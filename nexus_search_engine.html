@@ -1,0 +1,2336 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Search</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS & JS for Real Interactive Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        obsidian: '#09090f',
+                        midnight: '#12121e',
+                        midnightElevated: '#1a1a2e',
+                        midnightBorder: '#272742',
+                        pearl: '#f8f9fc',
+                        pearlCard: '#ffffff',
+                        pearlElevated: '#f1effa',
+                        pearlBorder: '#ddd8f2',
+                        indigoInk: '#161626',
+                        indigoMuted: '#4b4b6b',
+                        neonBlue: '#38bdf8',
+                        electricBlue: '#3b82f6',
+                        vividPurple: '#a855f7',
+                        deepPurple: '#9333ea',
+                        neonPink: '#ec4899',
+                        rosePink: '#f43f5e',
+                    },
+                    boxShadow: {
+                        'cosmic-glow': '0 0 25px -5px rgba(168, 85, 247, 0.35), 0 0 15px -3px rgba(236, 72, 153, 0.25)',
+                        'cosmic-focus': '0 0 32px -4px rgba(56, 189, 248, 0.4), 0 0 20px -4px rgba(236, 72, 153, 0.35)',
+                        'light-glow': '0 8px 28px -6px rgba(147, 51, 234, 0.16), 0 4px 14px -4px rgba(236, 72, 153, 0.12)',
+                        'dropdown-dark': '0 12px 32px rgba(0, 0, 0, 0.75)',
+                        'dropdown-light': '0 14px 34px rgba(22, 22, 38, 0.12)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Theme CSS Variables for Seamless Transitions */
+        :root {
+            --bg-primary: #f8f9fc;
+            --bg-surface: #ffffff;
+            --bg-elevated: #f1effa;
+            --border-subtle: #ddd8f2;
+            --text-primary: #161626;
+            --text-secondary: #4b4b6b;
+            --glow-blue: rgba(59, 130, 246, 0.14);
+            --glow-pink: rgba(236, 72, 153, 0.13);
+            --glow-purple: rgba(147, 51, 234, 0.12);
+        }
+
+        html.dark {
+            --bg-primary: #09090f;
+            --bg-surface: #12121e;
+            --bg-elevated: #1a1a2e;
+            --border-subtle: #272742;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --glow-blue: rgba(59, 130, 246, 0.13);
+            --glow-pink: rgba(236, 72, 153, 0.13);
+            --glow-purple: rgba(168, 85, 247, 0.11);
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.28s ease, color 0.28s ease, border-color 0.28s ease;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(168, 85, 247, 0.35);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(236, 72, 153, 0.6);
+        }
+
+        /* Cosmic Ambient Background Glow (Adapts to Light & Dark Mode) */
+        .cosmic-bg {
+            background-image: 
+                radial-gradient(circle at 20% 15%, var(--glow-blue) 0%, transparent 45%),
+                radial-gradient(circle at 80% 20%, var(--glow-pink) 0%, transparent 45%),
+                radial-gradient(circle at 50% 85%, var(--glow-purple) 0%, transparent 52%);
+        }
+
+        /* Pulse animation for Voice Search */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.85); opacity: 0.85; }
+            70% { transform: scale(1.45); opacity: 0; }
+            100% { transform: scale(1.45); opacity: 0; }
+        }
+        .voice-pulse::before {
+            content: '';
+            position: absolute;
+            inset: -12px;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, #38bdf8, #a855f7, #ec4899);
+            z-index: -1;
+            animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+
+        /* Animated soundwave bars */
+        @keyframes soundwave {
+            0%, 100% { height: 8px; }
+            50% { height: 28px; }
+        }
+        .wave-bar {
+            animation: soundwave 0.9s ease-in-out infinite;
+        }
+        .wave-bar:nth-child(2) { animation-delay: 0.15s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.45s; }
+        .wave-bar:nth-child(5) { animation-delay: 0.2s; }
+
+        /* Smooth fade transitions */
+        .fade-in {
+            animation: fadeIn 0.22s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hide scrollbar on horizontal tabs */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Shimmer Loading Skeleton */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .skeleton-shimmer {
+            background: linear-gradient(90deg, rgba(168, 85, 247, 0.08) 25%, rgba(236, 72, 153, 0.18) 50%, rgba(56, 189, 248, 0.08) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.6s infinite linear;
+        }
+
+        /* Custom Leaflet Map Styling */
+        .leaflet-container {
+            font-family: 'Inter', sans-serif !important;
+            z-index: 10;
+        }
+        html.dark .leaflet-tile-pane {
+            filter: invert(100%) hue-rotate(195deg) brightness(92%) contrast(92%);
+        }
+        .nexus-map-pin {
+            background: linear-gradient(135deg, #3b82f6, #a855f7, #ec4899);
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 18px rgba(236, 72, 153, 0.85);
+        }
+
+        /* Nexus Chat Typing Dots */
+        @keyframes chatBounce {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40% { transform: scale(1.1); opacity: 1; }
+        }
+        .chat-dot {
+            animation: chatBounce 1.3s infinite ease-in-out;
+        }
+        .chat-dot:nth-child(2) { animation-delay: 0.18s; }
+        .chat-dot:nth-child(3) { animation-delay: 0.36s; }
+    </style>
+</head>
+<body class="bg-pearl text-indigoInk dark:bg-obsidian dark:text-slate-100 cosmic-bg transition-colors duration-300 min-h-screen flex flex-col selection:bg-fuchsia-500/30 selection:text-pink-700 dark:selection:text-pink-200">
+
+    <!-- ========================================== -->
+    <!-- VOICE SEARCH MODAL                         -->
+    <!-- ========================================== -->
+    <div id="voiceModal" class="fixed inset-0 z-50 hidden pointer-events-none items-center justify-center bg-indigoInk/50 dark:bg-black/75 backdrop-blur-md p-4">
+        <div class="bg-pearlCard dark:bg-midnight rounded-3xl max-w-md w-full p-8 shadow-2xl border border-pearlBorder dark:border-purple-500/30 text-center relative fade-in transition-colors">
+            <button onclick="closeVoiceModal()" class="absolute top-4 right-4 p-2 rounded-full text-indigoMuted dark:text-slate-400 hover:text-indigoInk dark:hover:text-white hover:bg-pearlElevated dark:hover:bg-midnightElevated transition-colors" aria-label="Close voice search">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <p id="voiceStatusText" class="text-xl font-semibold bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink bg-clip-text text-transparent mb-6 mt-2">Listening...</p>
+            
+            <!-- Animated Mic + Soundwave -->
+            <div class="flex flex-col items-center justify-center mb-6">
+                <div class="relative inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-tr from-electricBlue via-vividPurple to-neonPink text-white shadow-cosmic-glow voice-pulse mb-6">
+                    <i data-lucide="mic" class="w-9 h-9"></i>
+                </div>
+                <div class="flex items-center justify-center gap-1.5 h-8">
+                    <span class="wave-bar w-1.5 rounded-full bg-electricBlue dark:bg-neonBlue"></span>
+                    <span class="wave-bar w-1.5 rounded-full bg-deepPurple dark:bg-vividPurple"></span>
+                    <span class="wave-bar w-1.5 rounded-full bg-neonPink"></span>
+                    <span class="wave-bar w-1.5 rounded-full bg-deepPurple dark:bg-vividPurple"></span>
+                    <span class="wave-bar w-1.5 rounded-full bg-electricBlue dark:bg-neonBlue"></span>
+                </div>
+            </div>
+
+            <p id="voiceTranscript" class="text-sm text-indigoMuted dark:text-slate-400 min-h-[24px] italic">"Try saying 'Artificial Intelligence' or 'Brampton parks'"</p>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- APPS LAUNCHER POPOVER (NON-ACCOUNT TOOLS)  -->
+    <!-- ========================================== -->
+    <div id="appsPopover" class="fixed top-16 right-4 sm:right-8 z-40 hidden pointer-events-none w-80 bg-pearlCard dark:bg-midnight rounded-3xl shadow-dropdown-light dark:shadow-dropdown-dark border border-pearlBorder dark:border-midnightBorder p-4 fade-in transition-colors">
+        <div class="px-2 pb-2.5 mb-2 border-b border-pearlBorder dark:border-midnightBorder flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-indigoMuted dark:text-slate-400">Live Nexus Tools</span>
+            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-purple-500/10 text-deepPurple dark:text-purple-300 border border-purple-500/25 font-medium">Zero Account</span>
+        </div>
+        <!-- Featured Nexus Chat Banner -->
+        <button type="button" onclick="openChatDrawer()" class="w-full mb-3 p-3 rounded-2xl bg-gradient-to-r from-electricBlue/15 via-vividPurple/15 to-neonPink/15 hover:from-electricBlue/25 hover:via-vividPurple/25 hover:to-neonPink/25 border border-neonPink/40 flex items-center justify-between gap-3 text-left transition-all group">
+            <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                    <span class="font-display font-bold text-sm text-indigoInk dark:text-white">Nexus Chat</span>
+                </div>
+                <p class="text-[11px] text-indigoMuted dark:text-slate-300 truncate mt-0.5">Conversational AI chat assistant</p>
+            </div>
+            <i data-lucide="arrow-up-right" class="w-4 h-4 text-neonPink shrink-0"></i>
+        </button>
+        <div class="grid grid-cols-3 gap-2 max-h-80 overflow-y-auto p-1">
+            <button type="button" onclick="openToolModal('calculator')" class="flex flex-col items-center p-3 rounded-2xl hover:bg-pearlElevated dark:hover:bg-purple-500/10 transition-colors group">
+                <div class="w-10 h-10 rounded-full bg-sky-500/15 text-electricBlue dark:text-neonBlue border border-sky-500/30 flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform">
+                    <i data-lucide="calculator" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xs font-medium text-indigoInk dark:text-slate-200">Calculator</span>
+            </button>
+            <button type="button" onclick="executeSearch('Weather in Brampton Ontario', 'all')" class="flex flex-col items-center p-3 rounded-2xl hover:bg-pearlElevated dark:hover:bg-purple-500/10 transition-colors group">
+                <div class="w-10 h-10 rounded-full bg-pink-500/15 text-neonPink border border-pink-500/30 flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform">
+                    <i data-lucide="cloud-sun" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xs font-medium text-indigoInk dark:text-slate-200">Weather</span>
+            </button>
+            <button type="button" onclick="executeSearch('Brampton, Ontario', 'maps')" class="flex flex-col items-center p-3 rounded-2xl hover:bg-pearlElevated dark:hover:bg-purple-500/10 transition-colors group">
+                <div class="w-10 h-10 rounded-full bg-purple-500/15 text-deepPurple dark:text-vividPurple border border-purple-500/30 flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform">
+                    <i data-lucide="map-pin" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xs font-medium text-indigoInk dark:text-slate-200">Maps</span>
+            </button>
+            <button type="button" onclick="openToolModal('translator')" class="flex flex-col items-center p-3 rounded-2xl hover:bg-pearlElevated dark:hover:bg-purple-500/10 transition-colors group">
+                <div class="w-10 h-10 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform">
+                    <i data-lucide="languages" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xs font-medium text-indigoInk dark:text-slate-200">Translate</span>
+            </button>
+            <button type="button" onclick="openToolModal('dictionary')" class="flex flex-col items-center p-3 rounded-2xl hover:bg-pearlElevated dark:hover:bg-purple-500/10 transition-colors group">
+                <div class="w-10 h-10 rounded-full bg-fuchsia-500/15 text-fuchsia-600 dark:text-fuchsia-400 border border-fuchsia-500/30 flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform">
+                    <i data-lucide="book-open" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xs font-medium text-indigoInk dark:text-slate-200">Dictionary</span>
+            </button>
+            <button type="button" onclick="executeSearch('Aurora Borealis', 'images')" class="flex flex-col items-center p-3 rounded-2xl hover:bg-pearlElevated dark:hover:bg-purple-500/10 transition-colors group">
+                <div class="w-10 h-10 rounded-full bg-blue-500/15 text-electricBlue dark:text-neonBlue border border-blue-500/30 flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform">
+                    <i data-lucide="image" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xs font-medium text-indigoInk dark:text-slate-200">Images</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- NEXUS CHAT SLIDE-OVER DRAWER               -->
+    <!-- ========================================== -->
+    <div id="chatDrawerBackdrop" class="fixed inset-0 z-50 hidden pointer-events-none bg-indigoInk/50 dark:bg-black/70 backdrop-blur-xs transition-opacity" onclick="if(event.target===this) closeChatDrawer()">
+        <aside id="chatDrawerPanel" class="ml-auto w-full max-w-lg h-full bg-pearlCard dark:bg-midnight border-l border-pearlBorder dark:border-purple-500/30 shadow-2xl flex flex-col fade-in">
+            <!-- Nexus Chat Drawer Header -->
+            <div class="px-5 py-4 border-b border-pearlBorder dark:border-midnightBorder bg-gradient-to-r from-electricBlue/10 via-vividPurple/10 to-neonPink/10 flex items-center justify-between gap-3">
+                <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                        <h2 class="font-display font-bold text-base text-indigoInk dark:text-white">Nexus Chat</h2>
+                        <span class="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-pink-500/15 text-neonPink border border-pink-500/30">
+                            <span class="w-1.5 h-1.5 rounded-full bg-neonPink animate-pulse"></span> Online
+                        </span>
+                    </div>
+                    <p class="text-xs text-indigoMuted dark:text-slate-400 truncate mt-0.5">Conversational AI Assistant</p>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <button type="button" onclick="clearNexusChat()" class="p-2 rounded-full text-indigoMuted dark:text-slate-400 hover:text-neonPink hover:bg-pearlElevated dark:hover:bg-midnightElevated transition-colors" title="Clear conversation" aria-label="Clear conversation">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                    <button type="button" onclick="closeChatDrawer()" class="p-2 rounded-full text-indigoMuted dark:text-slate-400 hover:text-indigoInk dark:hover:text-white hover:bg-pearlElevated dark:hover:bg-midnightElevated transition-colors" title="Close Nexus Chat" aria-label="Close Nexus Chat">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Nexus Chat Messages Feed -->
+            <div id="chatDrawerMessages" class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+                <!-- Populated via JS -->
+            </div>
+
+            <!-- Quick Prompt Chips -->
+            <div class="px-4 py-2.5 border-t border-pearlBorder/60 dark:border-midnightBorder/60 flex items-center gap-2 overflow-x-auto no-scrollbar">
+                <button type="button" onclick="sendChatPrompt('Write a short futuristic poem about neon stars')" class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-sky-500/10 text-electricBlue dark:text-neonBlue border border-sky-500/25 hover:bg-sky-500/20 transition-colors">Neon poem</button>
+                <button type="button" onclick="sendChatPrompt('Give me 3 creative app ideas')" class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-pink-500/10 text-neonPink border border-pink-500/25 hover:bg-pink-500/20 transition-colors">App ideas</button>
+                <button type="button" onclick="sendChatPrompt('Explain black holes like I am 12')" class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-purple-500/10 text-deepPurple dark:text-vividPurple border border-purple-500/25 hover:bg-purple-500/20 transition-colors">Black holes</button>
+                <button type="button" onclick="sendChatPrompt('Tell me a clever tech joke')" class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/25 hover:bg-indigo-500/20 transition-colors">Tech joke</button>
+                <button type="button" onclick="sendChatPrompt('Help me brainstorm a study schedule')" class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-fuchsia-500/10 text-fuchsia-600 dark:text-fuchsia-400 border border-fuchsia-500/25 hover:bg-fuchsia-500/20 transition-colors">Study tips</button>
+            </div>
+
+            <!-- Nexus Chat Input Bar -->
+            <div class="p-4 border-t border-pearlBorder dark:border-midnightBorder bg-pearl/70 dark:bg-obsidian/70">
+                <form onsubmit="event.preventDefault(); submitChatDrawerInput();" class="flex items-center gap-2 bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder focus-within:border-neonPink rounded-full px-4 py-2 shadow-xs">
+                    <input id="chatDrawerInput" type="text" autocomplete="off" placeholder="Ask Nexus Chat anything..." class="flex-1 bg-transparent text-sm text-indigoInk dark:text-slate-100 placeholder-indigoMuted/60 dark:placeholder-slate-500 focus:outline-none">
+                    <button type="submit" class="p-2 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white hover:opacity-90 transition-opacity shrink-0" aria-label="Send message to Nexus Chat">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                    </button>
+                </form>
+            </div>
+        </aside>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- INTERACTIVE TOOL MODAL (CALC & TRANSLATOR) -->
+    <!-- ========================================== -->
+    <div id="toolModal" class="fixed inset-0 z-50 hidden pointer-events-none items-center justify-center bg-indigoInk/60 dark:bg-black/80 backdrop-blur-md p-4">
+        <div class="bg-pearlCard dark:bg-midnight rounded-3xl max-w-md w-full p-6 shadow-2xl border border-pearlBorder dark:border-purple-500/30 relative fade-in">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-pearlBorder dark:border-midnightBorder">
+                <div class="flex items-center gap-2">
+                    <span id="toolModalIcon" class="p-2 rounded-xl bg-gradient-to-tr from-electricBlue via-vividPurple to-neonPink text-white"></span>
+                    <h3 id="toolModalTitle" class="font-display text-lg font-bold text-indigoInk dark:text-white">Nexus Tool</h3>
+                </div>
+                <button onclick="closeToolModal()" class="p-2 rounded-full text-indigoMuted dark:text-slate-400 hover:text-neonPink hover:bg-pearlElevated dark:hover:bg-midnightElevated transition-colors" aria-label="Close modal">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div id="toolModalBody"></div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- IMAGE LIGHTBOX MODAL                       -->
+    <!-- ========================================== -->
+    <div id="lightboxModal" class="fixed inset-0 z-50 hidden pointer-events-none items-center justify-center bg-black/85 backdrop-blur-md p-4" onclick="if(event.target===this) closeLightbox()">
+        <div class="bg-pearlCard dark:bg-midnight rounded-3xl max-w-4xl w-full overflow-hidden border border-pearlBorder dark:border-purple-500/40 shadow-2xl fade-in">
+            <div class="flex items-center justify-between px-5 py-3.5 border-b border-pearlBorder dark:border-midnightBorder">
+                <h3 id="lightboxTitle" class="text-sm font-semibold text-indigoInk dark:text-slate-100 truncate pr-4">Image Preview</h3>
+                <div class="flex items-center gap-2 shrink-0">
+                    <a id="lightboxSourceLink" href="#" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white hover:opacity-90">
+                        Open Original
+                    </a>
+                    <button onclick="closeLightbox()" class="p-1.5 rounded-full text-indigoMuted dark:text-slate-400 hover:text-neonPink">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="bg-black/95 flex items-center justify-center max-h-[70vh] overflow-hidden p-4">
+                <img id="lightboxImg" src="" alt="Full resolution preview" class="max-h-[65vh] w-auto object-contain rounded-xl">
+            </div>
+            <div class="px-5 py-3 bg-pearlElevated/70 dark:bg-midnightElevated text-xs text-indigoMuted dark:text-slate-400 flex flex-wrap items-center justify-between gap-2">
+                <span id="lightboxMeta">Wikimedia Commons</span>
+                <span id="lightboxDims">High Resolution</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIDEO PLAYER MODAL                         -->
+    <!-- ========================================== -->
+    <div id="videoModal" class="fixed inset-0 z-50 hidden pointer-events-none items-center justify-center bg-black/85 backdrop-blur-md p-4" onclick="if(event.target===this) closeVideoModal()">
+        <div class="bg-pearlCard dark:bg-midnight rounded-3xl max-w-4xl w-full overflow-hidden border border-pearlBorder dark:border-purple-500/40 shadow-2xl fade-in">
+            <div class="flex items-center justify-between px-5 py-3.5 border-b border-pearlBorder dark:border-midnightBorder">
+                <h3 id="videoModalTitle" class="text-sm font-semibold text-indigoInk dark:text-slate-100 truncate pr-4">Video Player</h3>
+                <div class="flex items-center gap-2 shrink-0">
+                    <a id="videoModalSourceLink" href="#" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white hover:opacity-90">
+                        Open Source
+                    </a>
+                    <button onclick="closeVideoModal()" class="p-1.5 rounded-full text-indigoMuted dark:text-slate-400 hover:text-neonPink">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="videoModalPlayerContainer" class="bg-black aspect-video w-full flex items-center justify-center"></div>
+            <div class="px-5 py-3 bg-pearlElevated/70 dark:bg-midnightElevated text-xs text-indigoMuted dark:text-slate-400 flex flex-wrap items-center justify-between gap-2">
+                <span id="videoModalMeta">Internet Archive / Wikimedia Commons</span>
+                <span>URL-Based Public Stream</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- WEB BROWSER / URL VIEWER MODAL             -->
+    <!-- ========================================== -->
+    <div id="webBrowserModal" class="fixed inset-0 z-50 hidden pointer-events-none items-center justify-center bg-indigoInk/70 dark:bg-black/85 backdrop-blur-md p-2 sm:p-5" onclick="if(event.target===this) closeWebBrowser()">
+        <div class="bg-pearlCard dark:bg-midnight rounded-3xl max-w-6xl w-full h-[88vh] flex flex-col overflow-hidden border border-pearlBorder dark:border-purple-500/40 shadow-2xl fade-in">
+            <!-- Browser Chrome Top Bar -->
+            <div class="px-4 py-3 border-b border-pearlBorder dark:border-midnightBorder bg-pearlElevated/80 dark:bg-obsidian/90 flex items-center gap-2.5">
+                <div class="hidden sm:flex items-center gap-1.5 mr-1">
+                    <button type="button" onclick="closeWebBrowser()" class="w-3 h-3 rounded-full bg-neonPink hover:opacity-80" title="Close Browser"></button>
+                    <span class="w-3 h-3 rounded-full bg-vividPurple/60"></span>
+                    <span class="w-3 h-3 rounded-full bg-electricBlue/60"></span>
+                </div>
+                <button type="button" onclick="reloadWebBrowser()" class="p-2 rounded-full text-indigoMuted dark:text-slate-300 hover:bg-pearlCard dark:hover:bg-midnightElevated transition-colors" title="Reload URL">
+                    <i data-lucide="rotate-cw" class="w-4 h-4"></i>
+                </button>
+                <!-- Interactive Modal URL Bar -->
+                <form onsubmit="event.preventDefault(); navigateToUrl(document.getElementById('modalUrlInput').value);" class="flex-1 flex items-center bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder focus-within:border-neonPink rounded-full px-3.5 py-1.5">
+                    <i data-lucide="lock" class="w-3.5 h-3.5 text-electricBlue dark:text-neonBlue mr-2 shrink-0"></i>
+                    <input id="modalUrlInput" type="text" autocomplete="off" spellcheck="false" placeholder="https://example.com" class="w-full bg-transparent text-xs sm:text-sm font-mono text-indigoInk dark:text-slate-100 focus:outline-none">
+                    <button type="submit" class="ml-2 px-3 py-1 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold hover:opacity-90 shrink-0">
+                        Go
+                    </button>
+                </form>
+                <a id="browserExternalLink" href="#" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-full text-xs font-semibold bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-indigoInk dark:text-slate-200 hover:border-neonPink transition-colors flex items-center gap-1.5 shrink-0" title="Open in new browser tab">
+                    <span class="hidden sm:inline">New Tab</span>
+                    <i data-lucide="external-link" class="w-3.5 h-3.5 text-neonPink"></i>
+                </a>
+                <button type="button" onclick="closeWebBrowser()" class="p-2 rounded-full text-indigoMuted dark:text-slate-400 hover:text-neonPink hover:bg-pearlCard dark:hover:bg-midnightElevated transition-colors" aria-label="Close URL Viewer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <!-- Notice Banner for Sites Blocking Iframes -->
+            <div class="px-4 py-1.5 bg-purple-500/10 border-b border-purple-500/20 text-[11px] text-indigoMuted dark:text-slate-300 flex items-center justify-between gap-2">
+                <span class="truncate">Viewing <strong id="browserCurrentHost" class="text-neonPink font-mono">example.com</strong> inside Nexus Web Frame</span>
+                <span class="shrink-0 text-indigoMuted/80 dark:text-slate-400">If a site blocks embedding, click <strong>New Tab</strong> &uarr;</span>
+            </div>
+            <!-- Embedded Viewport -->
+            <div class="flex-1 bg-white relative">
+                <iframe id="webBrowserFrame" src="about:blank" class="w-full h-full border-0" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TOAST / MESSAGE BOX (NO ALERT())           -->
+    <!-- ========================================== -->
+    <div id="toastBox" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden pointer-events-none bg-pearlCard dark:bg-midnightElevated text-indigoInk dark:text-slate-100 border border-pearlBorder dark:border-purple-500/40 px-5 py-3 rounded-full shadow-light-glow dark:shadow-cosmic-glow text-sm font-medium items-center gap-2.5 fade-in">
+        <i data-lucide="sparkles" class="w-4 h-4 text-neonPink"></i>
+        <span id="toastMessage">Message</span>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: HOME PAGE                          -->
+    <!-- ========================================== -->
+    <div id="homeView" class="flex-1 flex flex-col justify-between">
+        <!-- Minimalist Top Navigation -->
+        <header class="relative z-20 w-full px-4 sm:px-8 py-4 flex items-center justify-between text-sm">
+            <div class="flex items-center gap-5 text-indigoMuted dark:text-slate-400 font-medium">
+                <button type="button" onclick="executeSearch('About Nexus Search Engine')" class="hover:text-electricBlue dark:hover:text-neonBlue transition-colors">About</button>
+                <button type="button" onclick="executeSearch('Nexus Private Search')" class="hover:text-neonPink transition-colors">Privacy</button>
+            </div>
+            <div class="flex items-center gap-2.5">
+                <button type="button" onclick="executeSearch('Cyberpunk Neon Wallpapers', 'images')" class="hidden sm:inline-block text-indigoMuted dark:text-slate-300 hover:text-deepPurple dark:hover:text-vividPurple font-medium transition-colors px-3 py-1.5 rounded-full hover:bg-pearlElevated dark:hover:bg-midnight/60">Images</button>
+                
+                <!-- Nexus Chat Pill (Home) -->
+                <button type="button" onclick="openChatDrawer()" class="px-4 py-1.5 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold shadow-light-glow dark:shadow-cosmic-glow hover:opacity-95 transition-all active:scale-95" title="Open Nexus Chat">
+                    Nexus Chat
+                </button>
+
+                <!-- Prominent Light / Dark Mode Toggle Pill -->
+                <button type="button" onclick="toggleTheme()" class="flex items-center gap-2 px-3.5 py-2 rounded-full bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-indigoInk dark:text-slate-200 hover:border-neonPink/60 shadow-xs transition-all active:scale-95" title="Switch Light or Dark Theme" aria-label="Toggle Light or Dark Theme">
+                    <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-deepPurple"></i>
+                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-neonPink"></i>
+                    <span class="text-xs font-semibold block dark:hidden">Dark</span>
+                    <span class="text-xs font-semibold hidden dark:block">Light</span>
+                </button>
+
+                <!-- Apps Grid Button -->
+                <button type="button" id="homeAppsBtn" onclick="toggleAppsMenu(event)" class="p-2.5 rounded-full text-indigoMuted dark:text-slate-300 hover:bg-pearlElevated dark:hover:bg-midnightElevated border border-transparent hover:border-pearlBorder dark:hover:border-midnightBorder transition-all" title="Nexus Tools" aria-label="Nexus Tools">
+                    <i data-lucide="grip" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Center Hero -->
+        <main class="relative z-10 flex-1 flex flex-col items-center justify-center px-4 -mt-6 sm:-mt-12">
+            <!-- Pink, Blue & Purple Nexus Logo -->
+            <div class="mb-8 select-none text-center">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/25 text-xs font-semibold text-deepPurple dark:text-purple-300 mb-4">
+                    <span class="w-2 h-2 rounded-full bg-neonPink animate-pulse"></span>
+                    Private • Instant • Zero Account Required
+                </div>
+                <h1 class="font-display text-6xl sm:text-7xl md:text-8xl font-extrabold tracking-tight flex items-center justify-center">
+                    <span class="bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink dark:from-neonBlue dark:via-vividPurple dark:to-neonPink bg-clip-text text-transparent drop-shadow-[0_4px_24px_rgba(168,85,247,0.28)]">Nexus</span>
+                </h1>
+            </div>
+
+            <!-- Search Bar Container with Autocomplete -->
+            <div class="w-full max-w-[600px] relative" id="homeSearchWrapper">
+                <div id="homeSearchBox" class="flex items-center w-full bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder hover:border-purple-500/60 focus-within:border-neonPink/80 shadow-light-glow dark:shadow-sm hover:shadow-light-glow dark:hover:shadow-cosmic-glow focus-within:shadow-cosmic-focus rounded-full px-5 py-3.5 transition-all duration-200">
+                    <i data-lucide="search" class="w-5 h-5 text-electricBlue dark:text-neonBlue mr-3.5 shrink-0"></i>
+                    <input 
+                        type="text" 
+                        id="homeSearchInput" 
+                        autocomplete="off"
+                        placeholder="Search the web privately..." 
+                        class="w-full bg-transparent text-base text-indigoInk dark:text-slate-100 placeholder-indigoMuted/60 dark:placeholder-slate-500 focus:outline-none"
+                    >
+                    <!-- Clear Button -->
+                    <button type="button" id="homeClearBtn" onclick="clearInput('home')" class="hidden p-1 text-indigoMuted dark:text-slate-400 hover:text-neonPink mr-1 transition-colors" aria-label="Clear search">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                    <div class="h-6 w-[1px] bg-pearlBorder dark:bg-midnightBorder mx-2 hidden sm:block"></div>
+                    <!-- Voice Search Icon (Pink/Purple/Blue Gradient) -->
+                    <button type="button" onclick="openVoiceModal()" class="p-1.5 rounded-full hover:bg-pearlElevated dark:hover:bg-purple-500/15 transition-colors shrink-0 group" title="Search by voice" aria-label="Search by voice">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                            <defs>
+                                <linearGradient id="micGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#38bdf8"/>
+                                    <stop offset="50%" stop-color="#a855f7"/>
+                                    <stop offset="100%" stop-color="#ec4899"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M12 14C13.66 14 15 12.66 15 11V5C15 3.34 13.66 2 12 2C10.34 2 9 3.34 9 5V11C9 12.66 10.34 14 12 14Z" fill="url(#micGrad)"/>
+                            <path d="M17 11C17 13.76 14.76 16 12 16C9.24 16 7 13.76 7 11H5C5 14.53 7.61 17.43 11 17.92V21H13V17.92C16.39 17.43 19 14.53 19 11H17Z" fill="url(#micGrad)"/>
+                        </svg>
+                    <button type="button" onclick="executeSearch('Cyberpunk Neon Art', 'images')" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-fuchsia-500/10 text-fuchsia-600 dark:text-fuchsia-400 border border-fuchsia-500/25 hover:bg-fuchsia-500/20 transition-colors">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Neon Gallery
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dedicated URL Typing Area (Direct Web Address Bar) -->
+            <div class="mt-7 w-full max-w-[600px]">
+                <form onsubmit="event.preventDefault(); navigateToUrl(document.getElementById('homeUrlInput').value);" class="flex items-center w-full bg-pearlCard/90 dark:bg-midnight/90 border border-pearlBorder dark:border-midnightBorder hover:border-electricBlue/60 focus-within:border-neonPink shadow-xs focus-within:shadow-light-glow dark:focus-within:shadow-cosmic-glow rounded-2xl px-4 py-2.5 transition-all">
+                    <div class="flex items-center gap-1.5 text-xs font-semibold text-electricBlue dark:text-neonBlue pr-3 border-r border-pearlBorder dark:border-midnightBorder shrink-0 select-none">
+                        <i data-lucide="globe" class="w-4 h-4 text-neonPink"></i>
+                        <span>URL</span>
+                    </div>
+                    <input
+                        type="text"
+                        id="homeUrlInput"
+                        autocomplete="off"
+                        spellcheck="false"
+                        placeholder="Type a website URL (e.g., wikipedia.org, archive.org)..."
+                        class="flex-1 bg-transparent px-3 text-xs sm:text-sm font-mono text-indigoInk dark:text-slate-100 placeholder-indigoMuted/60 dark:placeholder-slate-500 focus:outline-none"
+                    >
+                    <button type="button" onclick="clearUrlInput('homeUrlInput')" class="p-1 text-indigoMuted dark:text-slate-400 hover:text-neonPink mr-1 transition-colors" title="Clear URL">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                    <button type="submit" class="px-4 py-1.5 rounded-xl bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold hover:opacity-95 transition-all active:scale-95 shrink-0 flex items-center gap-1">
+                        <span>Go</span>
+                        <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    </button>
+                </form>
+                <div class="flex flex-wrap items-center justify-center gap-2 mt-2.5 text-[11px] text-indigoMuted dark:text-slate-400">
+                    <span class="font-medium">Quick URLs:</span>
+                    <button type="button" onclick="navigateToUrl('https://en.wikipedia.org')" class="hover:text-neonPink underline decoration-purple-500/40 transition-colors">wikipedia.org</button>
+                    <span>•</span>
+                    <button type="button" onclick="navigateToUrl('https://archive.org')" class="hover:text-electricBlue dark:hover:text-neonBlue underline decoration-purple-500/40 transition-colors">archive.org</button>
+                    <span>•</span>
+                    <button type="button" onclick="navigateToUrl('https://www.openstreetmap.org')" class="hover:text-deepPurple dark:hover:text-vividPurple underline decoration-purple-500/40 transition-colors">openstreetmap.org</button>
+                    <span>•</span>
+                    <button type="button" onclick="navigateToUrl('https://news.ycombinator.com')" class="hover:text-neonPink underline decoration-purple-500/40 transition-colors">news.ycombinator.com</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Minimalist Footer -->
+        <footer class="w-full bg-pearlElevated/70 dark:bg-midnight/80 border-t border-pearlBorder dark:border-midnightBorder text-xs text-indigoMuted dark:text-slate-400 transition-colors">
+            <div class="px-6 py-3 border-b border-pearlBorder dark:border-midnightBorder flex items-center justify-between">
+                <span class="flex items-center gap-2 font-medium text-indigoInk dark:text-slate-300">
+                    <span class="w-2 h-2 rounded-full bg-electricBlue dark:bg-neonBlue"></span>
+                    Canada • Brampton, Ontario
+                </span>
+                <span class="text-indigoMuted/80 dark:text-slate-500">Zero Tracking • No Account Needed</span>
+            </div>
+            <div class="px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex flex-wrap items-center gap-6">
+                    <button onclick="executeSearch('How Nexus Search Works')" class="hover:text-electricBlue dark:hover:text-neonBlue transition-colors">How Search Works</button>
+                    <button onclick="executeSearch('Advertising on Nexus')" class="hover:text-deepPurple dark:hover:text-vividPurple transition-colors">Advertising</button>
+                    <button onclick="executeSearch('Nexus Business Solutions')" class="hover:text-neonPink transition-colors">Business</button>
+                </div>
+                <div class="flex flex-wrap items-center gap-6">
+                    <button onclick="executeSearch('Nexus Privacy Policy')" class="hover:text-electricBlue dark:hover:text-neonBlue transition-colors">Privacy</button>
+                    <button onclick="executeSearch('Nexus Terms of Service')" class="hover:text-deepPurple dark:hover:text-vividPurple transition-colors">Terms</button>
+                    <button onclick="showToast('SafeSearch is set to Moderate')" class="hover:text-neonPink transition-colors">Settings</button>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: SEARCH RESULTS PAGE (SERP)         -->
+    <!-- ========================================== -->
+    <div id="serpView" class="hidden flex-1 flex-col">
+        <!-- Sticky Top Header -->
+        <header class="sticky top-0 z-30 bg-pearl/90 dark:bg-obsidian/90 backdrop-blur-md border-b border-pearlBorder dark:border-midnightBorder transition-colors">
+            <div class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-3.5 pb-2 flex flex-col md:flex-row md:items-center gap-3 md:gap-6">
+                <!-- Top row on mobile: Nexus Logo + Controls -->
+                <div class="flex items-center justify-between md:justify-start gap-4 shrink-0">
+                    <button type="button" onclick="goHome()" class="font-display text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink dark:from-neonBlue dark:via-vividPurple dark:to-neonPink bg-clip-text text-transparent hover:opacity-90 transition-opacity" title="Back to Nexus Home">
+                        Nexus
+                    </button>
+
+                    <!-- Mobile Controls (Nexus Chat + Theme Toggle + Tools Grid) -->
+                    <div class="flex items-center gap-2 md:hidden">
+                        <button type="button" onclick="openChatDrawer()" class="px-3 py-1.5 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold shadow-xs" aria-label="Nexus Chat">
+                            Nexus Chat
+                        </button>
+                        <button type="button" onclick="toggleTheme()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-indigoInk dark:text-slate-200 text-xs font-semibold" aria-label="Toggle theme">
+                            <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-deepPurple"></i>
+                            <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-neonPink"></i>
+                            <span class="block dark:hidden">Dark</span>
+                            <span class="hidden dark:block">Light</span>
+                        </button>
+                        <button type="button" onclick="toggleAppsMenu(event)" class="p-2 rounded-full text-indigoMuted dark:text-slate-300 hover:bg-pearlElevated dark:hover:bg-midnightElevated" aria-label="Nexus Tools">
+                            <i data-lucide="grip" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SERP Search Bar -->
+                <div class="flex-1 max-w-[660px] relative" id="serpSearchWrapper">
+                    <div class="flex items-center w-full bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder hover:border-purple-500/60 focus-within:border-neonPink/80 focus-within:shadow-light-glow dark:focus-within:shadow-cosmic-glow rounded-full px-4 py-2 transition-all">
+                        <input 
+                            type="text" 
+                            id="serpSearchInput" 
+                            autocomplete="off"
+                            placeholder="Search Nexus..." 
+                            class="w-full bg-transparent text-sm sm:text-base text-indigoInk dark:text-slate-100 focus:outline-none"
+                        >
+                        <button type="button" id="serpClearBtn" onclick="clearInput('serp')" class="p-1 text-indigoMuted dark:text-slate-400 hover:text-neonPink mr-1 transition-colors" aria-label="Clear search">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                        <div class="h-5 w-[1px] bg-pearlBorder dark:bg-midnightBorder mx-1.5"></div>
+                        <button type="button" onclick="openVoiceModal()" class="p-1.5 rounded-full hover:bg-pearlElevated dark:hover:bg-purple-500/15 transition-colors shrink-0" title="Search by voice" aria-label="Search by voice">
+                            <i data-lucide="mic" class="w-4 h-4 text-neonPink"></i>
+                        </button>
+                        <button type="button" onclick="handleSerpSearchSubmit()" class="p-1.5 rounded-full hover:bg-pearlElevated dark:hover:bg-purple-500/15 transition-colors shrink-0 ml-0.5" title="Search" aria-label="Submit search">
+                            <i data-lucide="search" class="w-4 h-4 text-electricBlue dark:text-neonBlue"></i>
+                        </button>
+                    </div>
+
+                    <!-- Autocomplete Dropdown (SERP) -->
+                    <div id="serpAutocomplete" class="hidden absolute left-0 right-0 top-full mt-2 bg-pearlCard dark:bg-midnight rounded-3xl shadow-dropdown-light dark:shadow-dropdown-dark border border-pearlBorder dark:border-midnightBorder overflow-hidden z-30 py-2">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Compact SERP URL Typing Bar -->
+                <form onsubmit="event.preventDefault(); navigateToUrl(document.getElementById('serpUrlInput').value);" class="hidden xl:flex items-center w-64 bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder focus-within:border-neonPink rounded-full px-3 py-1.5 transition-all">
+                    <i data-lucide="globe" class="w-3.5 h-3.5 text-neonPink mr-2 shrink-0"></i>
+                    <input id="serpUrlInput" type="text" autocomplete="off" spellcheck="false" placeholder="Enter URL..." class="w-full bg-transparent text-xs font-mono text-indigoInk dark:text-slate-200 placeholder-indigoMuted/60 dark:placeholder-slate-500 focus:outline-none">
+                    <button type="submit" class="ml-1.5 px-2.5 py-0.5 rounded-full bg-purple-500/15 text-deepPurple dark:text-purple-300 hover:bg-neonPink hover:text-white text-[11px] font-semibold transition-colors shrink-0">
+                        Go
+                    </button>
+                </form>
+
+                <!-- Desktop Right Controls (Nexus Chat Pill + Theme Toggle Pill + Tools Grid) -->
+                <div class="hidden md:flex items-center gap-2.5 ml-auto shrink-0">
+                    <button type="button" onclick="openChatDrawer()" class="px-4 py-2 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold shadow-light-glow dark:shadow-cosmic-glow hover:opacity-95 transition-all active:scale-95" title="Open Nexus Chat">
+                        Nexus Chat
+                    </button>
+                    <button type="button" onclick="toggleTheme()" class="flex items-center gap-2 px-3.5 py-2 rounded-full bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-indigoInk dark:text-slate-200 hover:border-neonPink/60 shadow-xs transition-all active:scale-95" title="Switch Light or Dark Theme" aria-label="Toggle Light or Dark Theme">
+                        <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-deepPurple"></i>
+                        <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-neonPink"></i>
+                        <span class="text-xs font-semibold block dark:hidden">Dark</span>
+                        <span class="text-xs font-semibold hidden dark:block">Light</span>
+                    </button>
+                    <button type="button" onclick="toggleAppsMenu(event)" class="p-2.5 rounded-full text-indigoMuted dark:text-slate-300 hover:bg-pearlElevated dark:hover:bg-midnightElevated border border-transparent hover:border-pearlBorder dark:hover:border-midnightBorder transition-all" title="Nexus Tools" aria-label="Nexus Tools">
+                        <i data-lucide="grip" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category Tabs Bar + Search Tools Toggle -->
+            <div class="max-w-[1400px] mx-auto px-4 sm:px-6 md:pl-[148px] flex items-center justify-between gap-4 overflow-x-auto no-scrollbar text-sm">
+                <div class="flex items-center gap-1 sm:gap-2">
+                    <button type="button" onclick="switchTab('all')" id="tab-all" class="serp-tab flex items-center gap-1.5 px-3.5 py-2.5 border-b-[3px] border-neonPink text-neonPink font-semibold whitespace-nowrap transition-colors">
+                        <i data-lucide="search" class="w-4 h-4"></i> All
+                    </button>
+                    <button type="button" onclick="switchTab('chat')" id="tab-chat" class="serp-tab flex items-center gap-1.5 px-3.5 py-2.5 border-b-[3px] border-transparent text-indigoMuted dark:text-slate-400 hover:text-neonPink whitespace-nowrap transition-colors">
+                        Nexus Chat
+                    </button>
+                    <button type="button" onclick="switchTab('images')" id="tab-images" class="serp-tab flex items-center gap-1.5 px-3.5 py-2.5 border-b-[3px] border-transparent text-indigoMuted dark:text-slate-400 hover:text-electricBlue dark:hover:text-neonBlue whitespace-nowrap transition-colors">
+                        <i data-lucide="image" class="w-4 h-4"></i> Images
+                    </button>
+                    <button type="button" onclick="switchTab('news')" id="tab-news" class="serp-tab flex items-center gap-1.5 px-3.5 py-2.5 border-b-[3px] border-transparent text-indigoMuted dark:text-slate-400 hover:text-deepPurple dark:hover:text-vividPurple whitespace-nowrap transition-colors">
+                        <i data-lucide="newspaper" class="w-4 h-4"></i> News
+                    </button>
+                    <button type="button" onclick="switchTab('videos')" id="tab-videos" class="serp-tab flex items-center gap-1.5 px-3.5 py-2.5 border-b-[3px] border-transparent text-indigoMuted dark:text-slate-400 hover:text-neonPink whitespace-nowrap transition-colors">
+                        <i data-lucide="play-square" class="w-4 h-4"></i> Videos
+                    </button>
+                    <button type="button" onclick="switchTab('maps')" id="tab-maps" class="serp-tab flex items-center gap-1.5 px-3.5 py-2.5 border-b-[3px] border-transparent text-indigoMuted dark:text-slate-400 hover:text-electricBlue dark:hover:text-neonBlue whitespace-nowrap transition-colors">
+                        <i data-lucide="map-pin" class="w-4 h-4"></i> Maps
+                    </button>
+                </div>
+                <button type="button" onclick="toggleSearchTools()" id="searchToolsBtn" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-indigoMuted dark:text-slate-400 hover:bg-pearlElevated dark:hover:bg-midnightElevated hover:text-indigoInk dark:hover:text-slate-200 transition-colors shrink-0">
+                    <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i> Search tools
+                </button>
+            </div>
+        </header>
+
+        <!-- Collapsible Search Tools Filter Bar -->
+        <div id="searchToolsBar" class="hidden bg-pearlElevated/70 dark:bg-midnight/60 border-b border-pearlBorder dark:border-midnightBorder py-2 px-4 sm:px-6 md:pl-[156px] text-xs fade-in">
+            <div class="max-w-[1400px] mx-auto flex flex-wrap items-center gap-3">
+                <select id="timeFilter" onchange="applySearchFilters()" class="bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-indigoInk dark:text-slate-200 rounded-full px-3 py-1 focus:outline-none focus:border-neonPink">
+                    <option value="Any time">Any time</option>
+                    <option value="Past 24 hours">Past 24 hours</option>
+                    <option value="Past week">Past week</option>
+                    <option value="Past year">Past year</option>
+                </select>
+                <select id="verbatimFilter" onchange="applySearchFilters()" class="bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-indigoInk dark:text-slate-200 rounded-full px-3 py-1 focus:outline-none focus:border-neonPink">
+                    <option value="All results">All results</option>
+                    <option value="Verbatim">Verbatim</option>
+                </select>
+                <button onclick="resetSearchFilters()" class="text-neonPink hover:underline font-medium ml-1">Clear filters</button>
+            </div>
+        </div>
+
+        <!-- Search Results Stats Bar -->
+        <div class="max-w-[1400px] w-full mx-auto px-4 sm:px-6 md:pl-[156px] py-2.5 text-xs text-indigoMuted dark:text-slate-400 flex items-center justify-between">
+            <span id="resultsStats">About 1,420,000 results (0.24 seconds)</span>
+            <span class="hidden sm:inline-flex items-center gap-1.5 text-deepPurple dark:text-purple-400 font-medium">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Private Session Active
+            </span>
+        </div>
+
+        <!-- Dynamic Results Container -->
+        <main id="resultsContainer" class="flex-1 max-w-[1400px] w-full mx-auto px-4 sm:px-6 md:pl-[156px] pb-16">
+            <!-- Populated dynamically via JS -->
+        </main>
+
+        <!-- SERP Footer -->
+        <footer class="w-full bg-pearlElevated/70 dark:bg-midnight border-t border-pearlBorder dark:border-midnightBorder py-5 px-4 sm:px-6 md:pl-[156px] text-xs text-indigoMuted dark:text-slate-400 transition-colors">
+            <div class="flex flex-wrap items-center gap-4 mb-2">
+                <span class="font-semibold text-indigoInk dark:text-slate-300 flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-neonPink"></span>
+                    Brampton, Ontario
+                </span>
+                <span>•</span>
+                <span>Based on your current session</span>
+            </div>
+            <div class="flex flex-wrap gap-6">
+                <button onclick="executeSearch('Nexus Search Help')" class="hover:text-electricBlue dark:hover:text-neonBlue transition-colors">Help</button>
+                <button onclick="showToast('Feedback received! Thank you.')" class="hover:text-deepPurple dark:hover:text-vividPurple transition-colors">Send feedback</button>
+                <button onclick="executeSearch('Nexus Privacy')" class="hover:text-neonPink transition-colors">Privacy</button>
+                <button onclick="executeSearch('Nexus Terms')" class="hover:text-electricBlue dark:hover:text-neonBlue transition-colors">Terms</button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT ENGINE & KNOWLEDGE DATABASE     -->
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT ENGINE & LIVE DATA CONNECTORS   -->
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT ENGINE & URL-BASED PUBLIC APIS  -->
+    <!-- ========================================== -->
+    <script>
+        // ==========================================
+        // 1. SAFE STORAGE, GLOBAL STATE & THEME INIT
+        // ==========================================
+        const safeStorage = {
+            get(key) {
+                try {
+                    return window.localStorage.getItem(key);
+                } catch (_) {
+                    return null;
+                }
+            },
+            set(key, val) {
+                try {
+                    window.localStorage.setItem(key, val);
+                } catch (_) {}
+            }
+        };
+
+        let currentQuery = '';
+        let currentTab = 'all';
+        let recentSearches = [];
+        try {
+            const savedRecent = JSON.parse(safeStorage.get('nexus_recent_searches') || '[]');
+            if (Array.isArray(savedRecent)) recentSearches = savedRecent;
+        } catch (_) {
+            recentSearches = [];
+        }
+
+        let autocompleteTimer = null;
+        let speechRecognitionInstance = null;
+        let activeTimeFilter = 'Any time';
+        let activeVerbatimFilter = 'All results';
+        let activeMapInstance = null;
+        let calcExpression = '0';
+        let chatMessages = [];
+        let chatIsTyping = false;
+        let chatLastTopic = '';
+
+        function renderIcons() {
+            try {
+                if (window.lucide && typeof window.lucide.createIcons === 'function') {
+                    window.lucide.createIcons();
+                }
+            } catch (_) {}
+        }
+
+        function applySavedTheme() {
+            const saved = safeStorage.get('nexus_theme');
+            const htmlEl = document.documentElement;
+            if (saved === 'light') {
+                htmlEl.classList.remove('dark');
+            } else {
+                htmlEl.classList.add('dark');
+            }
+        }
+
+        // ==========================================
+        // 14. MAPS TAB (MULTI-API GEOCODING + LEAFLET)
+        // ==========================================
+        let activeMapMarkers = [];
+
+        async function geocodePlaces(query) {
+            const q = (query || '').trim() || 'Brampton, Ontario';
+
+            // 1. Primary: Photon (Komoot OpenStreetMap Geocoder - CORS-friendly, no custom User-Agent issues)
+            try {
+                const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=6`);
+                if (res.ok) {
+                    const data = await res.json();
+                    const features = data?.features || [];
+                    if (features.length > 0) {
+                        return features.map(f => {
+                            const props = f.properties || {};
+                            const coords = f.geometry?.coordinates || [-79.7624, 43.7315];
+                            const parts = [props.name, props.street, props.city || props.town || props.village, props.state, props.country].filter(Boolean);
+                            const uniqueParts = [...new Set(parts)];
+                            return {
+                                lat: Number(coords[1]),
+                                lon: Number(coords[0]),
+                                display_name: uniqueParts.join(', ') || q,
+                                type: props.osm_value || props.type || 'Location'
+                            };
+                        });
+                    }
+                }
+            } catch (_) {}
+
+            // 2. Fallback: Open-Meteo Geocoding API
+            try {
+                const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=6&language=en&format=json`);
+                if (res.ok) {
+                    const data = await res.json();
+                    const results = data?.results || [];
+                    if (results.length > 0) {
+                        return results.map(r => ({
+                            lat: Number(r.latitude),
+                            lon: Number(r.longitude),
+                            display_name: [r.name, r.admin1, r.country].filter(Boolean).join(', '),
+                            type: r.feature_code || 'Place'
+                        }));
+                    }
+                }
+            } catch (_) {}
+
+            // 3. Fallback: Nominatim OpenStreetMap
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=6`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length > 0) {
+                        return data.map(item => ({
+                            lat: Number(item.lat),
+                            lon: Number(item.lon),
+                            display_name: item.display_name,
+                            type: item.type || 'Location'
+                        }));
+                    }
+                }
+            } catch (_) {}
+
+            return [];
+        }
+
+        async function renderMapsTab(q, startTime) {
+            const container = document.getElementById('resultsContainer');
+            if (!container) return;
+
+            try {
+                const places = await geocodePlaces(q);
+                const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+                document.getElementById('resultsStats').textContent = `${places.length} map locations for "${q}" (${elapsed} seconds)`;
+
+                const primary = places[0] || { lat: 43.7315, lon: -79.7624, display_name: 'Brampton, Ontario, Canada', type: 'City' };
+                const osmEmbedUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${primary.lon - 0.06}%2C${primary.lat - 0.04}%2C${primary.lon + 0.06}%2C${primary.lat + 0.04}&layer=mapnik&marker=${primary.lat}%2C${primary.lon}`;
+
+                container.innerHTML = `
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-3 fade-in">
+                        <div class="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+                            ${places.length > 0 ? places.map((pl, idx) => `
+                                <button type="button" data-map-idx="${idx}" onclick="focusMapLocation(${pl.lat}, ${pl.lon}, '${escapeHTML(pl.display_name).replace(/'/g, "\\'")}', ${idx})" class="map-place-card w-full text-left p-4 rounded-2xl bg-pearlCard dark:bg-midnight border ${idx === 0 ? 'border-neonPink shadow-light-glow dark:shadow-cosmic-glow' : 'border-pearlBorder dark:border-midnightBorder'} hover:border-neonPink transition-all">
+                                    <div class="flex items-start gap-2.5">
+                                        <i data-lucide="map-pin" class="w-4 h-4 text-neonPink shrink-0 mt-1"></i>
+                                        <div class="min-w-0 flex-1">
+                                            <p class="text-sm font-semibold text-indigoInk dark:text-white line-clamp-2">${escapeHTML(pl.display_name)}</p>
+                                            <div class="flex items-center justify-between gap-2 mt-1.5">
+                                                <span class="text-[11px] text-indigoMuted dark:text-slate-400">${pl.lat.toFixed(4)}, ${pl.lon.toFixed(4)}</span>
+                                                <span class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-500/10 text-deepPurple dark:text-purple-300 font-semibold">${escapeHTML(pl.type)}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </button>
+                            `).join('') : `
+                                <div class="p-5 rounded-2xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder text-sm space-y-2">
+                                    <p class="font-semibold text-indigoInk dark:text-white">No exact coordinates found for "${escapeHTML(q)}"</p>
+                                    <p class="text-xs text-indigoMuted dark:text-slate-400">Showing default map centered on Brampton, Ontario. Try searching a city, landmark, or address.</p>
+                                </div>
+                            `}
+                        </div>
+                        <div class="lg:col-span-2 rounded-3xl overflow-hidden border border-pearlBorder dark:border-midnightBorder shadow-xs h-[420px] sm:h-[500px] relative bg-pearlElevated dark:bg-midnight">
+                            <div id="nexusLeafletMap" class="w-full h-full"></div>
+                            <a id="osmExternalLink" href="https://www.openstreetmap.org/?mlat=${primary.lat}&mlon=${primary.lon}#map=14/${primary.lat}/${primary.lon}" target="_blank" rel="noopener noreferrer" class="absolute bottom-3 left-3 z-20 px-3.5 py-1.5 rounded-full bg-pearlCard/95 dark:bg-midnight/95 border border-pearlBorder dark:border-purple-500/40 text-xs font-semibold text-indigoInk dark:text-white hover:border-neonPink shadow-md transition-colors">
+                                Open in Full Map &rarr;
+                            </a>
+                        </div>
+                    </div>
+                `;
+
+                requestAnimationFrame(() => {
+                    const mapEl = document.getElementById('nexusLeafletMap');
+                    if (!mapEl) return;
+
+                    if (window.L) {
+                        try {
+                            if (activeMapInstance) {
+                                activeMapInstance.remove();
+                                activeMapInstance = null;
+                            }
+                            activeMapMarkers = [];
+
+                            activeMapInstance = L.map('nexusLeafletMap', { zoomControl: true }).setView([primary.lat, primary.lon], 13);
+                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                maxZoom: 19,
+                                attribution: '&copy; OpenStreetMap contributors'
+                            }).addTo(activeMapInstance);
+
+                            const customIcon = L.divIcon({ className: 'nexus-map-pin', iconSize: [18, 18], iconAnchor: [9, 9] });
+                            const listToPin = places.length > 0 ? places : [primary];
+
+                            listToPin.forEach((pl, idx) => {
+                                const marker = L.marker([pl.lat, pl.lon], { icon: customIcon })
+                                    .addTo(activeMapInstance)
+                                    .bindPopup(`<strong>${escapeHTML(pl.display_name)}</strong>`);
+                                if (idx === 0) marker.openPopup();
+                                activeMapMarkers.push(marker);
+                            });
+
+                            setTimeout(() => {
+                                if (activeMapInstance) activeMapInstance.invalidateSize();
+                            }, 150);
+                            return;
+                        } catch (_) {}
+                    }
+
+                    // Fallback to direct OpenStreetMap iframe if Leaflet CDN is blocked
+                    mapEl.innerHTML = `<iframe src="${osmEmbedUrl}" class="w-full h-full border-0" loading="lazy"></iframe>`;
+                });
+            } catch (_) {
+                container.innerHTML = `<div class="p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder max-w-xl mt-3 text-sm">Unable to load map data right now.</div>`;
+            }
+        }
+
+        function focusMapLocation(lat, lon, name, idx = 0) {
+            document.querySelectorAll('.map-place-card').forEach((card, i) => {
+                if (i === idx) {
+                    card.classList.add('border-neonPink', 'shadow-light-glow', 'dark:shadow-cosmic-glow');
+                    card.classList.remove('border-pearlBorder', 'dark:border-midnightBorder');
+                } else {
+                    card.classList.remove('border-neonPink', 'shadow-light-glow', 'dark:shadow-cosmic-glow');
+                    card.classList.add('border-pearlBorder', 'dark:border-midnightBorder');
+                }
+            });
+
+            const extLink = document.getElementById('osmExternalLink');
+            if (extLink) {
+                extLink.href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=14/${lat}/${lon}`;
+            }
+
+            if (activeMapInstance && window.L) {
+                activeMapInstance.invalidateSize();
+                activeMapInstance.flyTo([Number(lat), Number(lon)], 14, { duration: 0.7 });
+                if (activeMapMarkers[idx]) {
+                    activeMapMarkers[idx].openPopup();
+                } else {
+                    const customIcon = L.divIcon({ className: 'nexus-map-pin', iconSize: [18, 18], iconAnchor: [9, 9] });
+                    L.marker([Number(lat), Number(lon)], { icon: customIcon })
+                        .addTo(activeMapInstance)
+                        .bindPopup(`<strong>${escapeHTML(name)}</strong>`)
+                        .openPopup();
+                }
+            } else {
+                const mapEl = document.getElementById('nexusLeafletMap');
+                if (mapEl) {
+                    const nLat = Number(lat);
+                    const nLon = Number(lon);
+                    mapEl.innerHTML = `<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${nLon - 0.04}%2C${nLat - 0.03}%2C${nLon + 0.04}%2C${nLat + 0.03}&layer=mapnik&marker=${nLat}%2C${nLon}" class="w-full h-full border-0"></iframe>`;
+                }
+            }
+        }
+
+        function toggleTheme() {
+            const htmlEl = document.documentElement;
+            const isDark = htmlEl.classList.toggle('dark');
+            safeStorage.set('nexus_theme', isDark ? 'dark' : 'light');
+            renderIcons();
+            showToast(isDark ? 'Dark mode enabled' : 'Light mode enabled');
+        }
+
+        // ==========================================
+        // 3. OVERLAY & TOAST HELPERS (NO ALERT())
+        // ==========================================
+        function showOverlay(el, displayClass = 'flex') {
+            if (!el) return;
+            el.classList.remove('hidden', 'pointer-events-none');
+            if (displayClass) el.classList.add(displayClass);
+            el.classList.add('pointer-events-auto');
+        }
+
+        function hideOverlay(el, displayClass = 'flex') {
+            if (!el) return;
+            el.classList.add('hidden', 'pointer-events-none');
+            if (displayClass) el.classList.remove(displayClass);
+            el.classList.remove('pointer-events-auto');
+        }
+
+        let toastTimeout = null;
+        function showToast(msg) {
+            const toast = document.getElementById('toastBox');
+            const toastMsg = document.getElementById('toastMessage');
+            if (!toast || !toastMsg) return;
+            toastMsg.textContent = msg;
+            showOverlay(toast, 'flex');
+            renderIcons();
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                hideOverlay(toast, 'flex');
+            }, 2600);
+        }
+
+        function escapeHTML(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function stripHTML(html) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = html || '';
+            return (tmp.textContent || tmp.innerText || '').trim();
+        }
+
+        // ==========================================
+        // 4. APPS LAUNCHER & NAVIGATION
+        // ==========================================
+        function toggleAppsMenu(e) {
+            if (e) e.stopPropagation();
+            const popover = document.getElementById('appsPopover');
+            if (!popover) return;
+            if (popover.classList.contains('hidden')) {
+                showOverlay(popover, '');
+                renderIcons();
+            } else {
+                hideOverlay(popover, '');
+            }
+        }
+
+        function goHome() {
+            document.getElementById('serpView').classList.add('hidden');
+            document.getElementById('serpView').classList.remove('flex');
+            document.getElementById('homeView').classList.remove('hidden');
+            document.getElementById('homeView').classList.add('flex');
+            const homeInput = document.getElementById('homeSearchInput');
+            if (homeInput) {
+                homeInput.value = '';
+                document.getElementById('homeClearBtn')?.classList.add('hidden');
+                homeInput.focus();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function clearInput(source) {
+            const input = document.getElementById(source === 'home' ? 'homeSearchInput' : 'serpSearchInput');
+            const clearBtn = document.getElementById(source === 'home' ? 'homeClearBtn' : 'serpClearBtn');
+            const dropdown = document.getElementById(source === 'home' ? 'homeAutocomplete' : 'serpAutocomplete');
+            if (input) {
+                input.value = '';
+                input.focus();
+            }
+            if (clearBtn && source === 'home') clearBtn.classList.add('hidden');
+            if (dropdown) dropdown.classList.add('hidden');
+        }
+
+        function saveRecentSearch(query) {
+            const q = query.trim();
+            if (!q) return;
+            recentSearches = [q, ...recentSearches.filter(item => item.toLowerCase() !== q.toLowerCase())].slice(0, 6);
+            safeStorage.set('nexus_recent_searches', JSON.stringify(recentSearches));
+        }
+
+        // ==========================================
+        // 5. LIVE AUTOCOMPLETE (WIKIPEDIA OPENSEARCH)
+        // ==========================================
+        function setupAutocomplete(inputId, dropdownId, clearBtnId) {
+            const input = document.getElementById(inputId);
+            const dropdown = document.getElementById(dropdownId);
+            const clearBtn = clearBtnId ? document.getElementById(clearBtnId) : null;
+            if (!input || !dropdown) return;
+
+            input.addEventListener('input', () => {
+                const val = input.value;
+                if (clearBtn) {
+                    clearBtn.classList.toggle('hidden', val.length === 0);
+                }
+                clearTimeout(autocompleteTimer);
+                if (!val.trim()) {
+                    renderAutocompleteDropdown(dropdown, '', recentSearches, true);
+                    return;
+                }
+                autocompleteTimer = setTimeout(() => fetchSuggestions(val.trim(), dropdown), 180);
+            });
+
+            input.addEventListener('focus', () => {
+                const val = input.value.trim();
+                if (!val) {
+                    renderAutocompleteDropdown(dropdown, '', recentSearches, true);
+                } else {
+                    fetchSuggestions(val, dropdown);
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    dropdown.classList.add('hidden');
+                    if (input.value.trim()) {
+                        executeSearch(input.value.trim(), currentTab === 'chat' ? 'chat' : (document.getElementById('serpView').classList.contains('hidden') ? 'all' : currentTab));
+                    }
+                } else if (e.key === 'Escape') {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        }
+
+        async function fetchSuggestions(query, dropdown) {
+            try {
+                const url = `https://en.wikipedia.org/w/api.php?action=opensearch&format=json&origin=*&limit=6&search=${encodeURIComponent(query)}`;
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('OpenSearch failed');
+                const data = await res.json();
+                const suggestions = Array.isArray(data[1]) ? data[1] : [];
+                renderAutocompleteDropdown(dropdown, query, suggestions.length ? suggestions : [query], false);
+            } catch (_) {
+                renderAutocompleteDropdown(dropdown, query, [query], false);
+            }
+        }
+
+        function renderAutocompleteDropdown(dropdown, query, items, isRecent) {
+            if (!items || items.length === 0) {
+                dropdown.classList.add('hidden');
+                return;
+            }
+            dropdown.innerHTML = items.map(item => `
+                <button type="button" onclick="selectSuggestion('${escapeHTML(item).replace(/'/g, "\\'")}')" class="w-full px-5 py-2.5 flex items-center gap-3 text-left text-sm text-indigoInk dark:text-slate-200 hover:bg-pearlElevated dark:hover:bg-midnightElevated transition-colors">
+                    <i data-lucide="${isRecent ? 'clock' : 'search'}" class="w-4 h-4 ${isRecent ? 'text-neonPink' : 'text-electricBlue dark:text-neonBlue'} shrink-0"></i>
+                    <span class="truncate flex-1">${escapeHTML(item)}</span>
+                    <i data-lucide="arrow-up-left" class="w-3.5 h-3.5 text-indigoMuted/60 dark:text-slate-500"></i>
+                </button>
+            `).join('');
+            dropdown.classList.remove('hidden');
+            renderIcons();
+        }
+
+        function selectSuggestion(term) {
+            document.getElementById('homeAutocomplete')?.classList.add('hidden');
+            document.getElementById('serpAutocomplete')?.classList.add('hidden');
+            const onHome = !document.getElementById('homeView').classList.contains('hidden');
+            executeSearch(term, onHome ? 'all' : currentTab);
+        }
+
+        function handleHomeSearchSubmit() {
+            const val = document.getElementById('homeSearchInput')?.value.trim();
+            if (!val) {
+                showToast('Enter a search term or try a trending topic');
+                document.getElementById('homeSearchInput')?.focus();
+                return;
+            }
+            executeSearch(val, 'all');
+        }
+
+        function handleSerpSearchSubmit() {
+            const val = document.getElementById('serpSearchInput')?.value.trim();
+            if (!val) {
+                showToast('Type something to search');
+                return;
+            }
+            executeSearch(val, currentTab);
+        }
+
+        async function feelingLucky() {
+            const typed = document.getElementById('homeSearchInput')?.value.trim();
+            if (typed) {
+                executeSearch(typed, 'all');
+                return;
+            }
+            showToast('Finding a random discovery...');
+            try {
+                const res = await fetch('https://en.wikipedia.org/api/rest_v1/page/random/summary');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.title) {
+                        executeSearch(data.title, 'all');
+                        return;
+                    }
+                }
+            } catch (_) {}
+            const fallbacks = ['Northern Lights', 'James Webb Space Telescope', 'Bioluminescence', 'Quantum Entanglement', 'Kyoto'];
+            executeSearch(fallbacks[Math.floor(Math.random() * fallbacks.length)], 'all');
+        }
+
+        // ==========================================
+        // 6. VOICE SEARCH (WEB SPEECH API)
+        // ==========================================
+        function openVoiceModal() {
+            const modal = document.getElementById('voiceModal');
+            const statusEl = document.getElementById('voiceStatusText');
+            const transcriptEl = document.getElementById('voiceTranscript');
+            showOverlay(modal, 'flex');
+            renderIcons();
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                statusEl.textContent = 'Voice Simulation';
+                transcriptEl.textContent = '"Listening for voice query..."';
+                setTimeout(() => {
+                    if (!modal.classList.contains('hidden')) {
+                        closeVoiceModal();
+                        executeSearch('Artificial Intelligence', 'all');
+                    }
+                }, 1800);
+                return;
+            }
+
+            try {
+                speechRecognitionInstance = new SpeechRecognition();
+                speechRecognitionInstance.lang = 'en-US';
+                speechRecognitionInstance.interimResults = true;
+                speechRecognitionInstance.maxAlternatives = 1;
+                statusEl.textContent = 'Listening...';
+                transcriptEl.textContent = '"Speak now..."';
+
+                speechRecognitionInstance.onresult = (event) => {
+                    const transcript = Array.from(event.results)
+                        .map(r => r[0].transcript)
+                        .join('');
+                    transcriptEl.textContent = `"${transcript}"`;
+                    if (event.results[0].isFinal && transcript.trim()) {
+                        closeVoiceModal();
+                        executeSearch(transcript.trim(), 'all');
+                    }
+                };
+
+                speechRecognitionInstance.onerror = () => {
+                    statusEl.textContent = 'Microphone unavailable';
+                    transcriptEl.textContent = 'Check browser mic permissions or type your search.';
+                };
+
+                speechRecognitionInstance.start();
+            } catch (_) {
+                statusEl.textContent = 'Voice Search Ready';
+            }
+        }
+
+        function closeVoiceModal() {
+            hideOverlay(document.getElementById('voiceModal'), 'flex');
+            try {
+                if (speechRecognitionInstance) {
+                    speechRecognitionInstance.stop();
+                    speechRecognitionInstance = null;
+                }
+            } catch (_) {}
+        }
+
+        // ==========================================
+        // 7. SEARCH TOOLS & TABS
+        // ==========================================
+        function toggleSearchTools() {
+            const bar = document.getElementById('searchToolsBar');
+            if (bar) bar.classList.toggle('hidden');
+        }
+
+        function applySearchFilters() {
+            activeTimeFilter = document.getElementById('timeFilter')?.value || 'Any time';
+            activeVerbatimFilter = document.getElementById('verbatimFilter')?.value || 'All results';
+            if (currentQuery) executeSearch(currentQuery, currentTab);
+        }
+
+        function resetSearchFilters() {
+            activeTimeFilter = 'Any time';
+            activeVerbatimFilter = 'All results';
+            if (document.getElementById('timeFilter')) document.getElementById('timeFilter').value = 'Any time';
+            if (document.getElementById('verbatimFilter')) document.getElementById('verbatimFilter').value = 'All results';
+            if (currentQuery) executeSearch(currentQuery, currentTab);
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.serp-tab').forEach(btn => {
+                btn.classList.remove('border-neonPink', 'text-neonPink', 'font-semibold');
+                btn.classList.add('border-transparent', 'text-indigoMuted', 'dark:text-slate-400');
+            });
+            const activeBtn = document.getElementById(`tab-${tab}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('border-transparent', 'text-indigoMuted', 'dark:text-slate-400');
+                activeBtn.classList.add('border-neonPink', 'text-neonPink', 'font-semibold');
+            }
+            if (currentQuery) {
+                executeSearch(currentQuery, tab);
+            }
+        }
+
+        // ==========================================
+        // 8. CORE SEARCH EXECUTION DISPATCHER
+        // ==========================================
+        function isDirectUrlInput(text) {
+            const trimmed = (text || '').trim();
+            if (!trimmed || /\s/.test(trimmed)) return false;
+            if (/^https?:\/\//i.test(trimmed)) return true;
+            return /^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+(\/[^\s]*)?$/.test(trimmed);
+        }
+
+        function normalizeWebUrl(raw) {
+            let url = (raw || '').trim();
+            if (!url) return '';
+            if (!/^https?:\/\//i.test(url)) {
+                url = 'https://' + url;
+            }
+            return url;
+        }
+
+        function clearUrlInput(inputId) {
+            const el = document.getElementById(inputId);
+            if (el) {
+                el.value = '';
+                el.focus();
+            }
+        }
+
+        function navigateToUrl(rawUrl) {
+            const normalized = normalizeWebUrl(rawUrl);
+            if (!normalized) {
+                showToast('Type a valid website URL (e.g., wikipedia.org)');
+                return;
+            }
+            let parsed;
+            try {
+                parsed = new URL(normalized);
+            } catch (_) {
+                showToast('Please enter a valid web address');
+                return;
+            }
+
+            const modal = document.getElementById('webBrowserModal');
+            const modalInput = document.getElementById('modalUrlInput');
+            const frame = document.getElementById('webBrowserFrame');
+            const extLink = document.getElementById('browserExternalLink');
+            const hostLabel = document.getElementById('browserCurrentHost');
+
+            if (modalInput) modalInput.value = parsed.href;
+            if (extLink) extLink.href = parsed.href;
+            if (hostLabel) hostLabel.textContent = parsed.hostname;
+            if (frame) frame.src = parsed.href;
+
+            const homeUrlEl = document.getElementById('homeUrlInput');
+            const serpUrlEl = document.getElementById('serpUrlInput');
+            if (homeUrlEl) homeUrlEl.value = parsed.href;
+            if (serpUrlEl) serpUrlEl.value = parsed.href;
+
+            showOverlay(modal, 'flex');
+            renderIcons();
+        }
+
+        function reloadWebBrowser() {
+            const modalInput = document.getElementById('modalUrlInput');
+            if (modalInput && modalInput.value.trim()) {
+                navigateToUrl(modalInput.value.trim());
+            }
+        }
+
+        function closeWebBrowser() {
+            hideOverlay(document.getElementById('webBrowserModal'), 'flex');
+            const frame = document.getElementById('webBrowserFrame');
+            if (frame) frame.src = 'about:blank';
+        }
+
+        async function executeSearch(query, tab = 'all', skipSpellcheck = false) {
+            const q = (query || '').trim();
+            if (!q) return;
+
+            if (isDirectUrlInput(q)) {
+                navigateToUrl(q);
+                return;
+            }
+
+            currentQuery = q;
+            currentTab = tab || 'all';
+            saveRecentSearch(q);
+
+            hideOverlay(document.getElementById('appsPopover'), '');
+            document.getElementById('homeAutocomplete')?.classList.add('hidden');
+            document.getElementById('serpAutocomplete')?.classList.add('hidden');
+
+            // Switch from Home view to SERP view
+            document.getElementById('homeView').classList.add('hidden');
+            document.getElementById('homeView').classList.remove('flex');
+            const serpView = document.getElementById('serpView');
+            serpView.classList.remove('hidden');
+            serpView.classList.add('flex');
+
+            // Sync SERP input and active tab highlight
+            const serpInput = document.getElementById('serpSearchInput');
+            if (serpInput) serpInput.value = q;
+
+            document.querySelectorAll('.serp-tab').forEach(btn => {
+                btn.classList.remove('border-neonPink', 'text-neonPink', 'font-semibold');
+                btn.classList.add('border-transparent', 'text-indigoMuted', 'dark:text-slate-400');
+            });
+            const activeBtn = document.getElementById(`tab-${currentTab}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('border-transparent', 'text-indigoMuted', 'dark:text-slate-400');
+                activeBtn.classList.add('border-neonPink', 'text-neonPink', 'font-semibold');
+            }
+
+            renderSkeleton(currentTab);
+            const startTime = performance.now();
+
+            try {
+                if (currentTab === 'all') {
+                    await renderAllTab(q, startTime, skipSpellcheck);
+                } else if (currentTab === 'chat') {
+                    await renderChatTab(q, startTime);
+                } else if (currentTab === 'images') {
+                    await renderImagesTab(q, startTime);
+                } else if (currentTab === 'news') {
+                    await renderNewsTab(q, startTime);
+                } else if (currentTab === 'videos') {
+                    await renderVideosTab(q, startTime);
+                } else if (currentTab === 'maps') {
+                    await renderMapsTab(q, startTime);
+                }
+            } catch (err) {
+                const container = document.getElementById('resultsContainer');
+                if (container) {
+                    container.innerHTML = `<div class="p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder max-w-xl mt-3 text-sm text-indigoInk dark:text-slate-200">Unable to fetch results right now. Please check your connection and try again.</div>`;
+                }
+            }
+            renderIcons();
+        }
+
+        function renderSkeleton(tab) {
+            const container = document.getElementById('resultsContainer');
+            if (!container) return;
+            if (tab === 'images') {
+                container.innerHTML = `<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-3">${Array(8).fill('<div class="aspect-square rounded-2xl skeleton-shimmer"></div>').join('')}</div>`;
+                return;
+            }
+            container.innerHTML = `
+                <div class="max-w-2xl space-y-5 mt-3">
+                    ${Array(4).fill(`
+                        <div class="p-4 rounded-2xl border border-pearlBorder/50 dark:border-midnightBorder/50 space-y-2.5">
+                            <div class="h-3 w-36 rounded-full skeleton-shimmer"></div>
+                            <div class="h-5 w-3/4 rounded-full skeleton-shimmer"></div>
+                            <div class="h-3.5 w-full rounded-full skeleton-shimmer"></div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // 9. ALL TAB (SPELLCHECK, WIDGETS, KNOWLEDGE, WEB)
+        // ==========================================
+        function getWeatherMeta(code) {
+            const map = {
+                0: { label: 'Clear Sky', icon: 'sun' },
+                1: { label: 'Mainly Clear', icon: 'sun' },
+                2: { label: 'Partly Cloudy', icon: 'cloud-sun' },
+                3: { label: 'Overcast', icon: 'cloud' },
+                45: { label: 'Foggy', icon: 'cloud-fog' },
+                48: { label: 'Rime Fog', icon: 'cloud-fog' },
+                51: { label: 'Light Drizzle', icon: 'cloud-drizzle' },
+                53: { label: 'Drizzle', icon: 'cloud-drizzle' },
+                55: { label: 'Heavy Drizzle', icon: 'cloud-drizzle' },
+                61: { label: 'Light Rain', icon: 'cloud-rain' },
+                63: { label: 'Rain', icon: 'cloud-rain' },
+                65: { label: 'Heavy Rain', icon: 'cloud-rain' },
+                71: { label: 'Light Snow', icon: 'snowflake' },
+                73: { label: 'Snow', icon: 'snowflake' },
+                75: { label: 'Heavy Snow', icon: 'snowflake' },
+                80: { label: 'Rain Showers', icon: 'cloud-rain' },
+                95: { label: 'Thunderstorm', icon: 'cloud-lightning' }
+            };
+            return map[code] || { label: 'Variable', icon: 'cloud-sun' };
+        }
+
+        async function buildSmartWidgetHTML(q) {
+            const lower = q.toLowerCase();
+
+            // 1. Inline Math Expression Evaluator
+            const mathCandidate = q.replace(/^(calculate|calc|what is|solve)\s+/i, '').trim();
+            if (/^[0-9+\-*/().%\s^]+$/.test(mathCandidate) && /[+\-*/%^]/.test(mathCandidate)) {
+                try {
+                    const sanitized = mathCandidate.replace(/\^/g, '**');
+                    const result = Function(`"use strict"; return (${sanitized})`)();
+                    if (Number.isFinite(result)) {
+                        return `
+                            <div class="mb-6 p-5 rounded-3xl bg-pearlCard dark:bg-midnight border border-electricBlue/40 shadow-light-glow dark:shadow-cosmic-glow fade-in">
+                                <div class="flex items-center justify-between text-xs text-electricBlue dark:text-neonBlue font-semibold mb-1">
+                                    <span>Instant Calculator</span>
+                                    <button type="button" onclick="openToolModal('calculator')" class="hover:underline">Open Full Calculator</button>
+                                </div>
+                                <div class="text-sm text-indigoMuted dark:text-slate-400">${escapeHTML(mathCandidate)} =</div>
+                                <div class="font-display text-3xl font-extrabold text-indigoInk dark:text-white mt-1">${Number(result.toFixed(8))}</div>
+                            </div>
+                        `;
+                    }
+                } catch (_) {}
+            }
+
+            // 2. Live Weather + 7-Day Weekly Forecast (Open-Meteo API)
+            if (/\b(weather|forecast|temperature|temp)\b/i.test(lower)) {
+                const cityMatch = q.replace(/\b(weather|forecast|temperature|temp|in|for|today|weekly|7 day)\b/gi, '').trim() || 'Brampton, Ontario';
+                try {
+                    const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityMatch)}&count=1&language=en&format=json`);
+                    const geoData = await geoRes.json();
+                    const place = geoData?.results?.[0] || { name: 'Brampton', admin1: 'Ontario', country: 'Canada', latitude: 43.7315, longitude: -79.7624 };
+
+                    const wxUrl = `https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=7`;
+                    const wxRes = await fetch(wxUrl);
+                    const wx = await wxRes.json();
+
+                    if (wx?.current && wx?.daily) {
+                        const curMeta = getWeatherMeta(wx.current.weather_code);
+                        const days = wx.daily.time || [];
+                        return `
+                            <div class="mb-6 p-5 sm:p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-neonPink/40 shadow-light-glow dark:shadow-cosmic-glow fade-in">
+                                <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-pearlBorder dark:border-midnightBorder">
+                                    <div>
+                                        <span class="text-xs font-semibold uppercase tracking-wider text-neonPink">Live Weather & 7-Day Forecast</span>
+                                        <h3 class="font-display text-xl font-bold text-indigoInk dark:text-white mt-0.5">${escapeHTML(place.name)}${place.admin1 ? ', ' + escapeHTML(place.admin1) : ''}</h3>
+                                        <p class="text-xs text-indigoMuted dark:text-slate-400 mt-0.5">${curMeta.label} • Humidity ${wx.current.relative_humidity_2m}% • Wind ${Math.round(wx.current.wind_speed_10m)} km/h</p>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-electricBlue via-vividPurple to-neonPink text-white flex items-center justify-center shadow-xs">
+                                            <i data-lucide="${curMeta.icon}" class="w-6 h-6"></i>
+                                        </div>
+                                        <div class="font-display text-4xl font-extrabold text-indigoInk dark:text-white">${Math.round(wx.current.temperature_2m)}°C</div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-7 gap-1.5 sm:gap-2 pt-4 text-center">
+                                    ${days.map((dateStr, idx) => {
+                                        const d = new Date(dateStr + 'T12:00:00');
+                                        const dayName = idx === 0 ? 'Today' : d.toLocaleDateString('en-US', { weekday: 'short' });
+                                        const meta = getWeatherMeta(wx.daily.weather_code[idx]);
+                                        const hi = Math.round(wx.daily.temperature_2m_max[idx]);
+                                        const lo = Math.round(wx.daily.temperature_2m_min[idx]);
+                                        const pop = wx.daily.precipitation_probability_max?.[idx] ?? 0;
+                                        return `
+                                            <div class="p-2 rounded-2xl ${idx === 0 ? 'bg-purple-500/15 border border-purple-500/30' : 'bg-pearlElevated/70 dark:bg-midnightElevated'} flex flex-col items-center">
+                                                <span class="text-[11px] font-semibold text-indigoInk dark:text-slate-200">${dayName}</span>
+                                                <i data-lucide="${meta.icon}" class="w-4 h-4 my-1.5 text-electricBlue dark:text-neonBlue"></i>
+                                                <span class="text-[10px] text-neonPink font-medium">${pop > 0 ? pop + '%' : meta.label.split(' ')[0]}</span>
+                                                <div class="text-xs font-bold text-indigoInk dark:text-white mt-1">${hi}° <span class="font-normal text-indigoMuted dark:text-slate-400">${lo}°</span></div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                } catch (_) {}
+            }
+
+            // 3. Inline Dictionary Card ("define <word>")
+            const defMatch = q.match(/^(?:define|definition of|meaning of)\s+([a-zA-Z-]+)$/i);
+            if (defMatch) {
+                try {
+                    const word = defMatch[1];
+                    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        const entry = data[0];
+                        const meaning = entry.meanings?.[0];
+                        const def = meaning?.definitions?.[0]?.definition;
+                        if (def) {
+                            return `
+                                <div class="mb-6 p-5 rounded-3xl bg-pearlCard dark:bg-midnight border border-vividPurple/40 shadow-light-glow dark:shadow-cosmic-glow fade-in">
+                                    <div class="text-xs font-semibold text-deepPurple dark:text-vividPurple uppercase tracking-wider mb-1">Dictionary</div>
+                                    <div class="font-display text-2xl font-bold text-indigoInk dark:text-white">${escapeHTML(entry.word)} <span class="text-sm font-normal text-neonPink">${escapeHTML(entry.phonetic || '')}</span></div>
+                                    <div class="text-xs italic text-indigoMuted dark:text-slate-400 mt-0.5">${escapeHTML(meaning.partOfSpeech || '')}</div>
+                                    <p class="text-sm text-indigoInk dark:text-slate-200 mt-2 leading-relaxed">${escapeHTML(def)}</p>
+                                </div>
+                            `;
+                        }
+                    }
+                } catch (_) {}
+            }
+
+            return '';
+        }
+
+        async function renderAllTab(q, startTime, skipSpellcheck = false) {
+            const container = document.getElementById('resultsContainer');
+            if (!container) return;
+
+            let effectiveQuery = q;
+            let spellBannerHTML = '';
+
+            // Check Wikipedia search suggestion for spelling correction
+            const initialWikiRes = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&srinfo=suggestion|totalhits&srlimit=8&format=json&origin=*`)
+                .then(r => r.json())
+                .catch(() => null);
+
+            const suggestion = initialWikiRes?.query?.searchinfo?.suggestion;
+            const totalHits = initialWikiRes?.query?.searchinfo?.totalhits ?? 0;
+
+            let wikiData = initialWikiRes;
+            if (!skipSpellcheck && suggestion && suggestion.toLowerCase() !== q.toLowerCase()) {
+                if (totalHits < 5) {
+                    effectiveQuery = suggestion;
+                    wikiData = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(effectiveQuery)}&srlimit=8&format=json&origin=*`)
+                        .then(r => r.json())
+                        .catch(() => initialWikiRes);
+                    spellBannerHTML = `
+                        <div class="mb-4 p-3.5 rounded-2xl bg-purple-500/10 border border-purple-500/25 text-sm fade-in">
+                            <p class="text-indigoInk dark:text-slate-200">
+                                Showing results for <button type="button" onclick="executeSearch('${escapeHTML(effectiveQuery).replace(/'/g, "\\'")}', 'all', true)" class="font-bold italic text-neonPink hover:underline">${escapeHTML(effectiveQuery)}</button>
+                            </p>
+                            <p class="text-xs text-indigoMuted dark:text-slate-400 mt-0.5">
+                                Search instead for <button type="button" onclick="executeSearch('${escapeHTML(q).replace(/'/g, "\\'")}', 'all', true)" class="text-electricBlue dark:text-neonBlue hover:underline">${escapeHTML(q)}</button>
+                            </p>
+                        </div>
+                    `;
+                } else {
+                    spellBannerHTML = `
+                        <div class="mb-4 text-sm fade-in">
+                            <span class="text-neonPink font-semibold">Did you mean:</span>
+                            <button type="button" onclick="executeSearch('${escapeHTML(suggestion).replace(/'/g, "\\'")}', 'all', true)" class="font-bold italic text-electricBlue dark:text-neonBlue hover:underline ml-1">${escapeHTML(suggestion)}</button>
+                        </div>
+                    `;
+                }
+            }
+
+            const wikiHits = wikiData?.query?.search || [];
+            const topTitle = wikiHits[0]?.title || effectiveQuery;
+
+            const [widgetHTML, summaryData, ddgData, hnData] = await Promise.all([
+                buildSmartWidgetHTML(effectiveQuery),
+                fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topTitle.replace(/ /g, '_'))}`).then(r => r.ok ? r.json() : null).catch(() => null),
+                fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(effectiveQuery)}&format=json&no_html=1&skip_disambig=1`).then(r => r.ok ? r.json() : null).catch(() => null),
+                fetch(`https://hn.algolia.com/api/v1/search?query=${encodeURIComponent(effectiveQuery)}&tags=story&hitsPerPage=3`).then(r => r.ok ? r.json() : null).catch(() => null)
+            ]);
+
+            const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+            const approxCount = (wikiData?.query?.searchinfo?.totalhits || wikiHits.length * 14200).toLocaleString();
+            document.getElementById('resultsStats').textContent = `About ${approxCount} results (${elapsed} seconds)`;
+
+            // Build Knowledge Panel (Right Column)
+            let knowledgeHTML = '';
+            if (summaryData && summaryData.extract && summaryData.type !== 'disambiguation') {
+                const wikiLink = summaryData.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${encodeURIComponent(summaryData.title.replace(/ /g, '_'))}`;
+                knowledgeHTML = `
+                    <aside class="w-full lg:w-[340px] shrink-0 fade-in">
+                        <div class="p-5 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-purple-500/30 shadow-light-glow dark:shadow-cosmic-glow">
+                            ${summaryData.thumbnail?.source ? `
+                                <div class="mb-4 rounded-2xl overflow-hidden bg-pearlElevated dark:bg-midnightElevated max-h-52 flex items-center justify-center">
+                                    <img src="${summaryData.thumbnail.source}" alt="${escapeHTML(summaryData.title)}" class="w-full h-48 object-cover">
+                                </div>
+                            ` : ''}
+                            <div class="flex items-start justify-between gap-2">
+                                <div>
+                                    <h2 class="font-display text-xl font-bold text-indigoInk dark:text-white">${escapeHTML(summaryData.title)}</h2>
+                                    ${summaryData.description ? `<p class="text-xs font-medium text-neonPink mt-0.5">${escapeHTML(summaryData.description)}</p>` : ''}
+                                </div>
+                            </div>
+                            <p class="text-sm text-indigoMuted dark:text-slate-300 mt-3 leading-relaxed">${escapeHTML(summaryData.extract)}</p>
+                            <div class="mt-4 pt-3 border-t border-pearlBorder dark:border-midnightBorder flex items-center justify-between gap-2">
+                                <a href="${wikiLink}" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-electricBlue dark:text-neonBlue hover:underline">Wikipedia &rarr;</a>
+                                <button type="button" onclick="openChatDrawer('Tell me more about ${escapeHTML(summaryData.title).replace(/'/g, "\\'")}')" class="px-3 py-1.5 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold hover:opacity-90">
+                                    Ask Nexus Chat
+                                </button>
+                            </div>
+                        </div>
+                    </aside>
+                `;
+            }
+
+            // Optional DuckDuckGo Instant Answer Card
+            let ddgHTML = '';
+            if (ddgData?.AbstractText && ddgData?.AbstractURL) {
+                ddgHTML = `
+                    <div class="p-5 rounded-3xl bg-pearlCard dark:bg-midnight border border-sky-500/30 shadow-xs fade-in">
+                        <div class="text-xs font-semibold text-electricBlue dark:text-neonBlue mb-1">${escapeHTML(ddgData.AbstractSource || 'Instant Reference')}</div>
+                        <a href="${ddgData.AbstractURL}" target="_blank" rel="noopener noreferrer" class="font-display text-lg font-bold text-indigoInk dark:text-white hover:text-neonPink transition-colors">${escapeHTML(ddgData.Heading || effectiveQuery)}</a>
+                        <p class="text-sm text-indigoMuted dark:text-slate-300 mt-1.5 leading-relaxed">${escapeHTML(ddgData.AbstractText)}</p>
+                    </div>
+                `;
+            }
+
+            // Optional Tech / Community Stories from Hacker News
+            const hnHits = (hnData?.hits || []).filter(h => h.title && h.url);
+            let hnHTML = '';
+            if (hnHits.length > 0) {
+                hnHTML = hnHits.map(hit => `
+                    <article class="group fade-in">
+                        <div class="text-xs text-indigoMuted dark:text-slate-400 mb-1">${escapeHTML(new URL(hit.url).hostname.replace(/^www\./, ''))} • Community Discussion</div>
+                        <a href="${hit.url}" target="_blank" rel="noopener noreferrer" class="inline-block font-display text-lg sm:text-xl font-semibold text-electricBlue dark:text-neonBlue group-hover:text-neonPink transition-colors leading-snug">
+                            ${escapeHTML(hit.title)}
+                        </a>
+                        <p class="text-sm text-indigoMuted dark:text-slate-300 mt-1 leading-relaxed">${hit.points || 0} points • ${hit.num_comments || 0} comments on Hacker News</p>
+                    </article>
+                `).join('');
+            }
+
+            container.innerHTML = `
+                <div class="flex flex-col lg:flex-row items-start gap-8 mt-2">
+                    <div class="flex-1 max-w-2xl w-full space-y-6">
+                        ${spellBannerHTML}
+                        ${widgetHTML}
+                        ${ddgHTML}
+                        ${wikiHits.length > 0 ? wikiHits.map(hit => {
+                            const pageUrl = `https://en.wikipedia.org/wiki/${encodeURIComponent(hit.title.replace(/ /g, '_'))}`;
+                            return `
+                                <article class="group fade-in">
+                                    <div class="text-xs text-indigoMuted dark:text-slate-400 mb-1">en.wikipedia.org &rsaquo; wiki &rsaquo; ${escapeHTML(hit.title.replace(/ /g, '_'))}</div>
+                                    <a href="${pageUrl}" target="_blank" rel="noopener noreferrer" class="inline-block font-display text-lg sm:text-xl font-semibold text-electricBlue dark:text-neonBlue group-hover:text-neonPink transition-colors leading-snug">
+                                        ${escapeHTML(hit.title)} - Wikipedia
+                                    </a>
+                                    <p class="text-sm text-indigoMuted dark:text-slate-300 mt-1 leading-relaxed">${escapeHTML(stripHTML(hit.snippet))}...</p>
+                                </article>
+                            `;
+                        }).join('') : (!ddgHTML && !widgetHTML ? `
+                            <div class="p-8 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder text-center">
+                                <p class="text-base font-semibold text-indigoInk dark:text-white">No exact matches found for "${escapeHTML(effectiveQuery)}"</p>
+                                <p class="text-xs text-indigoMuted dark:text-slate-400 mt-1">Try different keywords or ask Nexus Chat directly.</p>
+                            </div>
+                        ` : '')}
+                        ${hnHTML}
+                    </div>
+                    ${knowledgeHTML}
+                </div>
+            `;
+            renderIcons();
+        }
+
+        // ==========================================
+        // 11. IMAGES TAB (WIKIMEDIA COMMONS API)
+        // ==========================================
+        async function renderImagesTab(q, startTime) {
+            const container = document.getElementById('resultsContainer');
+            try {
+                const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=filetype:bitmap+${encodeURIComponent(q)}&gsrnamespace=6&gsrlimit=20&prop=imageinfo&iiprop=url|size|extmetadata&iiurlwidth=500&format=json&origin=*`;
+                const res = await fetch(url);
+                const data = await res.json();
+                const pages = Object.values(data?.query?.pages || {});
+                const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+                document.getElementById('resultsStats').textContent = `${pages.length} visual results for "${q}" (${elapsed} seconds)`;
+
+                if (pages.length === 0) {
+                    container.innerHTML = `<div class="p-8 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder text-center max-w-xl mt-3"><p class="font-semibold">No images found for "${escapeHTML(q)}"</p></div>`;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-3">
+                        ${pages.map(p => {
+                            const info = p.imageinfo?.[0];
+                            if (!info || !info.thumburl) return '';
+                            const cleanTitle = p.title.replace(/^File:/i, '').replace(/\.[^/.]+$/, '');
+                            const fullUrl = info.url || info.thumburl;
+                            const descUrl = info.descriptionurl || fullUrl;
+                            const dims = `${info.width || '?'} × ${info.height || '?'}`;
+                            return `
+                                <button type="button" onclick="openLightbox('${escapeHTML(fullUrl).replace(/'/g, "\\'")}', '${escapeHTML(cleanTitle).replace(/'/g, "\\'")}', '${escapeHTML(descUrl).replace(/'/g, "\\'")}', '${dims}')" class="group text-left rounded-2xl overflow-hidden bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder hover:border-neonPink/60 shadow-xs hover:shadow-light-glow dark:hover:shadow-cosmic-glow transition-all flex flex-col fade-in">
+                                    <div class="aspect-square w-full overflow-hidden bg-pearlElevated dark:bg-midnightElevated">
+                                        <img src="${info.thumburl}" alt="${escapeHTML(cleanTitle)}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                    </div>
+                                    <div class="p-2.5">
+                                        <p class="text-xs font-medium text-indigoInk dark:text-slate-200 truncate">${escapeHTML(cleanTitle)}</p>
+                                        <p class="text-[10px] text-indigoMuted dark:text-slate-400 mt-0.5">Wikimedia Commons</p>
+                                    </div>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            } catch (_) {
+                container.innerHTML = `<div class="p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder max-w-xl mt-3 text-sm">Unable to load image results right now.</div>`;
+            }
+        }
+
+        function openLightbox(imgUrl, title, sourceUrl, dims) {
+            document.getElementById('lightboxImg').src = imgUrl;
+            document.getElementById('lightboxTitle').textContent = title;
+            document.getElementById('lightboxSourceLink').href = sourceUrl;
+            document.getElementById('lightboxDims').textContent = dims;
+            showOverlay(document.getElementById('lightboxModal'), 'flex');
+            renderIcons();
+        }
+
+        function closeLightbox() {
+            hideOverlay(document.getElementById('lightboxModal'), 'flex');
+            document.getElementById('lightboxImg').src = '';
+        }
+
+        // ==========================================
+        // 12. NEWS TAB (HACKER NEWS & WIKINEWS APIS)
+        // ==========================================
+        async function renderNewsTab(q, startTime) {
+            const container = document.getElementById('resultsContainer');
+            const [hnRes, wnRes] = await Promise.all([
+                fetch(`https://hn.algolia.com/api/v1/search_by_date?query=${encodeURIComponent(q)}&tags=story&hitsPerPage=10`).then(r => r.json()).catch(() => null),
+                fetch(`https://en.wikinews.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&srlimit=6&format=json&origin=*`).then(r => r.json()).catch(() => null)
+            ]);
+
+            const articles = [];
+            (wnRes?.query?.search || []).forEach(item => {
+                articles.push({
+                    title: item.title,
+                    url: `https://en.wikinews.org/wiki/${encodeURIComponent(item.title.replace(/ /g, '_'))}`,
+                    source: 'Wikinews',
+                    date: new Date(item.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                    snippet: stripHTML(item.snippet) + '...'
+                });
+            });
+
+            (hnRes?.hits || []).forEach(hit => {
+                if (hit.title && hit.url) {
+                    articles.push({
+                        title: hit.title,
+                        url: hit.url,
+                        source: new URL(hit.url).hostname.replace(/^www\./, ''),
+                        date: new Date(hit.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                        snippet: `${hit.points || 0} upvotes • ${hit.num_comments || 0} community comments`
+                    });
+                }
+            });
+
+            const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+            document.getElementById('resultsStats').textContent = `${articles.length} recent news stories (${elapsed} seconds)`;
+
+            container.innerHTML = `
+                <div class="max-w-3xl space-y-4 mt-3">
+                    ${articles.length > 0 ? articles.map(art => `
+                        <a href="${art.url}" target="_blank" rel="noopener noreferrer" class="block p-5 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder hover:border-vividPurple/60 shadow-xs hover:shadow-light-glow dark:hover:shadow-cosmic-glow transition-all group fade-in">
+                            <div class="flex items-center gap-2 text-xs text-neonPink font-semibold mb-1.5">
+                                <span>${escapeHTML(art.source)}</span>
+                                <span>•</span>
+                                <span class="text-indigoMuted dark:text-slate-400 font-normal">${escapeHTML(art.date)}</span>
+                            </div>
+                            <h3 class="font-display text-lg font-bold text-indigoInk dark:text-white group-hover:text-electricBlue dark:group-hover:text-neonBlue transition-colors">${escapeHTML(art.title)}</h3>
+                            <p class="text-sm text-indigoMuted dark:text-slate-300 mt-1.5 leading-relaxed">${escapeHTML(art.snippet)}</p>
+                        </a>
+                    `).join('') : `
+                        <div class="p-8 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder text-center">
+                            <p class="font-semibold">No recent news stories found for "${escapeHTML(q)}"</p>
+                        </div>
+                    `}
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // 13. VIDEOS TAB (INTERNET ARCHIVE API)
+        // ==========================================
+        async function renderVideosTab(q, startTime) {
+            const container = document.getElementById('resultsContainer');
+            try {
+                const url = `https://archive.org/advancedsearch.php?q=${encodeURIComponent(q)}+AND+mediatype:(movies)&fl[]=identifier,title,description,creator,year&rows=12&output=json`;
+                const res = await fetch(url);
+                const data = await res.json();
+                const docs = data?.response?.docs || [];
+                const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+                document.getElementById('resultsStats').textContent = `${docs.length} playable videos for "${q}" (${elapsed} seconds)`;
+
+                container.innerHTML = `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mt-3">
+                        ${docs.length > 0 ? docs.map(doc => {
+                            const id = doc.identifier;
+                            const title = Array.isArray(doc.title) ? doc.title[0] : (doc.title || id);
+                            const desc = Array.isArray(doc.description) ? doc.description[0] : (doc.description || 'Public domain & open archive video stream');
+                            const thumb = `https://archive.org/services/img/${encodeURIComponent(id)}`;
+                            return `
+                                <button type="button" onclick="openVideoModal('${escapeHTML(id).replace(/'/g, "\\'")}', '${escapeHTML(title).replace(/'/g, "\\'")}')" class="group text-left rounded-3xl overflow-hidden bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder hover:border-neonPink/60 shadow-xs hover:shadow-light-glow dark:hover:shadow-cosmic-glow transition-all flex flex-col fade-in">
+                                    <div class="relative aspect-video w-full bg-black overflow-hidden">
+                                        <img src="${thumb}" alt="${escapeHTML(title)}" onerror="this.src='https://placehold.co/640x360/12121e/ec4899?text=Nexus+Video'" class="w-full h-full object-cover opacity-85 group-hover:scale-105 transition-transform duration-300">
+                                        <div class="absolute inset-0 flex items-center justify-center bg-black/25 group-hover:bg-black/10 transition-colors">
+                                            <span class="w-12 h-12 rounded-full bg-gradient-to-tr from-electricBlue via-deepPurple to-neonPink text-white flex items-center justify-center shadow-cosmic-glow group-hover:scale-110 transition-transform">
+                                                <i data-lucide="play" class="w-5 h-5 fill-current ml-0.5"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 flex-1 flex flex-col">
+                                        <h3 class="font-display text-sm font-bold text-indigoInk dark:text-white line-clamp-2 group-hover:text-neonPink transition-colors">${escapeHTML(title)}</h3>
+                                        <p class="text-xs text-indigoMuted dark:text-slate-400 line-clamp-2 mt-1.5">${escapeHTML(stripHTML(desc))}</p>
+                                        <span class="text-[11px] text-electricBlue dark:text-neonBlue font-medium mt-auto pt-3">Internet Archive • Click to play</span>
+                                    </div>
+                                </button>
+                            `;
+                        }).join('') : `
+                            <div class="col-span-full p-8 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder text-center">
+                                <p class="font-semibold">No videos found for "${escapeHTML(q)}"</p>
+                            </div>
+                        `}
+                    </div>
+                `;
+            } catch (_) {
+                container.innerHTML = `<div class="p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder max-w-xl mt-3 text-sm">Unable to load video results right now.</div>`;
+            }
+        }
+
+        function openVideoModal(identifier, title) {
+            document.getElementById('videoModalTitle').textContent = title;
+            document.getElementById('videoModalSourceLink').href = `https://archive.org/details/${encodeURIComponent(identifier)}`;
+            document.getElementById('videoModalPlayerContainer').innerHTML = `
+                <iframe src="https://archive.org/embed/${encodeURIComponent(identifier)}?autoplay=1" class="w-full h-full border-0" allowfullscreen></iframe>
+            `;
+            showOverlay(document.getElementById('videoModal'), 'flex');
+            renderIcons();
+        }
+
+        function closeVideoModal() {
+            hideOverlay(document.getElementById('videoModal'), 'flex');
+            document.getElementById('videoModalPlayerContainer').innerHTML = '';
+        }
+
+        // ==========================================
+        // 15. TOOLS MODALS (CALCULATOR, TRANSLATOR, DICT)
+        // ==========================================
+        function openToolModal(toolType) {
+            hideOverlay(document.getElementById('appsPopover'), '');
+            const modal = document.getElementById('toolModal');
+            const titleEl = document.getElementById('toolModalTitle');
+            const iconEl = document.getElementById('toolModalIcon');
+            const bodyEl = document.getElementById('toolModalBody');
+
+            if (toolType === 'calculator') {
+                calcExpression = '0';
+                titleEl.textContent = 'Scientific Calculator';
+                iconEl.innerHTML = '<i data-lucide="calculator" class="w-4 h-4"></i>';
+                const keys = ['C', '(', ')', '/', '7', '8', '9', '*', '4', '5', '6', '-', '1', '2', '3', '+', '0', '.', '%', '='];
+                bodyEl.innerHTML = `
+                    <div class="p-4 rounded-2xl bg-pearlElevated dark:bg-obsidian border border-pearlBorder dark:border-midnightBorder text-right mb-4">
+                        <div id="calcDisplay" class="font-display text-2xl font-bold text-indigoInk dark:text-white overflow-x-auto">0</div>
+                    </div>
+                    <div class="grid grid-cols-4 gap-2">
+                        ${keys.map(k => `
+                            <button type="button" onclick="pressCalcKey('${k}')" class="py-3 rounded-2xl font-display font-bold text-sm transition-all active:scale-95 ${k === '=' ? 'bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white shadow-xs' : 'bg-pearlElevated dark:bg-midnightElevated text-indigoInk dark:text-slate-200 hover:border-neonPink/50 border border-transparent'}">
+                                ${k}
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (toolType === 'translator') {
+                titleEl.textContent = 'Live URL Translator';
+                iconEl.innerHTML = '<i data-lucide="languages" class="w-4 h-4"></i>';
+                bodyEl.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2">
+                            <select id="transFrom" class="flex-1 bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder rounded-xl px-3 py-2 text-xs font-semibold">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="ja">Japanese</option>
+                            </select>
+                            <i data-lucide="arrow-right" class="w-4 h-4 text-neonPink"></i>
+                            <select id="transTo" class="flex-1 bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder rounded-xl px-3 py-2 text-xs font-semibold">
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="ja">Japanese</option>
+                                <option value="en">English</option>
+                            </select>
+                        </div>
+                        <textarea id="transInput" rows="3" placeholder="Enter text to translate..." class="w-full rounded-2xl bg-pearlElevated dark:bg-obsidian border border-pearlBorder dark:border-midnightBorder p-3 text-sm focus:outline-none focus:border-neonPink"></textarea>
+                        <button type="button" onclick="runLiveTranslation()" class="w-full py-2.5 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold hover:opacity-95">
+                            Translate Now
+                        </button>
+                        <div id="transOutput" class="p-3.5 rounded-2xl bg-pearlElevated/70 dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-sm min-h-[64px] text-indigoInk dark:text-slate-200">
+                            Translation will appear here...
+                        </div>
+                    </div>
+                `;
+            } else if (toolType === 'dictionary') {
+                titleEl.textContent = 'Live Dictionary';
+                iconEl.innerHTML = '<i data-lucide="book-open" class="w-4 h-4"></i>';
+                bodyEl.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="flex gap-2">
+                            <input id="dictWordInput" type="text" placeholder="Enter an English word (e.g. aurora)..." class="flex-1 rounded-full bg-pearlElevated dark:bg-obsidian border border-pearlBorder dark:border-midnightBorder px-4 py-2 text-sm focus:outline-none focus:border-neonPink" onkeydown="if(event.key==='Enter') runLiveDictionary()">
+                            <button type="button" onclick="runLiveDictionary()" class="px-4 py-2 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold">
+                                Define
+                            </button>
+                        </div>
+                        <div id="dictOutput" class="p-4 rounded-2xl bg-pearlElevated/70 dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-sm min-h-[96px] text-indigoInk dark:text-slate-200">
+                            Look up definitions, phonetics, and parts of speech.
+                        </div>
+                    </div>
+                `;
+            }
+
+            showOverlay(modal, 'flex');
+            renderIcons();
+        }
+
+        function closeToolModal() {
+            hideOverlay(document.getElementById('toolModal'), 'flex');
+        }
+
+        function pressCalcKey(key) {
+            const disp = document.getElementById('calcDisplay');
+            if (!disp) return;
+            if (key === 'C') {
+                calcExpression = '0';
+            } else if (key === '=') {
+                try {
+                    if (/^[0-9+\-*/().%\s]+$/.test(calcExpression)) {
+                        const val = Function(`"use strict"; return (${calcExpression})`)();
+                        calcExpression = Number.isFinite(val) ? String(Number(val.toFixed(8))) : 'Error';
+                    }
+                } catch (_) {
+                    calcExpression = 'Error';
+                }
+            } else {
+                calcExpression = (calcExpression === '0' || calcExpression === 'Error') ? key : calcExpression + key;
+            }
+            disp.textContent = calcExpression;
+        }
+
+        async function runLiveTranslation() {
+            const text = document.getElementById('transInput')?.value.trim();
+            const from = document.getElementById('transFrom')?.value || 'en';
+            const to = document.getElementById('transTo')?.value || 'es';
+            const out = document.getElementById('transOutput');
+            if (!text || !out) return;
+            out.textContent = 'Translating...';
+            try {
+                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`);
+                const data = await res.json();
+                out.textContent = data?.responseData?.translatedText || 'No translation available.';
+            } catch (_) {
+                out.textContent = 'Translation service temporarily unavailable.';
+            }
+        }
+
+        async function runLiveDictionary() {
+            const word = document.getElementById('dictWordInput')?.value.trim();
+            const out = document.getElementById('dictOutput');
+            if (!word || !out) return;
+            out.textContent = 'Looking up definition...';
+            try {
+                const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
+                if (!res.ok) throw new Error('Not found');
+                const data = await res.json();
+                const entry = data[0];
+                const meaning = entry.meanings?.[0];
+                const def = meaning?.definitions?.[0]?.definition || 'No definition found.';
+                out.innerHTML = `
+                    <div class="font-display font-bold text-base text-indigoInk dark:text-white">${escapeHTML(entry.word)} <span class="text-xs font-normal text-neonPink">${escapeHTML(entry.phonetic || '')}</span></div>
+                    <div class="text-xs uppercase font-semibold text-deepPurple dark:text-vividPurple mt-1">${escapeHTML(meaning?.partOfSpeech || '')}</div>
+                    <p class="mt-1.5 leading-relaxed">${escapeHTML(def)}</p>
+                `;
+            } catch (_) {
+                out.textContent = `No dictionary entry found for "${word}".`;
+            }
+        }
+
+        // ==========================================
+        // 16. NEXUS CHAT (CONVERSATIONAL AI, NO SEARCH)
+        // ==========================================
+        function initChatGreeting() {
+            if (chatMessages.length === 0) {
+                chatMessages = [
+                    {
+                        role: 'assistant',
+                        text: "Hi! Welcome to Nexus Chat, your conversational AI assistant. Ask me to brainstorm ideas, explain complex concepts, write stories or poems, or chat about anything on your mind!"
+                    }
+                ];
+            }
+            renderChatDrawerMessages();
+        }
+
+        function openChatDrawer(initialPrompt = '') {
+            hideOverlay(document.getElementById('appsPopover'), '');
+            const backdrop = document.getElementById('chatDrawerBackdrop');
+            showOverlay(backdrop, 'flex');
+            initChatGreeting();
+            renderIcons();
+
+            const input = document.getElementById('chatDrawerInput');
+            if (initialPrompt && typeof initialPrompt === 'string' && initialPrompt.trim()) {
+                sendChatPrompt(initialPrompt.trim());
+            } else if (input) {
+                setTimeout(() => input.focus(), 60);
+            }
+        }
+
+        function closeChatDrawer() {
+            hideOverlay(document.getElementById('chatDrawerBackdrop'), 'flex');
+        }
+
+        function clearNexusChat() {
+            chatMessages = [];
+            chatLastTopic = '';
+            initChatGreeting();
+            if (currentTab === 'chat' && currentQuery) {
+                renderChatTab(currentQuery, performance.now());
+            }
+            showToast('Conversation cleared');
+        }
+
+        function submitChatDrawerInput() {
+            const input = document.getElementById('chatDrawerInput');
+            if (!input) return;
+            const text = input.value.trim();
+            if (!text || chatIsTyping) return;
+            input.value = '';
+            sendChatPrompt(text);
+        }
+
+        function formatChatMarkdown(text) {
+            let safe = escapeHTML(text || '');
+            safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold text-indigoInk dark:text-white">$1</strong>');
+            safe = safe.replace(/\n/g, '<br>');
+            return safe;
+        }
+
+        function renderChatDrawerMessages() {
+            const feed = document.getElementById('chatDrawerMessages');
+            if (!feed) return;
+
+            const bubblesHTML = chatMessages.map(msg => {
+                if (msg.role === 'user') {
+                    return `
+                        <div class="flex justify-end fade-in">
+                            <div class="max-w-[82%] px-4 py-2.5 rounded-2xl rounded-br-sm bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-sm leading-relaxed shadow-xs">
+                                ${escapeHTML(msg.text)}
+                            </div>
+                        </div>
+                    `;
+                }
+                return `
+                    <div class="flex flex-col items-start fade-in">
+                        <span class="text-[11px] font-semibold text-neonPink mb-1 px-1">Nexus Chat</span>
+                        <div class="max-w-[88%] px-4 py-3 rounded-2xl rounded-tl-sm bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-purple-500/25 text-sm text-indigoInk dark:text-slate-200 leading-relaxed">
+                            ${formatChatMarkdown(msg.text)}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const typingHTML = chatIsTyping ? `
+                <div class="flex flex-col items-start fade-in">
+                    <span class="text-[11px] font-semibold text-neonPink mb-1 px-1">Nexus Chat</span>
+                    <div class="px-4 py-3 rounded-2xl rounded-tl-sm bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-purple-500/25 flex items-center gap-1.5">
+                        <span class="chat-dot w-2 h-2 rounded-full bg-electricBlue dark:bg-neonBlue"></span>
+                        <span class="chat-dot w-2 h-2 rounded-full bg-deepPurple dark:bg-vividPurple"></span>
+                        <span class="chat-dot w-2 h-2 rounded-full bg-neonPink"></span>
+                    </div>
+                </div>
+            ` : '';
+
+            feed.innerHTML = bubblesHTML + typingHTML;
+            feed.scrollTop = feed.scrollHeight;
+        }
+
+        async function sendChatPrompt(promptText) {
+            const prompt = (promptText || '').trim();
+            if (!prompt || chatIsTyping) return;
+
+            chatMessages.push({ role: 'user', text: prompt });
+            chatIsTyping = true;
+            renderChatDrawerMessages();
+
+            const reply = await fetchNexusChatReply(prompt);
+            chatIsTyping = false;
+            chatMessages.push({ role: 'assistant', text: reply });
+            renderChatDrawerMessages();
+        }
+
+        async function renderChatTab(q, startTime) {
+            const container = document.getElementById('resultsContainer');
+            if (!container) return;
+
+            const reply = await fetchNexusChatReply(q);
+            const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+            document.getElementById('resultsStats').textContent = `Nexus Chat response (${elapsed} seconds)`;
+
+            container.innerHTML = `
+                <div class="max-w-3xl mt-3 fade-in">
+                    <div class="p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-neonPink/35 shadow-light-glow dark:shadow-cosmic-glow">
+                        <div class="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-pearlBorder dark:border-midnightBorder">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h2 class="font-display text-lg font-bold text-indigoInk dark:text-white">Nexus Chat Response</h2>
+                                    <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-pink-500/15 text-neonPink border border-pink-500/30">Conversational AI</span>
+                                </div>
+                                <p class="text-xs text-indigoMuted dark:text-slate-400 mt-0.5">Prompt: "${escapeHTML(q)}"</p>
+                            </div>
+                            <button type="button" onclick="openChatDrawer('${escapeHTML(q).replace(/'/g, "\\'")}')" class="px-4 py-2 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold hover:opacity-90 shrink-0">
+                                Continue in Chat
+                            </button>
+                        </div>
+                        <div class="text-sm sm:text-base text-indigoInk dark:text-slate-200 leading-relaxed space-y-2">
+                            ${formatChatMarkdown(reply)}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function fetchNexusChatReply(prompt) {
+            try {
+                const systemInstruction = 'You are Nexus Chat, a warm, clever, concise conversational AI assistant inside Nexus. Reply directly and naturally without acting like a search engine or outputting raw URLs.';
+                const url = `https://text.pollinations.ai/${encodeURIComponent(prompt)}?system=${encodeURIComponent(systemInstruction)}&model=openai`;
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 7500);
+                const res = await fetch(url, { signal: controller.signal });
+                clearTimeout(timeoutId);
+                if (res.ok) {
+                    const text = (await res.text()).trim();
+                    if (text && text.length > 1 && !text.startsWith('<!DOCTYPE')) {
+                        chatLastTopic = prompt;
+                        return text;
+                    }
+                }
+            } catch (_) {}
+
+            return generateLocalChatReply(prompt);
+        }
+
+        function generateLocalChatReply(prompt) {
+            const lower = prompt.toLowerCase();
+            chatLastTopic = prompt;
+
+            if (/^(hi|hello|hey|yo|sup|greetings)\b/.test(lower)) {
+                return "Hey there! Welcome to Nexus Chat. What would you like to chat about, brainstorm, or create today?";
+            }
+            if (lower.includes('poem') || lower.includes('haiku')) {
+                return "Beneath a sky of violet glow,\nWhere electric rivers softly flow,\nNeon stars begin to gleam,\nLighting up a midnight dream.";
+            }
+            if (lower.includes('joke')) {
+                return "Why do programmers prefer dark mode? Because light attracts bugs!";
+            }
+            if (lower.includes('app idea') || lower.includes('ideas')) {
+                return "Here are 3 fun app concepts:\n**1. Soundscape Focus:** Generative ambient music that adapts to your typing rhythm.\n**2. Pocket Micro-Journal:** One-sentence daily reflections visualized as a growing constellation.\n**3. Local Skill Swap:** Connect neighbors to trade quick 30-minute lessons like guitar, coding, or cooking.";
+            }
+            if (lower.includes('black hole')) {
+                return "Imagine squeezing the mass of ten Suns into a space smaller than a single city! Gravity becomes so intense that not even a beam of light moving at 300,000 km per second can climb back out—that boundary is called the **event horizon**.";
+            }
+            if (lower.includes('study') || lower.includes('schedule')) {
+                return "Try the **45/15 Rhythm**: spend 45 minutes focused on one active task (like practice problems or summarizing notes in your own words), then take a real 15-minute screen-free break before starting the next block.";
+            }
+            return `That's a great thought about **"${prompt}"**! I'm ready to explore it with you—would you like me to brainstorm ideas around it, break down the key concepts, or write something creative based on it?`;
+        }
+
+        // ==========================================
+        // 17. BOOTSTRAP & GLOBAL LISTENERS
+        // ==========================================
+        function initNexusApp() {
+            applySavedTheme();
+            setupAutocomplete('homeSearchInput', 'homeAutocomplete', 'homeClearBtn');
+            setupAutocomplete('serpSearchInput', 'serpAutocomplete', 'serpClearBtn');
+            initChatGreeting();
+            renderIcons();
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeVoiceModal();
+                    closeChatDrawer();
+                    closeToolModal();
+                    closeLightbox();
+                    closeVideoModal();
+                    closeWebBrowser();
+                    hideOverlay(document.getElementById('appsPopover'), '');
+                    document.getElementById('homeAutocomplete')?.classList.add('hidden');
+                    document.getElementById('serpAutocomplete')?.classList.add('hidden');
+                } else if (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
+                    e.preventDefault();
+                    const onHome = !document.getElementById('homeView').classList.contains('hidden');
+                    document.getElementById(onHome ? 'homeSearchInput' : 'serpSearchInput')?.focus();
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                const appsPopover = document.getElementById('appsPopover');
+                if (appsPopover && !appsPopover.classList.contains('hidden') && !appsPopover.contains(e.target)) {
+                    hideOverlay(appsPopover, '');
+                }
+                const homeWrap = document.getElementById('homeSearchWrapper');
+                if (homeWrap && !homeWrap.contains(e.target)) {
+                    document.getElementById('homeAutocomplete')?.classList.add('hidden');
+                }
+                const serpWrap = document.getElementById('serpSearchWrapper');
+                if (serpWrap && !serpWrap.contains(e.target)) {
+                    document.getElementById('serpAutocomplete')?.classList.add('hidden');
+                }
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initNexusApp);
+        } else {
+            initNexusApp();
+        }
+    </script>
+</body>
+</html>
