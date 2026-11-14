@@ -1,6 +1,6 @@
 # 🌐 Nexus
 
-> 🎉 **We're Live!** Huge congratulations on the launch of **Nexus**! Explore the live site at **[IIVShar.github.io/Nexus]**.
+> 🎉 **We're Live!** Huge congratulations on the launch of **Nexus**! Explore the live site at **[Nexus](IIVShar.github.io/Nexus)**.
 
 **Nexus** is a private, all-in-one web search and productivity hub built for seamless research—with **zero account required**. It brings together traditional and voice-activated search, an integrated AI assistant, and essential everyday tools inside a fast, customizable interface.
 
