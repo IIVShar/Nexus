@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus Search</title>
-   <link rel="icon" type="image/png" sizes="32x32" href="nexus.png">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Inter & Plus Jakarta Sans -->
@@ -617,7 +617,7 @@
             <div class="mb-8 select-none text-center">
                 <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/25 text-xs font-semibold text-deepPurple dark:text-purple-300 mb-4">
                     <span class="w-2 h-2 rounded-full bg-neonPink animate-pulse"></span>
-                    Private • Instant • Zero Account Required
+                    Private • Built for Research • Zero Account Required
                 </div>
                 <div class="flex items-center justify-center gap-3.5 sm:gap-4">
                     <!-- Custom Nexus Geometric Prism Logo -->
@@ -2083,9 +2083,107 @@
             return '';
         }
 
+        function renderInternalPageHTML(title, subtitle, icon, content) {
+            return `
+                <div class="max-w-3xl mt-4 fade-in">
+                    <div class="p-8 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-purple-500/40 shadow-light-glow dark:shadow-cosmic-glow">
+                        <div class="flex items-center gap-4 mb-6 pb-6 border-b border-pearlBorder dark:border-midnightBorder">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-electricBlue via-deepPurple to-neonPink flex items-center justify-center text-white shrink-0 shadow-xs">
+                                <i data-lucide="${icon}" class="w-7 h-7"></i>
+                            </div>
+                            <div>
+                                <h2 class="font-display text-2xl font-bold text-indigoInk dark:text-white">${title}</h2>
+                                <p class="text-xs text-indigoMuted dark:text-slate-400 mt-1">${subtitle}</p>
+                            </div>
+                        </div>
+                        <div class="space-y-4 text-sm sm:text-base text-indigoInk dark:text-slate-200 leading-relaxed">
+                            ${content}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
         async function renderAllTab(q, startTime, skipSpellcheck = false) {
             const container = document.getElementById('resultsContainer');
             if (!container) return;
+
+            const lowerQ = q.toLowerCase();
+
+            // --- Internal Nexus Pages (About, Privacy, Terms, Help) ---
+            if (lowerQ === 'about nexus search engine') {
+                container.innerHTML = renderInternalPageHTML(
+                    'About Nexus Search', 'Next-Generation Private Web Exploration', 'info',
+                    `<p><strong>Nexus Search Engine</strong> is a modern, privacy-first web exploration tool built for speed and aesthetics, and proudly <strong>Built for Research</strong>.</p>
+                     <p>Unlike traditional search engines, Nexus aggregates data directly through free, open-source APIs (like Wikipedia, DuckDuckGo, Hacker News, and the Internet Archive) directly in your browser. This means your queries are distributed and never logged in a central advertising database.</p>
+                     <p><strong>Core Features:</strong></p>
+                     <ul class="list-disc pl-5 space-y-1.5 mt-2 mb-4 text-indigoMuted dark:text-slate-300">
+                        <li><strong>Built for Research:</strong> Seamlessly pulls academic info, historical archives, and factual data instantly.</li>
+                        <li><strong>Instant Tools:</strong> Built-in Scientific Calculator, URL Translator, Dictionary, and Live Weather widgets.</li>
+                        <li><strong>Nexus Web Frame:</strong> A fully integrated full-screen browser with a stored tab management system.</li>
+                        <li><strong>Nexus Chat:</strong> A built-in, context-aware conversational AI assistant that grounds its answers in real-time web data.</li>
+                        <li><strong>Beautiful UI:</strong> Seamless light and dark modes with a custom cosmic glassmorphism aesthetic.</li>
+                     </ul>
+                     <p>Engineered to bring the fun, utility, and safety back to surfing the open web.</p>`
+                );
+                document.getElementById('resultsStats').textContent = `Internal Document (0.01 seconds)`;
+                renderIcons();
+                return;
+            }
+
+            if (lowerQ === 'nexus private search' || lowerQ === 'nexus privacy') {
+                container.innerHTML = renderInternalPageHTML(
+                    'Nexus Privacy Policy', 'Your data stays on your device.', 'shield-check',
+                    `<p>At Nexus Search, <strong>privacy is our core tenet.</strong> We believe you should be able to explore the web without leaving a trail.</p>
+                     <p><strong>How we protect you:</strong></p>
+                     <ul class="list-disc pl-5 space-y-1.5 mt-2 mb-4 text-indigoMuted dark:text-slate-300">
+                        <li><strong>Zero Tracking:</strong> We do not store your IP address, we don't track your search history across sessions, and we never sell your data to third-party advertisers.</li>
+                        <li><strong>Local Storage Only:</strong> Your recent searches, saved browser tabs, and theme preferences are stored entirely locally on your own device using browser <code>localStorage</code>. They never touch a central server.</li>
+                        <li><strong>Direct API Connections:</strong> Searches fetch results anonymously from open data sources (DuckDuckGo, Wikipedia, Open-Meteo, Leaflet) acting as a proxy layer to keep your personal profile hidden.</li>
+                     </ul>
+                     <p>When using the built-in Nexus Web Frame, you browse as you normally would, but your search habits remain insulated.</p>`
+                );
+                document.getElementById('resultsStats').textContent = `Internal Document (0.01 seconds)`;
+                renderIcons();
+                return;
+            }
+
+            if (lowerQ === 'nexus terms') {
+                container.innerHTML = renderInternalPageHTML(
+                    'Nexus Terms of Service', 'Rules of the Road', 'file-text',
+                    `<p>Welcome to Nexus Search. By using our platform, you agree to explore the web responsibly.</p>
+                     <p>All search results, map data, images, and news stories are provided "as-is" and are aggregated from third-party public APIs. Nexus does not claim ownership over the content displayed in search results.</p>
+                     <p>The integrated <strong>Nexus Web Frame</strong> is designed to improve productivity. However, some websites employ security policies that block embedding (iframes). In these cases, use the "New Tab" button to open the link securely outside the engine.</p>
+                     <p>Enjoy your private web experience!</p>`
+                );
+                document.getElementById('resultsStats').textContent = `Internal Document (0.01 seconds)`;
+                renderIcons();
+                return;
+            }
+
+            if (lowerQ === 'nexus search help') {
+                container.innerHTML = renderInternalPageHTML(
+                    'Nexus Help Center', 'Tips, Tricks, and Shortcuts', 'life-buoy',
+                    `<p>Need help navigating Nexus Search? Here are a few pro-tips to master your experience:</p>
+                     <div class="space-y-3 mt-3">
+                        <div class="p-3 rounded-xl bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder">
+                            <h3 class="font-bold text-indigoInk dark:text-white mb-1">Keyboard Shortcuts</h3>
+                            <p class="text-sm text-indigoMuted dark:text-slate-300">Press <kbd class="px-1.5 py-0.5 rounded bg-pearlCard dark:bg-obsidian border border-pearlBorder dark:border-purple-500/30 text-neonPink font-mono text-xs">/</kbd> anywhere to instantly focus the search bar. Press <kbd class="px-1.5 py-0.5 rounded bg-pearlCard dark:bg-obsidian border border-pearlBorder dark:border-purple-500/30 text-neonPink font-mono text-xs">Esc</kbd> to close any open modal, tool, or drawer.</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder">
+                            <h3 class="font-bold text-indigoInk dark:text-white mb-1">Smart Queries</h3>
+                            <p class="text-sm text-indigoMuted dark:text-slate-300">Try typing a math equation like <code>calculate 50 * 3.14</code>, search for <code>weather in Toronto</code>, or type <code>define serendipity</code> for instant widgets.</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder">
+                            <h3 class="font-bold text-indigoInk dark:text-white mb-1">Direct URL Launch</h3>
+                            <p class="text-sm text-indigoMuted dark:text-slate-300">If you type a direct website URL (e.g., <code>wikipedia.org</code>) into the main search, Nexus will instantly open it in a new stored tab inside the full-screen Web Frame.</p>
+                        </div>
+                     </div>`
+                );
+                document.getElementById('resultsStats').textContent = `Internal Document (0.01 seconds)`;
+                renderIcons();
+                return;
+            }
 
             let effectiveQuery = q;
             let spellBannerHTML = '';
