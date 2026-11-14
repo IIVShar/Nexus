@@ -33,7 +33,7 @@ Check out other projects in the network:
 
 ## 🛠️ Usage
 
-1. Visit **[IIVShar.github.io/Nexus]**.
+1. Visit **[Nexus](IIVShar.github.io/Nexus)**.
 2. Type a query into the search bar, click the **microphone icon** to use voice search, or open **Nexus Chat**.
 3. Switch between **Live Nexus Tools** (Weather, Calculator, Translator, Dictionary) or manage multiple pages using the **Tabs** bar.
 4. Toggle between **Dark** and **Light** mode anytime to suit your workspace.
