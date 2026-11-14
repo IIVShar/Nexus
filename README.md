@@ -19,7 +19,7 @@
 ## 🚀 Live Demo
 
 Try it out directly in your browser—no installation or login needed:
-👉 **[https://IIVShar.github.io/Nexus]**
+👉 **[Nexus](IIVShar.github.io/Nexus)**
 
 ---
 
