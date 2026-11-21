@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-    <!-- Leaflet for Interactive Maps -->
+    <!-- Leaflet Maps -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <!-- Lucide Icons -->
@@ -60,7 +60,6 @@
             --glow-pink: rgba(236, 72, 153, 0.13);
             --glow-purple: rgba(147, 51, 234, 0.12);
         }
-
         html.dark {
             --bg-primary: #09090f;
             --text-primary: #f1f5f9;
@@ -68,44 +67,28 @@
             --glow-pink: rgba(236, 72, 153, 0.13);
             --glow-purple: rgba(168, 85, 247, 0.11);
         }
-
         body {
             background-color: var(--bg-primary);
             color: var(--text-primary);
             transition: background-color 0.25s ease, color 0.25s ease;
         }
-
         .cosmic-bg {
             background-image:
                 radial-gradient(circle at 20% 15%, var(--glow-blue) 0%, transparent 45%),
                 radial-gradient(circle at 80% 20%, var(--glow-pink) 0%, transparent 45%),
                 radial-gradient(circle at 50% 85%, var(--glow-purple) 0%, transparent 52%);
         }
-
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.2s ease-out forwards; }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
         .skeleton-shimmer {
             background: linear-gradient(90deg, rgba(168, 85, 247, 0.08) 25%, rgba(236, 72, 153, 0.18) 50%, rgba(56, 189, 248, 0.08) 75%);
             background-size: 200% 100%;
             animation: shimmer 1.5s infinite linear;
         }
-
-        @keyframes pulseRing {
-            0% { transform: scale(0.85); opacity: 0.85; }
-            70% { transform: scale(1.45); opacity: 0; }
-            100% { transform: scale(1.45); opacity: 0; }
-        }
+        @keyframes pulseRing { 0% { transform: scale(0.85); opacity: 0.85; } 70%, 100% { transform: scale(1.45); opacity: 0; } }
         .voice-pulse::before {
             content: '';
             position: absolute;
@@ -115,35 +98,20 @@
             z-index: -1;
             animation: pulseRing 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
         }
-
-        @keyframes soundwave {
-            0%, 100% { height: 8px; }
-            50% { height: 28px; }
-        }
+        @keyframes soundwave { 0%, 100% { height: 8px; } 50% { height: 28px; } }
         .wave-bar { animation: soundwave 0.9s ease-in-out infinite; }
         .wave-bar:nth-child(2) { animation-delay: 0.15s; }
         .wave-bar:nth-child(3) { animation-delay: 0.3s; }
         .wave-bar:nth-child(4) { animation-delay: 0.45s; }
         .wave-bar:nth-child(5) { animation-delay: 0.2s; }
-
-        @keyframes chatBounce {
-            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-            40% { transform: scale(1.1); opacity: 1; }
-        }
+        @keyframes chatBounce { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1.1); opacity: 1; } }
         .chat-dot { animation: chatBounce 1.3s infinite ease-in-out; }
         .chat-dot:nth-child(2) { animation-delay: 0.18s; }
         .chat-dot:nth-child(3) { animation-delay: 0.36s; }
-
-        @keyframes barrelRoll {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes barrelRoll { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .barrel-roll { animation: barrelRoll 1.4s cubic-bezier(0.65, 0, 0.35, 1); }
         .askew { transform: rotate(1.5deg); }
-
-        html.dark .leaflet-tile-pane {
-            filter: invert(100%) hue-rotate(195deg) brightness(92%) contrast(92%);
-        }
+        html.dark .leaflet-tile-pane { filter: invert(100%) hue-rotate(195deg) brightness(92%) contrast(92%); }
         .nexus-map-pin {
             background: linear-gradient(135deg, #3b82f6, #a855f7, #ec4899);
             border: 3px solid #ffffff;
@@ -154,12 +122,10 @@
 </head>
 <body class="bg-pearl text-indigoInk dark:bg-obsidian dark:text-slate-100 cosmic-bg min-h-screen flex flex-col selection:bg-fuchsia-500/30 selection:text-pink-700 dark:selection:text-pink-200">
 
-    <!-- ========================================== -->
-    <!-- VOICE SEARCH MODAL                         -->
-    <!-- ========================================== -->
+    <!-- VOICE MODAL -->
     <div id="voiceModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-indigoInk/55 dark:bg-black/75 backdrop-blur-md p-4">
         <div class="bg-pearlCard dark:bg-midnight rounded-3xl max-w-md w-full p-8 shadow-2xl border border-pearlBorder dark:border-purple-500/30 text-center relative fade-in">
-            <button type="button" onclick="closeVoiceModal()" class="absolute top-4 right-4 p-2 rounded-full text-indigoMuted dark:text-slate-400 hover:text-neonPink hover:bg-pearlElevated dark:hover:bg-midnightElevated transition-colors" aria-label="Close voice search">
+            <button type="button" onclick="closeVoiceModal()" class="absolute top-4 right-4 p-2 rounded-full text-indigoMuted dark:text-slate-400 hover:text-neonPink hover:bg-pearlElevated dark:hover:bg-midnightElevated" aria-label="Close voice search">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             <p id="voiceStatusText" class="text-xl font-semibold bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink bg-clip-text text-transparent mb-6 mt-2">Listening...</p>
@@ -179,15 +145,12 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- APPS & TOOLS POPOVER                       -->
-    <!-- ========================================== -->
+    <!-- APPS & TOOLS POPOVER -->
     <div id="appsPopover" class="fixed top-16 right-4 sm:right-8 z-40 hidden w-80 bg-pearlCard dark:bg-midnight rounded-3xl shadow-dropdown-light dark:shadow-dropdown-dark border border-pearlBorder dark:border-midnightBorder p-4 fade-in">
         <div class="px-2 pb-2.5 mb-2 border-b border-pearlBorder dark:border-midnightBorder flex items-center justify-between">
             <span class="text-xs font-semibold uppercase tracking-wider text-indigoMuted dark:text-slate-400">Nexus Tools</span>
             <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-purple-500/10 text-deepPurple dark:text-purple-300 border border-purple-500/25 font-medium">Zero Account</span>
         </div>
-
         <button type="button" onclick="openChatDrawer()" class="w-full mb-3 p-3 rounded-2xl bg-gradient-to-r from-electricBlue/15 via-vividPurple/15 to-neonPink/15 hover:from-electricBlue/25 hover:via-vividPurple/25 hover:to-neonPink/25 border border-neonPink/40 flex items-center justify-between gap-3 text-left transition-all">
             <div class="flex items-center gap-2.5 min-w-0 flex-1">
                 <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-electricBlue via-deepPurple to-neonPink flex items-center justify-center text-white shrink-0">
@@ -200,48 +163,13 @@
             </div>
             <i data-lucide="arrow-up-right" class="w-4 h-4 text-neonPink shrink-0"></i>
         </button>
-
-        <div class="grid grid-cols-3 gap-2">
-            <button type="button" onclick="openToolModal('calculator')" class="flex flex-col items-center p-3 rounded-2xl hover:bg-pearlElevated dark:hover:bg-purple-500/10 transition-colors">
-                <div class="w-10 h-10 rounded-full bg-sky-500/15 text-electricBlue dark:text-neonBlue border border-sky-500/30 flex items-center justify-center mb-1.5">
-                    <i data-lucide="calculator" class="w-5 h-5"></i>
-                </div>
-                <span class="text-xs font-medium text-indigoInk dark:text-slate-200">Calculator</span>
-            </button>
-            <button type="button" onclick="executeSearch('Weather in Brampton Ontario', 'all')" class="flex flex-col items-center p-3 rounded-2xl hover:bg-pearlElevated dark:hover:bg-purple-500/10 transition-colors">
-                <div class="w-10 h-10 rounded-full bg-pink-500/15 text-neonPink border border-pink-500/30 flex items-center justify-center mb-1.5">
-                    <i data-lucide="cloud-sun" class="w-5 h-5"></i>
-                </div>
-                <span class="text-xs font-medium text-indigoInk dark:text-slate-200">Weather</span>
-            </button>
-            <button type="button" onclick="executeSearch('Brampton, Ontario', 'maps')" class="flex flex-col items-center p-3 rounded-2xl hover:bg-pearlElevated dark:hover:bg-purple-500/10 transition-colors">
-                <div class="w-10 h-10 rounded-full bg-purple-500/15 text-deepPurple dark:text-vividPurple border border-purple-500/30 flex items-center justify-center mb-1.5">
-                    <i data-lucide="map-pin" class="w-5 h-5"></i>
-                </div>
-                <span class="text-xs font-medium text-indigoInk dark:text-slate-200">Maps</span>
-            </button>
-            <button type="button" onclick="openToolModal('translator')" class="flex flex-col items-center p-3 rounded-2xl hover:bg-pearlElevated dark:hover:bg-purple-500/10 transition-colors">
-                <div class="w-10 h-10 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 flex items-center justify-center mb-1.5">
-                    <i data-lucide="languages" class="w-5 h-5"></i>
-                </div>
-                <span class="text-xs font-medium text-indigoInk dark:text-slate-200">Translate</span>
-            </button>
-            <button type="button" onclick="openToolModal('dictionary')" class="flex flex-col items-center p-3 rounded-2xl hover:bg-pearlElevated dark:hover:bg-purple-500/10 transition-colors">
-                <div class="w-10 h-10 rounded-full bg-fuchsia-500/15 text-fuchsia-600 dark:text-fuchsia-400 border border-fuchsia-500/30 flex items-center justify-center mb-1.5">
-                    <i data-lucide="book-open" class="w-5 h-5"></i>
-                </div>
-                <span class="text-xs font-medium text-indigoInk dark:text-slate-200">Dictionary</span>
-            </button>
-            <button type="button" onclick="executeSearch('Aurora Borealis', 'images')" class="flex flex-col items-center p-3 rounded-2xl hover:bg-pearlElevated dark:hover:bg-purple-500/10 transition-colors">
-                <div class="w-10 h-10 rounded-full bg-blue-500/15 text-electricBlue dark:text-neonBlue border border-blue-500/30 flex items-center justify-center mb-1.5">
-                    <i data-lucide="image" class="w-5 h-5"></i>
-                </div>
-                <span class="text-xs font-medium text-indigoInk dark:text-slate-200">Images</span>
-            </button>
-        </div>
-
+        <div id="appsGridContainer" class="grid grid-cols-3 gap-2"></div>
         <div class="mt-3 pt-3 border-t border-pearlBorder dark:border-midnightBorder space-y-1.5">
             <span class="px-2 text-[10px] font-bold uppercase tracking-wider text-indigoMuted dark:text-slate-500 block">Web Frame Shortcuts</span>
+            <button type="button" onclick="navigateToUrl('https://IIVShar.github.io/Mei-AI')" class="w-full p-2.5 rounded-2xl bg-pearlElevated/70 dark:bg-midnightElevated/70 hover:border-neonPink/50 border border-pearlBorder/60 dark:border-midnightBorder flex items-center justify-between text-left transition-colors">
+                <span class="text-xs font-semibold text-indigoInk dark:text-slate-200">Mei AI</span>
+                <span class="text-[11px] font-mono text-neonPink">Mei.ai</span>
+            </button>
             <button type="button" onclick="navigateToUrl('https://en.wikipedia.org')" class="w-full p-2.5 rounded-2xl bg-pearlElevated/70 dark:bg-midnightElevated/70 hover:border-neonPink/50 border border-pearlBorder/60 dark:border-midnightBorder flex items-center justify-between text-left transition-colors">
                 <span class="text-xs font-semibold text-indigoInk dark:text-slate-200">Wikipedia</span>
                 <span class="text-[11px] font-mono text-indigoMuted dark:text-slate-400">en.wikipedia.org</span>
@@ -253,9 +181,7 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- NEXUS CHAT SLIDE-OVER DRAWER               -->
-    <!-- ========================================== -->
+    <!-- NEXUS CHAT DRAWER -->
     <div id="chatDrawerBackdrop" class="fixed inset-0 z-50 hidden bg-indigoInk/55 dark:bg-black/75 backdrop-blur-xs" onclick="if(event.target===this) closeChatDrawer()">
         <aside class="ml-auto w-full max-w-lg h-full bg-pearlCard dark:bg-midnight border-l border-pearlBorder dark:border-purple-500/30 shadow-2xl flex flex-col fade-in">
             <div class="px-5 py-4 border-b border-pearlBorder dark:border-midnightBorder bg-gradient-to-r from-electricBlue/10 via-vividPurple/10 to-neonPink/10 flex items-center justify-between gap-3">
@@ -274,28 +200,25 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-1.5 shrink-0">
-                    <button type="button" onclick="clearNexusChat()" class="p-2 rounded-full text-indigoMuted dark:text-slate-400 hover:text-neonPink hover:bg-pearlElevated dark:hover:bg-midnightElevated transition-colors" title="Clear chat" aria-label="Clear chat">
+                    <button type="button" onclick="clearNexusChat()" class="p-2 rounded-full text-indigoMuted dark:text-slate-400 hover:text-neonPink hover:bg-pearlElevated dark:hover:bg-midnightElevated" title="Clear chat" aria-label="Clear chat">
                         <i data-lucide="trash-2" class="w-4 h-4"></i>
                     </button>
-                    <button type="button" onclick="closeChatDrawer()" class="p-2 rounded-full text-indigoMuted dark:text-slate-400 hover:text-indigoInk dark:hover:text-white hover:bg-pearlElevated dark:hover:bg-midnightElevated transition-colors" title="Close Nexus Chat" aria-label="Close Nexus Chat">
+                    <button type="button" onclick="closeChatDrawer()" class="p-2 rounded-full text-indigoMuted dark:text-slate-400 hover:text-indigoInk dark:hover:text-white hover:bg-pearlElevated dark:hover:bg-midnightElevated" title="Close chat" aria-label="Close chat">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
             </div>
-
             <div id="chatDrawerMessages" class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4"></div>
-
             <div class="px-4 py-2.5 border-t border-pearlBorder/60 dark:border-midnightBorder/60 flex items-center gap-2 overflow-x-auto no-scrollbar">
-                <button type="button" onclick="sendChatPrompt('Write a short futuristic poem about neon stars')" class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-sky-500/10 text-electricBlue dark:text-neonBlue border border-sky-500/25 hover:bg-sky-500/20 transition-colors">Neon poem</button>
-                <button type="button" onclick="sendChatPrompt('Give me 3 creative app ideas')" class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-pink-500/10 text-neonPink border border-pink-500/25 hover:bg-pink-500/20 transition-colors">App ideas</button>
-                <button type="button" onclick="sendChatPrompt('Explain black holes like I am 12')" class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-purple-500/10 text-deepPurple dark:text-vividPurple border border-purple-500/25 hover:bg-purple-500/20 transition-colors">Black holes</button>
-                <button type="button" onclick="sendChatPrompt('Tell me a clever tech joke')" class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/25 hover:bg-indigo-500/20 transition-colors">Tech joke</button>
+                <button type="button" onclick="sendChatPrompt('Write a short futuristic poem about neon stars')" class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-sky-500/10 text-electricBlue dark:text-neonBlue border border-sky-500/25 hover:bg-sky-500/20">Neon poem</button>
+                <button type="button" onclick="sendChatPrompt('Give me 3 creative app ideas')" class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-pink-500/10 text-neonPink border border-pink-500/25 hover:bg-pink-500/20">App ideas</button>
+                <button type="button" onclick="sendChatPrompt('Explain black holes like I am 12')" class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-purple-500/10 text-deepPurple dark:text-vividPurple border border-purple-500/25 hover:bg-purple-500/20">Black holes</button>
+                <button type="button" onclick="sendChatPrompt('Tell me a clever tech joke')" class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/25 hover:bg-indigo-500/20">Tech joke</button>
             </div>
-
             <div class="p-4 border-t border-pearlBorder dark:border-midnightBorder bg-pearl/70 dark:bg-obsidian/70">
                 <form onsubmit="event.preventDefault(); submitChatDrawerInput();" class="flex items-center gap-2 bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder focus-within:border-neonPink rounded-full px-4 py-2 shadow-xs">
                     <input id="chatDrawerInput" type="text" autocomplete="off" placeholder="Ask Nexus Chat anything..." class="flex-1 bg-transparent text-sm text-indigoInk dark:text-slate-100 placeholder-indigoMuted/60 dark:placeholder-slate-500 focus:outline-none">
-                    <button type="submit" class="p-2 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white hover:opacity-90 transition-opacity shrink-0" aria-label="Send message">
+                    <button type="submit" class="p-2 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white hover:opacity-90 shrink-0" aria-label="Send message">
                         <i data-lucide="send" class="w-4 h-4"></i>
                     </button>
                 </form>
@@ -303,9 +226,7 @@
         </aside>
     </div>
 
-    <!-- ========================================== -->
-    <!-- TOOL & INFO MODAL                          -->
-    <!-- ========================================== -->
+    <!-- TOOL & INFO MODAL -->
     <div id="toolModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-indigoInk/60 dark:bg-black/80 backdrop-blur-md p-4" onclick="if(event.target===this) closeToolModal()">
         <div class="bg-pearlCard dark:bg-midnight rounded-3xl max-w-md w-full p-6 shadow-2xl border border-pearlBorder dark:border-purple-500/30 relative fade-in">
             <div class="flex items-center justify-between mb-4 pb-3 border-b border-pearlBorder dark:border-midnightBorder">
@@ -313,7 +234,7 @@
                     <span id="toolModalIcon" class="p-2 rounded-xl bg-gradient-to-tr from-electricBlue via-vividPurple to-neonPink text-white"></span>
                     <h3 id="toolModalTitle" class="font-display text-lg font-bold text-indigoInk dark:text-white">Nexus Tool</h3>
                 </div>
-                <button type="button" onclick="closeToolModal()" class="p-2 rounded-full text-indigoMuted dark:text-slate-400 hover:text-neonPink hover:bg-pearlElevated dark:hover:bg-midnightElevated transition-colors" aria-label="Close modal">
+                <button type="button" onclick="closeToolModal()" class="p-2 rounded-full text-indigoMuted dark:text-slate-400 hover:text-neonPink hover:bg-pearlElevated dark:hover:bg-midnightElevated" aria-label="Close modal">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -321,17 +242,13 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- IMAGE LIGHTBOX MODAL                       -->
-    <!-- ========================================== -->
+    <!-- IMAGE LIGHTBOX -->
     <div id="lightboxModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/85 backdrop-blur-md p-4" onclick="if(event.target===this) closeLightbox()">
         <div class="bg-pearlCard dark:bg-midnight rounded-3xl max-w-4xl w-full overflow-hidden border border-pearlBorder dark:border-purple-500/40 shadow-2xl fade-in">
             <div class="flex items-center justify-between px-5 py-3.5 border-b border-pearlBorder dark:border-midnightBorder">
                 <h3 id="lightboxTitle" class="text-sm font-semibold text-indigoInk dark:text-slate-100 truncate pr-4">Image Preview</h3>
                 <div class="flex items-center gap-2 shrink-0">
-                    <a id="lightboxSourceLink" href="#" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white hover:opacity-90">
-                        Open Original
-                    </a>
+                    <a id="lightboxSourceLink" href="#" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white hover:opacity-90">Open Original</a>
                     <button type="button" onclick="closeLightbox()" class="p-1.5 rounded-full text-indigoMuted dark:text-slate-400 hover:text-neonPink" aria-label="Close lightbox">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
@@ -340,40 +257,34 @@
             <div class="bg-black/95 flex items-center justify-center max-h-[70vh] overflow-hidden p-4">
                 <img id="lightboxImg" src="" alt="Full resolution preview" class="max-h-[65vh] w-auto object-contain rounded-xl">
             </div>
-            <div class="px-5 py-3 bg-pearlElevated/70 dark:bg-midnightElevated text-xs text-indigoMuted dark:text-slate-400 flex flex-wrap items-center justify-between gap-2">
-                <span id="lightboxMeta">Wikimedia Commons</span>
+            <div class="px-5 py-3 bg-pearlElevated/70 dark:bg-midnightElevated text-xs text-indigoMuted dark:text-slate-400 flex items-center justify-between gap-2">
+                <span>Wikimedia Commons</span>
                 <span id="lightboxDims">High Resolution</span>
             </div>
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- VIDEO PLAYER MODAL                         -->
-    <!-- ========================================== -->
+    <!-- VIDEO PLAYER MODAL -->
     <div id="videoModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/85 backdrop-blur-md p-4" onclick="if(event.target===this) closeVideoModal()">
         <div class="bg-pearlCard dark:bg-midnight rounded-3xl max-w-4xl w-full overflow-hidden border border-pearlBorder dark:border-purple-500/40 shadow-2xl fade-in">
             <div class="flex items-center justify-between px-5 py-3.5 border-b border-pearlBorder dark:border-midnightBorder">
                 <h3 id="videoModalTitle" class="text-sm font-semibold text-indigoInk dark:text-slate-100 truncate pr-4">Video Player</h3>
                 <div class="flex items-center gap-2 shrink-0">
-                    <a id="videoModalSourceLink" href="#" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white hover:opacity-90">
-                        Open Source
-                    </a>
+                    <a id="videoModalSourceLink" href="#" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white hover:opacity-90">Open Source</a>
                     <button type="button" onclick="closeVideoModal()" class="p-1.5 rounded-full text-indigoMuted dark:text-slate-400 hover:text-neonPink" aria-label="Close video player">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
             </div>
             <div id="videoModalPlayerContainer" class="bg-black aspect-video w-full flex items-center justify-center"></div>
-            <div class="px-5 py-3 bg-pearlElevated/70 dark:bg-midnightElevated text-xs text-indigoMuted dark:text-slate-400 flex flex-wrap items-center justify-between gap-2">
+            <div class="px-5 py-3 bg-pearlElevated/70 dark:bg-midnightElevated text-xs text-indigoMuted dark:text-slate-400 flex items-center justify-between gap-2">
                 <span id="videoModalMeta">Internet Archive</span>
                 <span>Public Media Stream</span>
             </div>
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- MULTI-TAB WEB FRAME VIEWER                 -->
-    <!-- ========================================== -->
+    <!-- MULTI-TAB WEB FRAME VIEWER -->
     <div id="webBrowserModal" class="fixed inset-0 z-50 hidden flex-col bg-pearlCard dark:bg-midnight">
         <div id="modalTabsBarContainer" class="px-3 pt-2 pb-1.5 border-b border-pearlBorder/70 dark:border-midnightBorder bg-pearlElevated dark:bg-obsidian flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0">
             <button type="button" onclick="toggleTabsCollapse()" class="px-2 py-1 rounded-xl text-xs font-semibold text-indigoMuted dark:text-slate-300 hover:text-neonPink hover:bg-pearlCard dark:hover:bg-midnightElevated flex items-center gap-1 shrink-0" title="Collapse or expand tabs">
@@ -397,9 +308,7 @@
             <form onsubmit="event.preventDefault(); navigateToUrl(document.getElementById('modalUrlInput').value, false);" class="flex-1 flex items-center bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder focus-within:border-neonPink rounded-full px-3.5 py-1.5">
                 <i data-lucide="globe" class="w-3.5 h-3.5 text-electricBlue dark:text-neonBlue mr-2 shrink-0"></i>
                 <input id="modalUrlInput" type="text" autocomplete="off" spellcheck="false" placeholder="Enter a URL (e.g., wikipedia.org, archive.org)..." class="w-full bg-transparent text-xs sm:text-sm font-mono text-indigoInk dark:text-slate-100 focus:outline-none">
-                <button type="submit" class="ml-2 px-3.5 py-1 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold hover:opacity-90 shrink-0">
-                    Go
-                </button>
+                <button type="submit" class="ml-2 px-3.5 py-1 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold hover:opacity-90 shrink-0">Go</button>
             </form>
             <button type="button" onclick="saveCurrentTabBookmark()" class="p-2 rounded-full text-indigoMuted dark:text-slate-300 hover:text-neonPink hover:bg-pearlCard dark:hover:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder shrink-0" title="Pin tab" aria-label="Pin tab">
                 <i data-lucide="bookmark" class="w-4 h-4"></i>
@@ -424,9 +333,7 @@
                 <div class="max-w-3xl mx-auto space-y-4">
                     <div class="p-3.5 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex flex-wrap items-center justify-between gap-2 text-xs">
                         <span>This site restricts iframe embedding — showing a summary view in <strong>Nexus Reader</strong>.</span>
-                        <button type="button" onclick="retryDirectIframeLoad()" class="px-3 py-1 rounded-full bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder font-semibold hover:border-neonPink">
-                            Retry Frame
-                        </button>
+                        <button type="button" onclick="retryDirectIframeLoad()" class="px-3 py-1 rounded-full bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder font-semibold hover:border-neonPink">Retry Frame</button>
                     </div>
                     <article id="webBrowserReaderContent" class="p-6 rounded-3xl bg-pearlElevated/60 dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder space-y-3 text-sm leading-relaxed"></article>
                 </div>
@@ -434,58 +341,51 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- TOAST NOTIFICATION                         -->
-    <!-- ========================================== -->
+    <!-- TOAST -->
     <div id="toastBox" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden bg-pearlCard dark:bg-midnightElevated text-indigoInk dark:text-slate-100 border border-pearlBorder dark:border-purple-500/40 px-5 py-3 rounded-full shadow-light-glow dark:shadow-cosmic-glow text-sm font-medium items-center gap-2.5 fade-in">
         <i data-lucide="sparkles" class="w-4 h-4 text-neonPink shrink-0"></i>
         <span id="toastMessage">Notification</span>
     </div>
 
-    <!-- ========================================== -->
-    <!-- VIEW 1: HOME PAGE                          -->
-    <!-- ========================================== -->
+    <!-- HOME VIEW -->
     <div id="homeView" class="flex-1 flex flex-col justify-between">
-        <!-- Stored Tabs Strip -->
         <div class="relative z-30 w-full px-3 sm:px-6 py-2 bg-pearlElevated/90 dark:bg-midnight/95 border-b border-pearlBorder dark:border-midnightBorder flex items-center gap-2 overflow-x-auto no-scrollbar">
-            <button type="button" onclick="toggleTabsCollapse()" class="text-[11px] font-bold uppercase tracking-wider text-indigoMuted dark:text-slate-300 hover:text-neonPink shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-pearlCard/80 dark:bg-midnightElevated/80 border border-pearlBorder dark:border-midnightBorder transition-colors" title="Collapse or expand tabs">
+            <button type="button" onclick="toggleTabsCollapse()" class="text-[11px] font-bold uppercase tracking-wider text-indigoMuted dark:text-slate-300 hover:text-neonPink shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-pearlCard/80 dark:bg-midnightElevated/80 border border-pearlBorder dark:border-midnightBorder" title="Collapse or expand tabs">
                 <i data-lucide="layers" class="w-3.5 h-3.5 text-neonPink"></i>
                 <span>Tabs</span>
                 <span class="tabs-collapsed-badge hidden px-1.5 py-0.5 rounded-full bg-pink-500/15 text-neonPink text-[10px]">0</span>
                 <i data-lucide="chevron-up" class="tabs-collapse-chevron w-3.5 h-3.5 text-indigoMuted dark:text-slate-400 transition-transform duration-200"></i>
             </button>
             <div id="globalTabsListHome" class="tabs-collapsible-items flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-1"></div>
-            <button type="button" onclick="createNewBrowserTab('https://en.wikipedia.org')" class="ml-auto px-2.5 py-1 rounded-full text-xs font-semibold bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-indigoInk dark:text-slate-200 hover:border-neonPink hover:text-neonPink transition-colors flex items-center gap-1 shrink-0">
+            <button type="button" onclick="createNewBrowserTab('https://en.wikipedia.org')" class="ml-auto px-2.5 py-1 rounded-full text-xs font-semibold bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-indigoInk dark:text-slate-200 hover:border-neonPink hover:text-neonPink flex items-center gap-1 shrink-0">
                 <i data-lucide="plus" class="w-3.5 h-3.5 text-neonPink"></i>
                 <span>New Tab</span>
             </button>
         </div>
 
-        <!-- Top Bar -->
         <header class="relative z-20 w-full px-4 sm:px-8 py-4 flex items-center justify-between text-sm">
             <div class="flex items-center gap-5 text-indigoMuted dark:text-slate-400 font-medium">
                 <button type="button" onclick="openInfoModal('about')" class="hover:text-electricBlue dark:hover:text-neonBlue transition-colors">About</button>
                 <button type="button" onclick="openInfoModal('privacy')" class="hover:text-neonPink transition-colors">Privacy</button>
             </div>
             <div class="flex items-center gap-2.5">
-                <button type="button" onclick="executeSearch('Aurora Borealis', 'images')" class="hidden sm:inline-block text-indigoMuted dark:text-slate-300 hover:text-deepPurple dark:hover:text-vividPurple font-medium transition-colors px-3 py-1.5 rounded-full hover:bg-pearlElevated dark:hover:bg-midnight/60">Images</button>
-                <button type="button" onclick="openChatDrawer()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold shadow-light-glow dark:shadow-cosmic-glow hover:opacity-95 transition-all active:scale-95">
+                <button type="button" onclick="executeSearch('Aurora Borealis', 'images')" class="hidden sm:inline-block text-indigoMuted dark:text-slate-300 hover:text-deepPurple dark:hover:text-vividPurple font-medium px-3 py-1.5 rounded-full hover:bg-pearlElevated dark:hover:bg-midnight/60">Images</button>
+                <button type="button" onclick="openChatDrawer()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold shadow-light-glow dark:shadow-cosmic-glow hover:opacity-95 active:scale-95">
                     <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
                     <span>Nexus Chat</span>
                 </button>
-                <button type="button" onclick="toggleTheme()" class="flex items-center gap-2 px-3.5 py-2 rounded-full bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-indigoInk dark:text-slate-200 hover:border-neonPink/60 shadow-xs transition-all active:scale-95" aria-label="Toggle theme">
+                <button type="button" onclick="toggleTheme()" class="flex items-center gap-2 px-3.5 py-2 rounded-full bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-indigoInk dark:text-slate-200 hover:border-neonPink/60 shadow-xs active:scale-95" aria-label="Toggle theme">
                     <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-deepPurple"></i>
                     <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-neonPink"></i>
                     <span class="text-xs font-semibold block dark:hidden">Dark</span>
                     <span class="text-xs font-semibold hidden dark:block">Light</span>
                 </button>
-                <button type="button" onclick="toggleAppsMenu(event)" class="p-2.5 rounded-full text-indigoMuted dark:text-slate-300 hover:bg-pearlElevated dark:hover:bg-midnightElevated border border-transparent hover:border-pearlBorder dark:hover:border-midnightBorder transition-all" title="Nexus Tools" aria-label="Nexus Tools">
+                <button type="button" onclick="toggleAppsMenu(event)" class="p-2.5 rounded-full text-indigoMuted dark:text-slate-300 hover:bg-pearlElevated dark:hover:bg-midnightElevated border border-transparent hover:border-pearlBorder dark:hover:border-midnightBorder" title="Nexus Tools" aria-label="Nexus Tools">
                     <i data-lucide="grip" class="w-5 h-5"></i>
                 </button>
             </div>
         </header>
 
-        <!-- Center Hero -->
         <main class="relative z-10 flex-1 flex flex-col items-center justify-center px-4 -mt-6 sm:-mt-10">
             <div class="mb-8 select-none text-center">
                 <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/25 text-xs font-semibold text-deepPurple dark:text-purple-300 mb-4">
@@ -512,82 +412,66 @@
                 </div>
             </div>
 
-            <!-- Main Search Bar -->
             <div class="w-full max-w-[600px] relative">
                 <div class="flex items-center w-full bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder hover:border-purple-500/60 focus-within:border-neonPink/80 shadow-light-glow dark:shadow-sm hover:shadow-light-glow dark:hover:shadow-cosmic-glow focus-within:shadow-cosmic-focus rounded-full px-5 py-3.5 transition-all">
                     <i data-lucide="search" class="w-5 h-5 text-electricBlue dark:text-neonBlue mr-3.5 shrink-0"></i>
                     <input type="text" id="homeSearchInput" autocomplete="off" placeholder="Search the web privately..." class="w-full bg-transparent text-base text-indigoInk dark:text-slate-100 placeholder-indigoMuted/60 dark:placeholder-slate-500 focus:outline-none">
-                    <button type="button" id="homeClearBtn" onclick="clearInput('home')" class="hidden p-1 text-indigoMuted dark:text-slate-400 hover:text-neonPink mr-1 transition-colors" aria-label="Clear search">
+                    <button type="button" id="homeClearBtn" onclick="clearInput('home')" class="hidden p-1 text-indigoMuted dark:text-slate-400 hover:text-neonPink mr-1" aria-label="Clear search">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                     <div class="h-6 w-[1px] bg-pearlBorder dark:bg-midnightBorder mx-2 hidden sm:block"></div>
-                    <button type="button" onclick="openVoiceModal()" class="p-1.5 rounded-full hover:bg-pearlElevated dark:hover:bg-purple-500/15 text-neonPink transition-colors shrink-0" title="Search by voice" aria-label="Search by voice">
+                    <button type="button" onclick="openVoiceModal()" class="p-1.5 rounded-full hover:bg-pearlElevated dark:hover:bg-purple-500/15 text-neonPink shrink-0" title="Search by voice" aria-label="Search by voice">
                         <i data-lucide="mic" class="w-5 h-5"></i>
                     </button>
-                    <button type="button" onclick="handleHomeSearchSubmit()" class="sm:hidden ml-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold shrink-0">
-                        Search
-                    </button>
+                    <button type="button" onclick="handleHomeSearchSubmit()" class="sm:hidden ml-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold shrink-0">Search</button>
                 </div>
                 <div id="homeAutocomplete" class="hidden absolute left-0 right-0 top-full mt-2 bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder rounded-3xl shadow-dropdown-light dark:shadow-dropdown-dark overflow-hidden z-30 py-2"></div>
             </div>
 
-            <!-- Action Buttons -->
             <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
-                <button type="button" onclick="handleHomeSearchSubmit()" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-sm font-semibold shadow-light-glow dark:shadow-cosmic-glow hover:opacity-95 transition-all active:scale-95">
-                    Nexus Search
-                </button>
-                <button type="button" onclick="feelingLucky()" class="px-6 py-2.5 rounded-full bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder hover:border-neonPink/60 text-indigoInk dark:text-slate-200 text-sm font-semibold transition-all active:scale-95">
-                    I'm Feeling Lucky
-                </button>
+                <button type="button" onclick="handleHomeSearchSubmit()" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-sm font-semibold shadow-light-glow dark:shadow-cosmic-glow hover:opacity-95 active:scale-95">Nexus Search</button>
+                <button type="button" onclick="feelingLucky()" class="px-6 py-2.5 rounded-full bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder hover:border-neonPink/60 text-indigoInk dark:text-slate-200 text-sm font-semibold active:scale-95">I'm Feeling Lucky</button>
             </div>
 
-            <!-- Direct URL Bar -->
             <div class="w-full max-w-[600px] mt-5">
                 <form onsubmit="event.preventDefault(); navigateToUrl(document.getElementById('homeUrlInput').value, true);" class="flex items-center bg-pearlCard/85 dark:bg-midnight/85 border border-pearlBorder dark:border-midnightBorder focus-within:border-electricBlue rounded-full px-4 py-2 shadow-xs">
                     <i data-lucide="globe" class="w-4 h-4 text-neonPink mr-2.5 shrink-0"></i>
                     <input id="homeUrlInput" type="text" autocomplete="off" spellcheck="false" placeholder="Open a URL directly (e.g., wikipedia.org, archive.org)..." class="w-full bg-transparent text-xs sm:text-sm font-mono text-indigoInk dark:text-slate-200 placeholder-indigoMuted/60 dark:placeholder-slate-500 focus:outline-none">
-                    <button type="submit" class="ml-2 px-3.5 py-1 rounded-full bg-electricBlue/15 text-electricBlue dark:text-neonBlue hover:bg-electricBlue hover:text-white text-xs font-semibold transition-colors shrink-0">
-                        Open URL
-                    </button>
+                    <button type="submit" class="ml-2 px-3.5 py-1 rounded-full bg-electricBlue/15 text-electricBlue dark:text-neonBlue hover:bg-electricBlue hover:text-white text-xs font-semibold transition-colors shrink-0">Open URL</button>
                 </form>
             </div>
         </main>
 
-        <!-- Home Footer -->
         <footer class="w-full bg-pearlElevated/70 dark:bg-midnight border-t border-pearlBorder dark:border-midnightBorder py-4 px-6 sm:px-8 text-xs text-indigoMuted dark:text-slate-400 flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center gap-2 font-medium text-indigoInk dark:text-slate-300">
                 <span class="w-2 h-2 rounded-full bg-neonPink"></span>
                 <span>Brampton, Ontario, Canada</span>
             </div>
             <div class="flex flex-wrap items-center gap-5">
-                <button type="button" onclick="executeSearch('Weather in Brampton Ontario')" class="hover:text-electricBlue dark:hover:text-neonBlue transition-colors">7-Day Weather</button>
-                <button type="button" onclick="openToolModal('calculator')" class="hover:text-deepPurple dark:hover:text-vividPurple transition-colors">Calculator</button>
-                <button type="button" onclick="openToolModal('translator')" class="hover:text-neonPink transition-colors">Translator</button>
-                <button type="button" onclick="openChatDrawer()" class="hover:text-electricBlue dark:hover:text-neonBlue transition-colors">Nexus Chat</button>
+                <button type="button" onclick="executeSearch('Weather in Brampton Ontario')" class="hover:text-electricBlue dark:hover:text-neonBlue">7-Day Weather</button>
+                <button type="button" onclick="openToolModal('calculator')" class="hover:text-deepPurple dark:hover:text-vividPurple">Calculator</button>
+                <button type="button" onclick="openToolModal('translator')" class="hover:text-neonPink">Translator</button>
+                <button type="button" onclick="openChatDrawer()" class="hover:text-electricBlue dark:hover:text-neonBlue">Nexus Chat</button>
             </div>
         </footer>
     </div>
 
-    <!-- ========================================== -->
-    <!-- VIEW 2: SEARCH RESULTS PAGE (SERP)         -->
-    <!-- ========================================== -->
+    <!-- SERP VIEW -->
     <div id="serpView" class="hidden flex-1 flex-col">
-        <!-- Stored Tabs Strip -->
         <div class="relative z-40 w-full px-3 sm:px-6 py-1.5 bg-pearlElevated/95 dark:bg-obsidian/95 border-b border-pearlBorder dark:border-midnightBorder flex items-center gap-2 overflow-x-auto no-scrollbar">
-            <button type="button" onclick="toggleTabsCollapse()" class="text-[11px] font-bold uppercase tracking-wider text-indigoMuted dark:text-slate-300 hover:text-neonPink shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-pearlCard/80 dark:bg-midnightElevated/80 border border-pearlBorder dark:border-midnightBorder transition-colors" title="Collapse or expand tabs">
+            <button type="button" onclick="toggleTabsCollapse()" class="text-[11px] font-bold uppercase tracking-wider text-indigoMuted dark:text-slate-300 hover:text-neonPink shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-pearlCard/80 dark:bg-midnightElevated/80 border border-pearlBorder dark:border-midnightBorder" title="Collapse or expand tabs">
                 <i data-lucide="layers" class="w-3.5 h-3.5 text-neonPink"></i>
                 <span>Tabs</span>
                 <span class="tabs-collapsed-badge hidden px-1.5 py-0.5 rounded-full bg-pink-500/15 text-neonPink text-[10px]">0</span>
                 <i data-lucide="chevron-up" class="tabs-collapse-chevron w-3.5 h-3.5 text-indigoMuted dark:text-slate-400 transition-transform duration-200"></i>
             </button>
             <div id="globalTabsListSerp" class="tabs-collapsible-items flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-1"></div>
-            <button type="button" onclick="createNewBrowserTab('https://en.wikipedia.org')" class="ml-auto px-2.5 py-1 rounded-full text-xs font-semibold bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-indigoInk dark:text-slate-200 hover:border-neonPink hover:text-neonPink transition-colors flex items-center gap-1 shrink-0">
+            <button type="button" onclick="createNewBrowserTab('https://en.wikipedia.org')" class="ml-auto px-2.5 py-1 rounded-full text-xs font-semibold bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-indigoInk dark:text-slate-200 hover:border-neonPink hover:text-neonPink flex items-center gap-1 shrink-0">
                 <i data-lucide="plus" class="w-3.5 h-3.5 text-neonPink"></i>
                 <span>New Tab</span>
             </button>
         </div>
 
-        <!-- Sticky SERP Header -->
         <header class="sticky top-0 z-30 bg-pearlCard/95 dark:bg-midnight/95 backdrop-blur-md border-b border-pearlBorder dark:border-midnightBorder">
             <div class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-3.5 pb-2.5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-5">
                 <button type="button" onclick="goHome()" class="flex items-center gap-2.5 shrink-0 group" title="Back to Nexus Home">
@@ -608,7 +492,7 @@
                 </button>
 
                 <div class="flex-1 max-w-2xl relative order-3 md:order-2 w-full">
-                    <div class="flex items-center w-full bg-pearlElevated/70 dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder focus-within:border-neonPink rounded-full px-4 py-2 transition-all">
+                    <div class="flex items-center w-full bg-pearlElevated/70 dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder focus-within:border-neonPink rounded-full px-4 py-2">
                         <input id="serpSearchInput" type="text" autocomplete="off" placeholder="Search Nexus..." class="w-full bg-transparent text-sm sm:text-base text-indigoInk dark:text-slate-100 focus:outline-none">
                         <button type="button" id="serpClearBtn" onclick="clearInput('serp')" class="p-1 text-indigoMuted dark:text-slate-400 hover:text-neonPink" aria-label="Clear search">
                             <i data-lucide="x" class="w-4 h-4"></i>
@@ -625,49 +509,28 @@
                 </div>
 
                 <div class="ml-auto flex items-center gap-2 order-2 md:order-3">
-                    <button type="button" onclick="openChatDrawer()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold shadow-xs hover:opacity-95 transition-all">
+                    <button type="button" onclick="openChatDrawer()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold shadow-xs hover:opacity-95">
                         <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
                         <span>Nexus Chat</span>
                     </button>
-                    <button type="button" onclick="toggleTheme()" class="p-2 rounded-full bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-indigoInk dark:text-slate-200 hover:border-neonPink/60 transition-colors" aria-label="Toggle theme">
+                    <button type="button" onclick="toggleTheme()" class="p-2 rounded-full bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-indigoInk dark:text-slate-200 hover:border-neonPink/60" aria-label="Toggle theme">
                         <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-deepPurple"></i>
                         <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-neonPink"></i>
                     </button>
-                    <button type="button" onclick="toggleAppsMenu(event)" class="p-2 rounded-full text-indigoMuted dark:text-slate-300 hover:bg-pearlElevated dark:hover:bg-midnightElevated transition-colors" aria-label="Nexus Tools">
+                    <button type="button" onclick="toggleAppsMenu(event)" class="p-2 rounded-full text-indigoMuted dark:text-slate-300 hover:bg-pearlElevated dark:hover:bg-midnightElevated" aria-label="Nexus Tools">
                         <i data-lucide="grip" class="w-5 h-5"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- Category Tabs -->
             <div class="max-w-[1400px] mx-auto px-4 sm:px-6 md:pl-[148px] flex items-center justify-between gap-4 overflow-x-auto no-scrollbar text-sm">
-                <div class="flex items-center gap-1 sm:gap-2">
-                    <button type="button" onclick="switchTab('all')" id="tab-all" class="serp-tab flex items-center gap-1.5 px-3.5 py-2.5 border-b-[3px] border-neonPink text-neonPink font-semibold whitespace-nowrap transition-colors">
-                        <i data-lucide="search" class="w-4 h-4"></i> All
-                    </button>
-                    <button type="button" onclick="switchTab('chat')" id="tab-chat" class="serp-tab flex items-center gap-1.5 px-3.5 py-2.5 border-b-[3px] border-transparent text-indigoMuted dark:text-slate-400 hover:text-neonPink whitespace-nowrap transition-colors">
-                        <i data-lucide="message-circle" class="w-4 h-4"></i> Nexus Chat
-                    </button>
-                    <button type="button" onclick="switchTab('images')" id="tab-images" class="serp-tab flex items-center gap-1.5 px-3.5 py-2.5 border-b-[3px] border-transparent text-indigoMuted dark:text-slate-400 hover:text-electricBlue dark:hover:text-neonBlue whitespace-nowrap transition-colors">
-                        <i data-lucide="image" class="w-4 h-4"></i> Images
-                    </button>
-                    <button type="button" onclick="switchTab('news')" id="tab-news" class="serp-tab flex items-center gap-1.5 px-3.5 py-2.5 border-b-[3px] border-transparent text-indigoMuted dark:text-slate-400 hover:text-deepPurple dark:hover:text-vividPurple whitespace-nowrap transition-colors">
-                        <i data-lucide="newspaper" class="w-4 h-4"></i> News
-                    </button>
-                    <button type="button" onclick="switchTab('videos')" id="tab-videos" class="serp-tab flex items-center gap-1.5 px-3.5 py-2.5 border-b-[3px] border-transparent text-indigoMuted dark:text-slate-400 hover:text-neonPink whitespace-nowrap transition-colors">
-                        <i data-lucide="play-square" class="w-4 h-4"></i> Videos
-                    </button>
-                    <button type="button" onclick="switchTab('maps')" id="tab-maps" class="serp-tab flex items-center gap-1.5 px-3.5 py-2.5 border-b-[3px] border-transparent text-indigoMuted dark:text-slate-400 hover:text-electricBlue dark:hover:text-neonBlue whitespace-nowrap transition-colors">
-                        <i data-lucide="map-pin" class="w-4 h-4"></i> Maps
-                    </button>
-                </div>
-                <button type="button" onclick="toggleSearchTools()" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-indigoMuted dark:text-slate-400 hover:bg-pearlElevated dark:hover:bg-midnightElevated hover:text-indigoInk dark:hover:text-slate-200 transition-colors shrink-0">
+                <div id="serpTabsRow" class="flex items-center gap-1 sm:gap-2"></div>
+                <button type="button" onclick="toggleSearchTools()" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-indigoMuted dark:text-slate-400 hover:bg-pearlElevated dark:hover:bg-midnightElevated hover:text-indigoInk dark:hover:text-slate-200 shrink-0">
                     <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i> Search tools
                 </button>
             </div>
         </header>
 
-        <!-- Search Tools Bar -->
         <div id="searchToolsBar" class="hidden bg-pearlElevated/70 dark:bg-midnight/60 border-b border-pearlBorder dark:border-midnightBorder py-2 px-4 sm:px-6 md:pl-[156px] text-xs fade-in">
             <div class="max-w-[1400px] mx-auto flex flex-wrap items-center gap-3">
                 <select id="timeFilter" onchange="applySearchFilters()" class="bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-indigoInk dark:text-slate-200 rounded-full px-3 py-1 focus:outline-none focus:border-neonPink">
@@ -684,7 +547,6 @@
             </div>
         </div>
 
-        <!-- Results Stats -->
         <div class="max-w-[1400px] w-full mx-auto px-4 sm:px-6 md:pl-[156px] py-2.5 text-xs text-indigoMuted dark:text-slate-400 flex items-center justify-between">
             <span id="resultsStats">Ready</span>
             <span class="hidden sm:inline-flex items-center gap-1.5 text-deepPurple dark:text-purple-400 font-medium">
@@ -692,10 +554,8 @@
             </span>
         </div>
 
-        <!-- Dynamic Results Area -->
         <main id="resultsContainer" class="flex-1 max-w-[1400px] w-full mx-auto px-4 sm:px-6 md:pl-[156px] pb-16"></main>
 
-        <!-- SERP Footer -->
         <footer class="w-full bg-pearlElevated/70 dark:bg-midnight border-t border-pearlBorder dark:border-midnightBorder py-5 px-4 sm:px-6 md:pl-[156px] text-xs text-indigoMuted dark:text-slate-400">
             <div class="flex flex-wrap items-center gap-4 mb-2">
                 <span class="font-semibold text-indigoInk dark:text-slate-300 flex items-center gap-1.5">
@@ -706,80 +566,60 @@
                 <span>Private session</span>
             </div>
             <div class="flex flex-wrap gap-6">
-                <button type="button" onclick="openInfoModal('help')" class="hover:text-electricBlue dark:hover:text-neonBlue transition-colors">Help</button>
-                <button type="button" onclick="openInfoModal('feedback')" class="hover:text-deepPurple dark:hover:text-vividPurple transition-colors">Send feedback</button>
-                <button type="button" onclick="openInfoModal('privacy')" class="hover:text-neonPink transition-colors">Privacy</button>
-                <button type="button" onclick="openInfoModal('terms')" class="hover:text-electricBlue dark:hover:text-neonBlue transition-colors">Terms</button>
+                <button type="button" onclick="openInfoModal('help')" class="hover:text-electricBlue dark:hover:text-neonBlue">Help</button>
+                <button type="button" onclick="openInfoModal('feedback')" class="hover:text-deepPurple dark:hover:text-vividPurple">Send feedback</button>
+                <button type="button" onclick="openInfoModal('privacy')" class="hover:text-neonPink">Privacy</button>
+                <button type="button" onclick="openInfoModal('terms')" class="hover:text-electricBlue dark:hover:text-neonBlue">Terms</button>
             </div>
         </footer>
 
-        <!-- Floating Home Button -->
         <button type="button" onclick="goHome()" class="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-40 w-12 h-12 rounded-2xl bg-pearlCard/90 dark:bg-midnight/90 backdrop-blur-md border border-pearlBorder dark:border-purple-500/50 shadow-light-glow dark:shadow-cosmic-glow flex items-center justify-center hover:scale-105 hover:border-neonPink transition-all" aria-label="Back to Home" title="Back to Nexus Home">
             <i data-lucide="home" class="w-5 h-5 text-neonPink"></i>
         </button>
     </div>
 
     <script>
-        // ==========================================
-        // STATE & SAFE STORAGE
-        // ==========================================
         const safeStorage = {
-            get(key) {
-                try { return window.localStorage.getItem(key); } catch (_) { return null; }
-            },
-            set(key, val) {
-                try { window.localStorage.setItem(key, val); } catch (_) {}
-            }
+            get(k) { try { return window.localStorage.getItem(k); } catch (_) { return null; } },
+            set(k, v) { try { window.localStorage.setItem(k, v); } catch (_) {} }
         };
 
-        let currentQuery = '';
-        let currentTab = 'all';
-        let activeTimeFilter = 'Any time';
-        let activeVerbatimFilter = 'All results';
-        let recentSearches = [];
-        let autocompleteTimer = null;
-        let speechRecognitionInstance = null;
-        let activeMapInstance = null;
-        let activeMapMarkers = [];
-        let calcExpression = '0';
-        let chatMessages = [];
-        let chatIsTyping = false;
-        let storedBrowserTabs = [];
-        let activeBrowserTabId = null;
+        let currentQuery = '', currentTab = 'all', activeTimeFilter = 'Any time', activeVerbatimFilter = 'All results';
+        let recentSearches = [], storedBrowserTabs = [], activeBrowserTabId = null;
         let isTabsBarCollapsed = safeStorage.get('nexus_tabs_collapsed') === 'true';
-        let iframeEmbedWatchdog = null;
+        let autocompleteTimer = null, speechRecognitionInstance = null, activeMapInstance = null, activeMapMarkers = [];
+        let calcExpression = '0', chatMessages = [], chatIsTyping = false, iframeEmbedWatchdog = null;
+        let currentImageResults = [], currentVideoResults = [];
 
+        try { recentSearches = JSON.parse(safeStorage.get('nexus_recent_searches') || '[]') || []; } catch (_) {}
         try {
-            const savedRecent = JSON.parse(safeStorage.get('nexus_recent_searches') || '[]');
-            if (Array.isArray(savedRecent)) recentSearches = savedRecent;
-        } catch (_) { recentSearches = []; }
+            storedBrowserTabs = JSON.parse(safeStorage.get('nexus_browser_tabs') || '[]') || [];
+            if (storedBrowserTabs.length) activeBrowserTabId = storedBrowserTabs[0].id;
+        } catch (_) {}
 
-        try {
-            const savedTabs = JSON.parse(safeStorage.get('nexus_browser_tabs') || '[]');
-            if (Array.isArray(savedTabs) && savedTabs.length > 0) {
-                storedBrowserTabs = savedTabs;
-                activeBrowserTabId = savedTabs[0].id;
-            }
-        } catch (_) { storedBrowserTabs = []; }
+        const $ = (id) => document.getElementById(id);
+        const escapeHTML = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const stripHTML = (h) => { const d = document.createElement('div'); d.innerHTML = h || ''; return (d.textContent || '').trim(); };
+        const getDomain = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (_) { return 'web'; } };
+        const getFavicon = (u) => `https://www.google.com/s2/favicons?domain=${encodeURIComponent(getDomain(u))}&sz=32`;
 
-        // ==========================================
-        // UI HELPERS & THEME
-        // ==========================================
-        function renderIcons() {
-            try {
-                if (window.lucide && typeof window.lucide.createIcons === 'function') {
-                    window.lucide.createIcons();
-                }
-            } catch (_) {}
+        function renderIcons() { try { window.lucide?.createIcons?.(); } catch (_) {} }
+        function showModal(el, cls = 'flex') { if (el) { el.classList.remove('hidden'); if (cls) el.classList.add(cls); } }
+        function hideModal(el, cls = 'flex') { if (el) { el.classList.add('hidden'); if (cls) el.classList.remove(cls); } }
+
+        let toastTimer = null;
+        function showToast(msg) {
+            const box = $('toastBox'), text = $('toastMessage');
+            if (!box || !text) return;
+            text.textContent = msg;
+            showModal(box, 'flex');
+            renderIcons();
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => hideModal(box, 'flex'), 2600);
         }
 
         function applySavedTheme() {
-            const saved = safeStorage.get('nexus_theme');
-            if (saved === 'light') {
-                document.documentElement.classList.remove('dark');
-            } else {
-                document.documentElement.classList.add('dark');
-            }
+            document.documentElement.classList.toggle('dark', safeStorage.get('nexus_theme') !== 'light');
         }
 
         function toggleTheme() {
@@ -789,310 +629,187 @@
             showToast(isDark ? 'Dark mode enabled' : 'Light mode enabled');
         }
 
-        function showModal(el, displayClass = 'flex') {
-            if (!el) return;
-            el.classList.remove('hidden');
-            if (displayClass) el.classList.add(displayClass);
-        }
-
-        function hideModal(el, displayClass = 'flex') {
-            if (!el) return;
-            el.classList.add('hidden');
-            if (displayClass) el.classList.remove(displayClass);
-        }
-
-        let toastTimer = null;
-        function showToast(msg) {
-            const box = document.getElementById('toastBox');
-            const text = document.getElementById('toastMessage');
-            if (!box || !text) return;
-            text.textContent = msg;
-            showModal(box, 'flex');
-            renderIcons();
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => hideModal(box, 'flex'), 2600);
-        }
-
-        function escapeHTML(str) {
-            if (str === null || str === undefined) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
-        }
-
-        function stripHTML(html) {
-            const div = document.createElement('div');
-            div.innerHTML = html || '';
-            return (div.textContent || div.innerText || '').trim();
-        }
-
-        function getDomainFromUrl(url) {
-            try {
-                return new URL(url).hostname.replace(/^www\./, '');
-            } catch (_) {
-                return 'web';
+        function renderStaticUI() {
+            const tools = [
+                { label: 'Calculator', icon: 'calculator', color: 'bg-sky-500/15 text-electricBlue dark:text-neonBlue border-sky-500/30', fn: "openToolModal('calculator')" },
+                { label: 'Weather', icon: 'cloud-sun', color: 'bg-pink-500/15 text-neonPink border-pink-500/30', fn: "executeSearch('Weather in Brampton Ontario', 'all')" },
+                { label: 'Maps', icon: 'map-pin', color: 'bg-purple-500/15 text-deepPurple dark:text-vividPurple border-purple-500/30', fn: "executeSearch('Brampton, Ontario', 'maps')" },
+                { label: 'Translate', icon: 'languages', color: 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border-indigo-500/30', fn: "openToolModal('translator')" },
+                { label: 'Dictionary', icon: 'book-open', color: 'bg-fuchsia-500/15 text-fuchsia-600 dark:text-fuchsia-400 border-fuchsia-500/30', fn: "openToolModal('dictionary')" },
+                { label: 'Images', icon: 'image', color: 'bg-blue-500/15 text-electricBlue dark:text-neonBlue border-blue-500/30', fn: "executeSearch('Aurora Borealis', 'images')" },
+            ];
+            if ($('appsGridContainer')) {
+                $('appsGridContainer').innerHTML = tools.map(t => `
+                    <button type="button" onclick="${t.fn}" class="flex flex-col items-center p-3 rounded-2xl hover:bg-pearlElevated dark:hover:bg-purple-500/10 transition-colors">
+                        <div class="w-10 h-10 rounded-full ${t.color} border flex items-center justify-center mb-1.5"><i data-lucide="${t.icon}" class="w-5 h-5"></i></div>
+                        <span class="text-xs font-medium text-indigoInk dark:text-slate-200">${t.label}</span>
+                    </button>
+                `).join('');
+            }
+            const tabs = [
+                { id: 'all', label: 'All', icon: 'search' },
+                { id: 'chat', label: 'Nexus Chat', icon: 'message-circle' },
+                { id: 'images', label: 'Images', icon: 'image' },
+                { id: 'news', label: 'News', icon: 'newspaper' },
+                { id: 'videos', label: 'Videos', icon: 'play-square' },
+                { id: 'maps', label: 'Maps', icon: 'map-pin' },
+            ];
+            if ($('serpTabsRow')) {
+                $('serpTabsRow').innerHTML = tabs.map(t => `
+                    <button type="button" onclick="switchTab('${t.id}')" id="tab-${t.id}" class="serp-tab flex items-center gap-1.5 px-3.5 py-2.5 border-b-[3px] ${t.id === 'all' ? 'border-neonPink text-neonPink font-semibold' : 'border-transparent text-indigoMuted dark:text-slate-400 hover:text-neonPink'} whitespace-nowrap transition-colors">
+                        <i data-lucide="${t.icon}" class="w-4 h-4"></i> ${t.label}
+                    </button>
+                `).join('');
             }
         }
 
-        function getFaviconUrl(url) {
-            const host = getDomainFromUrl(url);
-            return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=32`;
-        }
-
-        // ==========================================
-        // NAVIGATION & SEARCH INPUTS
-        // ==========================================
         function toggleAppsMenu(e) {
             if (e) e.stopPropagation();
-            const popover = document.getElementById('appsPopover');
-            if (!popover) return;
-            if (popover.classList.contains('hidden')) {
-                showModal(popover, '');
-                renderIcons();
-            } else {
-                hideModal(popover, '');
-            }
+            const p = $('appsPopover');
+            if (!p) return;
+            p.classList.contains('hidden') ? (showModal(p, ''), renderIcons()) : hideModal(p, '');
         }
 
         function goHome() {
-            document.getElementById('serpView')?.classList.add('hidden');
-            document.getElementById('serpView')?.classList.remove('flex');
-            const homeView = document.getElementById('homeView');
-            homeView?.classList.remove('hidden');
-            homeView?.classList.add('flex');
-            const input = document.getElementById('homeSearchInput');
-            if (input) {
-                input.value = '';
-                document.getElementById('homeClearBtn')?.classList.add('hidden');
-                input.focus();
+            hideModal($('serpView'), 'flex');
+            showModal($('homeView'), 'flex');
+            if ($('homeSearchInput')) {
+                $('homeSearchInput').value = '';
+                $('homeClearBtn')?.classList.add('hidden');
+                $('homeSearchInput').focus();
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function clearInput(source) {
-            const input = document.getElementById(source === 'home' ? 'homeSearchInput' : 'serpSearchInput');
-            const clearBtn = document.getElementById(source === 'home' ? 'homeClearBtn' : 'serpClearBtn');
-            const dropdown = document.getElementById(source === 'home' ? 'homeAutocomplete' : 'serpAutocomplete');
-            if (input) {
-                input.value = '';
-                input.focus();
-            }
-            if (clearBtn && source === 'home') clearBtn.classList.add('hidden');
-            if (dropdown) dropdown.classList.add('hidden');
+        function clearInput(src) {
+            const inp = $(src === 'home' ? 'homeSearchInput' : 'serpSearchInput');
+            if (inp) { inp.value = ''; inp.focus(); }
+            if (src === 'home') $('homeClearBtn')?.classList.add('hidden');
+            $(src === 'home' ? 'homeAutocomplete' : 'serpAutocomplete')?.classList.add('hidden');
         }
 
         function saveRecentSearch(q) {
-            const clean = (q || '').trim();
+            const clean = q.trim();
             if (!clean) return;
-            recentSearches = [clean, ...recentSearches.filter(item => item.toLowerCase() !== clean.toLowerCase())].slice(0, 6);
+            recentSearches = [clean, ...recentSearches.filter(x => x.toLowerCase() !== clean.toLowerCase())].slice(0, 6);
             safeStorage.set('nexus_recent_searches', JSON.stringify(recentSearches));
         }
 
-        function setupAutocomplete(inputId, dropdownId, clearBtnId) {
-            const input = document.getElementById(inputId);
-            const dropdown = document.getElementById(dropdownId);
-            const clearBtn = clearBtnId ? document.getElementById(clearBtnId) : null;
-            if (!input || !dropdown) return;
-
-            input.addEventListener('input', () => {
-                const val = input.value;
-                if (clearBtn) clearBtn.classList.toggle('hidden', val.length === 0);
+        function setupAutocomplete(inputId, dropId, clearId) {
+            const inp = $(inputId), drop = $(dropId), clr = clearId ? $(clearId) : null;
+            if (!inp || !drop) return;
+            inp.addEventListener('input', () => {
+                if (clr) clr.classList.toggle('hidden', !inp.value.length);
                 clearTimeout(autocompleteTimer);
-                if (!val.trim()) {
-                    renderAutocompleteDropdown(dropdown, recentSearches, true);
-                    return;
-                }
-                autocompleteTimer = setTimeout(() => fetchSuggestions(val.trim(), dropdown), 180);
+                if (!inp.value.trim()) return renderAutocomplete(drop, recentSearches, true);
+                autocompleteTimer = setTimeout(() => fetchSuggestions(inp.value.trim(), drop), 180);
             });
-
-            input.addEventListener('focus', () => {
-                const val = input.value.trim();
-                if (!val) {
-                    renderAutocompleteDropdown(dropdown, recentSearches, true);
-                } else {
-                    fetchSuggestions(val, dropdown);
-                }
-            });
-
-            input.addEventListener('keydown', (e) => {
+            inp.addEventListener('focus', () => inp.value.trim() ? fetchSuggestions(inp.value.trim(), drop) : renderAutocomplete(drop, recentSearches, true));
+            inp.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    dropdown.classList.add('hidden');
-                    if (input.value.trim()) {
-                        const targetTab = document.getElementById('serpView')?.classList.contains('hidden') ? 'all' : currentTab;
-                        executeSearch(input.value.trim(), targetTab);
-                    }
-                } else if (e.key === 'Escape') {
-                    dropdown.classList.add('hidden');
-                }
+                    drop.classList.add('hidden');
+                    if (inp.value.trim()) executeSearch(inp.value.trim(), $('serpView')?.classList.contains('hidden') ? 'all' : currentTab);
+                } else if (e.key === 'Escape') drop.classList.add('hidden');
             });
         }
 
-        async function fetchSuggestions(query, dropdown) {
+        async function fetchSuggestions(q, drop) {
             try {
-                const res = await fetch(`https://en.wikipedia.org/w/api.php?action=opensearch&format=json&origin=*&limit=6&search=${encodeURIComponent(query)}`);
+                const res = await fetch(`https://en.wikipedia.org/w/api.php?action=opensearch&format=json&origin=*&limit=6&search=${encodeURIComponent(q)}`);
                 const data = await res.json();
-                const list = Array.isArray(data?.[1]) ? data[1] : [];
-                renderAutocompleteDropdown(dropdown, list.length ? list : [query], false);
-            } catch (_) {
-                renderAutocompleteDropdown(dropdown, [query], false);
-            }
+                renderAutocomplete(drop, data?.[1]?.length ? data[1] : [q], false);
+            } catch (_) { renderAutocomplete(drop, [q], false); }
         }
 
-        function renderAutocompleteDropdown(dropdown, items, isRecent) {
-            if (!items || items.length === 0) {
-                dropdown.classList.add('hidden');
-                return;
-            }
-            dropdown.innerHTML = items.map(item => `
-                <button type="button" onclick="selectSuggestion('${escapeHTML(item).replace(/'/g, "\\'")}')" class="w-full px-5 py-2.5 flex items-center gap-3 text-left text-sm text-indigoInk dark:text-slate-200 hover:bg-pearlElevated dark:hover:bg-midnightElevated transition-colors">
+        function renderAutocomplete(drop, items, isRecent) {
+            if (!items?.length) return drop.classList.add('hidden');
+            drop.innerHTML = items.map(item => `
+                <button type="button" onclick="selectSuggestion('${escapeHTML(item).replace(/'/g, "\\'")}')" class="w-full px-5 py-2.5 flex items-center gap-3 text-left text-sm text-indigoInk dark:text-slate-200 hover:bg-pearlElevated dark:hover:bg-midnightElevated">
                     <i data-lucide="${isRecent ? 'clock' : 'search'}" class="w-4 h-4 ${isRecent ? 'text-neonPink' : 'text-electricBlue dark:text-neonBlue'} shrink-0"></i>
                     <span class="truncate flex-1">${escapeHTML(item)}</span>
                     <i data-lucide="arrow-up-left" class="w-3.5 h-3.5 text-indigoMuted/60 dark:text-slate-500"></i>
                 </button>
             `).join('');
-            dropdown.classList.remove('hidden');
+            drop.classList.remove('hidden');
             renderIcons();
         }
 
         function selectSuggestion(term) {
-            document.getElementById('homeAutocomplete')?.classList.add('hidden');
-            document.getElementById('serpAutocomplete')?.classList.add('hidden');
-            const onHome = !document.getElementById('homeView')?.classList.contains('hidden');
-            executeSearch(term, onHome ? 'all' : currentTab);
+            $('homeAutocomplete')?.classList.add('hidden');
+            $('serpAutocomplete')?.classList.add('hidden');
+            executeSearch(term, !$('homeView')?.classList.contains('hidden') ? 'all' : currentTab);
         }
 
         function handleHomeSearchSubmit() {
-            const val = document.getElementById('homeSearchInput')?.value.trim();
-            if (!val) {
-                showToast('Enter a search term or click I\'m Feeling Lucky');
-                document.getElementById('homeSearchInput')?.focus();
-                return;
-            }
-            executeSearch(val, 'all');
+            const v = $('homeSearchInput')?.value.trim();
+            v ? executeSearch(v, 'all') : (showToast('Enter a search term'), $('homeSearchInput')?.focus());
         }
 
         function handleSerpSearchSubmit() {
-            const val = document.getElementById('serpSearchInput')?.value.trim();
-            if (!val) {
-                showToast('Type something to search');
-                return;
-            }
-            executeSearch(val, currentTab);
+            const v = $('serpSearchInput')?.value.trim();
+            v ? executeSearch(v, currentTab) : showToast('Type something to search');
         }
 
         async function feelingLucky() {
-            const typed = document.getElementById('homeSearchInput')?.value.trim();
-            if (typed) {
-                executeSearch(typed, 'all');
-                return;
-            }
+            const typed = $('homeSearchInput')?.value.trim();
+            if (typed) return executeSearch(typed, 'all');
             showToast('Finding a discovery...');
             try {
                 const res = await fetch('https://en.wikipedia.org/api/rest_v1/page/random/summary');
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data?.title) {
-                        executeSearch(data.title, 'all');
-                        return;
-                    }
-                }
+                const data = await res.json();
+                if (data?.title) return executeSearch(data.title, 'all');
             } catch (_) {}
-            const topics = ['Northern Lights', 'James Webb Space Telescope', 'Bioluminescence', 'Quantum Computing'];
-            executeSearch(topics[Math.floor(Math.random() * topics.length)], 'all');
+            const list = ['Northern Lights', 'James Webb Space Telescope', 'Bioluminescence', 'Quantum Computing'];
+            executeSearch(list[Math.floor(Math.random() * list.length)], 'all');
         }
 
-        // ==========================================
         // VOICE SEARCH
-        // ==========================================
         function openVoiceModal() {
-            const modal = document.getElementById('voiceModal');
-            const statusEl = document.getElementById('voiceStatusText');
-            const transcriptEl = document.getElementById('voiceTranscript');
+            const modal = $('voiceModal'), st = $('voiceStatusText'), tr = $('voiceTranscript');
             showModal(modal, 'flex');
             renderIcons();
-
-            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRec) {
-                if (statusEl) statusEl.textContent = 'Voice Simulation';
-                if (transcriptEl) transcriptEl.textContent = '"Searching for Artificial Intelligence..."';
-                setTimeout(() => {
-                    if (modal && !modal.classList.contains('hidden')) {
-                        closeVoiceModal();
-                        executeSearch('Artificial Intelligence', 'all');
-                    }
-                }, 1600);
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SR) {
+                if (st) st.textContent = 'Voice Simulation';
+                if (tr) tr.textContent = '"Searching for Artificial Intelligence..."';
+                setTimeout(() => { if (!modal?.classList.contains('hidden')) { closeVoiceModal(); executeSearch('Artificial Intelligence', 'all'); } }, 1500);
                 return;
             }
-
             try {
-                speechRecognitionInstance = new SpeechRec();
+                speechRecognitionInstance = new SR();
                 speechRecognitionInstance.lang = 'en-US';
                 speechRecognitionInstance.interimResults = true;
-                if (statusEl) statusEl.textContent = 'Listening...';
-                if (transcriptEl) transcriptEl.textContent = '"Speak now..."';
-
-                speechRecognitionInstance.onresult = (event) => {
-                    const transcript = Array.from(event.results).map(r => r[0].transcript).join('');
-                    if (transcriptEl) transcriptEl.textContent = `"${transcript}"`;
-                    if (event.results[0]?.isFinal && transcript.trim()) {
-                        closeVoiceModal();
-                        executeSearch(transcript.trim(), 'all');
-                    }
+                speechRecognitionInstance.onresult = (e) => {
+                    const txt = Array.from(e.results).map(r => r[0].transcript).join('');
+                    if (tr) tr.textContent = `"${txt}"`;
+                    if (e.results[0]?.isFinal && txt.trim()) { closeVoiceModal(); executeSearch(txt.trim(), 'all'); }
                 };
-                speechRecognitionInstance.onerror = () => {
-                    if (statusEl) statusEl.textContent = 'Mic unavailable';
-                    if (transcriptEl) transcriptEl.textContent = 'Type your query in the search bar instead.';
-                };
+                speechRecognitionInstance.onerror = () => { if (st) st.textContent = 'Mic unavailable'; };
                 speechRecognitionInstance.start();
             } catch (_) {}
         }
 
         function closeVoiceModal() {
-            hideModal(document.getElementById('voiceModal'), 'flex');
-            try {
-                speechRecognitionInstance?.stop();
-                speechRecognitionInstance = null;
-            } catch (_) {}
+            hideModal($('voiceModal'), 'flex');
+            try { speechRecognitionInstance?.stop(); speechRecognitionInstance = null; } catch (_) {}
         }
 
-        // ==========================================
-        // MULTI-TAB WEB FRAME VIEWER
-        // ==========================================
-        function isDirectUrlInput(text) {
-            const t = (text || '').trim();
-            if (!t || /\s/.test(t)) return false;
-            if (/^https?:\/\//i.test(t)) return true;
-            return /^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+(\/[^\s]*)?$/.test(t);
-        }
-
-        function normalizeWebUrl(raw) {
-            const t = (raw || '').trim();
-            if (!t) return '';
-            return /^https?:\/\//i.test(t) ? t : 'https://' + t;
-        }
+        // MULTI-TAB WEB FRAME
+        const isDirectUrl = (t) => !/\s/.test(t) && (/^https?:\/\//i.test(t) || /^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+(\/[^\s]*)?$/.test(t));
+        const normalizeUrl = (u) => { const t = (u || '').trim(); return !t ? '' : (/^https?:\/\//i.test(t) ? t : 'https://' + t); };
 
         function persistBrowserTabs() {
             safeStorage.set('nexus_browser_tabs', JSON.stringify(storedBrowserTabs));
-            renderGlobalTabsBar();
-            renderBrowserTabsBar();
+            renderTabsBars();
         }
 
         function applyTabsCollapseUI() {
-            document.querySelectorAll('.tabs-collapsible-items').forEach(el => {
-                el.classList.toggle('hidden', isTabsBarCollapsed);
-            });
-            document.querySelectorAll('.tabs-collapse-chevron').forEach(icon => {
-                icon.style.transform = isTabsBarCollapsed ? 'rotate(180deg)' : 'rotate(0deg)';
-            });
-            document.querySelectorAll('.tabs-collapsed-badge').forEach(badge => {
-                badge.classList.toggle('hidden', !isTabsBarCollapsed);
-                badge.textContent = badge.closest('#modalTabsBarContainer')
-                    ? `Tabs (${storedBrowserTabs.length})`
-                    : `${storedBrowserTabs.length}`;
+            document.querySelectorAll('.tabs-collapsible-items').forEach(el => el.classList.toggle('hidden', isTabsBarCollapsed));
+            document.querySelectorAll('.tabs-collapse-chevron').forEach(ic => { ic.style.transform = isTabsBarCollapsed ? 'rotate(180deg)' : 'rotate(0deg)'; });
+            document.querySelectorAll('.tabs-collapsed-badge').forEach(b => {
+                b.classList.toggle('hidden', !isTabsBarCollapsed);
+                b.textContent = b.closest('#modalTabsBarContainer') ? `Tabs (${storedBrowserTabs.length})` : `${storedBrowserTabs.length}`;
             });
         }
 
@@ -1102,339 +819,166 @@
             applyTabsCollapseUI();
         }
 
-        function renderGlobalTabsBar() {
-            const targets = [
-                document.getElementById('globalTabsListHome'),
-                document.getElementById('globalTabsListSerp')
-            ].filter(Boolean);
-
-            const html = storedBrowserTabs.map(tab => {
-                const active = tab.id === activeBrowserTabId;
+        function renderTabsBars() {
+            const chipHTML = storedBrowserTabs.map(t => {
+                const act = t.id === activeBrowserTabId;
                 return `
-                    <div onclick="openStoredTabFromBar('${tab.id}')" class="group flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium cursor-pointer border transition-all max-w-[180px] shrink-0 ${active ? 'bg-pearlCard dark:bg-midnightElevated border-neonPink/70 text-indigoInk dark:text-white shadow-xs' : 'bg-pearlCard/60 dark:bg-midnight/70 border-pearlBorder dark:border-midnightBorder text-indigoMuted dark:text-slate-300 hover:border-neonPink/50'}">
-                        <i data-lucide="globe" class="w-3 h-3 ${active ? 'text-neonPink' : 'text-electricBlue dark:text-neonBlue'} shrink-0"></i>
-                        <span class="truncate">${escapeHTML(tab.title || tab.host)}</span>
-                        <button type="button" onclick="event.stopPropagation(); closeBrowserTab('${tab.id}')" class="p-0.5 rounded-full opacity-70 hover:opacity-100 hover:bg-pink-500/20 hover:text-neonPink shrink-0" title="Close tab" aria-label="Close tab">
-                            <i data-lucide="x" class="w-2.5 h-2.5"></i>
-                        </button>
+                    <div onclick="switchBrowserTab('${t.id}')" class="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium cursor-pointer border max-w-[180px] shrink-0 ${act ? 'bg-pearlCard dark:bg-midnightElevated border-neonPink/70 text-indigoInk dark:text-white shadow-xs' : 'bg-pearlCard/60 dark:bg-midnight/70 border-pearlBorder dark:border-midnightBorder text-indigoMuted dark:text-slate-300 hover:border-neonPink/50'}">
+                        <i data-lucide="globe" class="w-3 h-3 ${act ? 'text-neonPink' : 'text-electricBlue dark:text-neonBlue'} shrink-0"></i>
+                        <span class="truncate">${escapeHTML(t.title || t.host)}</span>
+                        <button type="button" onclick="event.stopPropagation(); closeBrowserTab('${t.id}')" class="p-0.5 rounded-full hover:bg-pink-500/20 hover:text-neonPink shrink-0" aria-label="Close tab"><i data-lucide="x" class="w-2.5 h-2.5"></i></button>
                     </div>
                 `;
             }).join('');
-
-            targets.forEach(el => { el.innerHTML = html; });
+            ['globalTabsListHome', 'globalTabsListSerp', 'browserTabsList'].forEach(id => { if ($(id)) $(id).innerHTML = chipHTML; });
+            if ($('browserTabCountLabel')) $('browserTabCountLabel').textContent = `${storedBrowserTabs.length} stored ${storedBrowserTabs.length === 1 ? 'tab' : 'tabs'}`;
             applyTabsCollapseUI();
             renderIcons();
         }
 
-        function renderBrowserTabsBar() {
-            const listEl = document.getElementById('browserTabsList');
-            const countEl = document.getElementById('browserTabCountLabel');
-            if (countEl) {
-                countEl.textContent = `${storedBrowserTabs.length} stored ${storedBrowserTabs.length === 1 ? 'tab' : 'tabs'}`;
-            }
-            if (!listEl) return;
-
-            listEl.innerHTML = storedBrowserTabs.map(tab => {
-                const active = tab.id === activeBrowserTabId;
-                return `
-                    <div onclick="switchBrowserTab('${tab.id}')" class="group flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium cursor-pointer border transition-all max-w-[200px] shrink-0 ${active ? 'bg-pearlCard dark:bg-midnightElevated border-neonPink/70 text-indigoInk dark:text-white shadow-xs' : 'bg-pearlCard/50 dark:bg-midnight/60 border-pearlBorder/70 dark:border-midnightBorder text-indigoMuted dark:text-slate-400 hover:text-indigoInk dark:hover:text-slate-200'}">
-                        <i data-lucide="globe" class="w-3.5 h-3.5 ${active ? 'text-neonPink' : 'text-electricBlue dark:text-neonBlue'} shrink-0"></i>
-                        <span class="truncate flex-1">${escapeHTML(tab.title || tab.host)}</span>
-                        <button type="button" onclick="event.stopPropagation(); closeBrowserTab('${tab.id}')" class="p-0.5 rounded-full opacity-70 hover:opacity-100 hover:bg-pink-500/20 hover:text-neonPink shrink-0" title="Close tab" aria-label="Close tab">
-                            <i data-lucide="x" class="w-3 h-3"></i>
-                        </button>
-                    </div>
-                `;
-            }).join('');
-            applyTabsCollapseUI();
-            renderIcons();
-        }
-
-        function openStoredTabFromBar(tabId) {
-            const tab = storedBrowserTabs.find(t => t.id === tabId);
-            if (!tab) return;
-            activeBrowserTabId = tab.id;
+        function createNewBrowserTab(url = 'https://en.wikipedia.org') { navigateToUrl(url, true); }
+        function switchBrowserTab(id) {
+            const t = storedBrowserTabs.find(x => x.id === id);
+            if (!t) return;
+            activeBrowserTabId = t.id;
             persistBrowserTabs();
-            loadTabIntoViewport(tab);
+            loadTabIntoViewport(t);
         }
 
-        function createNewBrowserTab(defaultUrl = 'https://en.wikipedia.org') {
-            const normalized = normalizeWebUrl(defaultUrl);
-            let parsed;
-            try { parsed = new URL(normalized); } catch (_) { parsed = new URL('https://en.wikipedia.org'); }
-            const newId = 'tab_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-            const newTab = {
-                id: newId,
-                url: parsed.href,
-                host: parsed.hostname,
-                title: parsed.hostname.replace(/^www\./, '')
-            };
-            storedBrowserTabs.push(newTab);
-            activeBrowserTabId = newId;
-            persistBrowserTabs();
-            loadTabIntoViewport(newTab);
-        }
-
-        function switchBrowserTab(tabId) {
-            const tab = storedBrowserTabs.find(t => t.id === tabId);
-            if (!tab) return;
-            activeBrowserTabId = tab.id;
-            persistBrowserTabs();
-            loadTabIntoViewport(tab);
-        }
-
-        function closeBrowserTab(tabId) {
-            const idx = storedBrowserTabs.findIndex(t => t.id === tabId);
+        function closeBrowserTab(id) {
+            const idx = storedBrowserTabs.findIndex(x => x.id === id);
             if (idx === -1) return;
             storedBrowserTabs.splice(idx, 1);
-
-            if (storedBrowserTabs.length === 0) {
+            if (!storedBrowserTabs.length) {
                 activeBrowserTabId = null;
                 persistBrowserTabs();
-                closeWebBrowser();
-                return;
+                return closeWebBrowser();
             }
-
-            if (activeBrowserTabId === tabId) {
-                const next = storedBrowserTabs[Math.max(0, idx - 1)];
-                activeBrowserTabId = next.id;
+            if (activeBrowserTabId === id) {
+                activeBrowserTabId = storedBrowserTabs[Math.max(0, idx - 1)].id;
                 persistBrowserTabs();
-                if (!document.getElementById('webBrowserModal')?.classList.contains('hidden')) {
-                    loadTabIntoViewport(next);
-                }
-            } else {
-                persistBrowserTabs();
-            }
+                if (!$('webBrowserModal')?.classList.contains('hidden')) loadTabIntoViewport(storedBrowserTabs.find(x => x.id === activeBrowserTabId));
+            } else persistBrowserTabs();
         }
 
         function saveCurrentTabBookmark() {
-            const active = storedBrowserTabs.find(t => t.id === activeBrowserTabId);
-            if (active) {
-                persistBrowserTabs();
-                showToast(`Pinned "${active.title}"`);
-            }
+            const t = storedBrowserTabs.find(x => x.id === activeBrowserTabId);
+            if (t) { persistBrowserTabs(); showToast(`Pinned "${t.title}"`); }
         }
 
         async function renderReaderFallbackForUrl(url) {
-            const fallbackEl = document.getElementById('webBrowserReaderFallback');
-            const contentEl = document.getElementById('webBrowserReaderContent');
-            if (!fallbackEl || !contentEl) return;
-
-            fallbackEl.classList.remove('hidden');
-            contentEl.innerHTML = `<p class="text-indigoMuted dark:text-slate-400">Loading reader summary for <span class="font-mono text-neonPink">${escapeHTML(url)}</span>...</p>`;
-
+            const fb = $('webBrowserReaderFallback'), content = $('webBrowserReaderContent');
+            if (!fb || !content) return;
+            fb.classList.remove('hidden');
+            content.innerHTML = `<p class="text-indigoMuted dark:text-slate-400">Loading reader summary for <span class="font-mono text-neonPink">${escapeHTML(url)}</span>...</p>`;
             try {
                 const parsed = new URL(url);
-                const wikiTitleMatch = parsed.hostname.includes('wikipedia.org')
-                    ? decodeURIComponent(parsed.pathname.split('/wiki/')[1] || '').replace(/_/g, ' ')
-                    : '';
-                if (wikiTitleMatch) {
-                    const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikiTitleMatch)}`);
+                const wikiTitle = parsed.hostname.includes('wikipedia.org') ? decodeURIComponent(parsed.pathname.split('/wiki/')[1] || '').replace(/_/g, ' ') : '';
+                if (wikiTitle) {
+                    const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikiTitle)}`);
                     if (res.ok) {
-                        const data = await res.json();
-                        contentEl.innerHTML = `
-                            <h3 class="font-display text-xl font-bold text-indigoInk dark:text-white">${escapeHTML(data.title || wikiTitleMatch)}</h3>
-                            ${data.description ? `<p class="text-xs font-semibold text-neonPink">${escapeHTML(data.description)}</p>` : ''}
-                            <p class="leading-relaxed">${escapeHTML(data.extract || 'Summary unavailable.')}</p>
-                            <a href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold">
-                                Open Full Page in New Tab <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                            </a>
-                        `;
-                        renderIcons();
-                        return;
+                        const d = await res.json();
+                        content.innerHTML = `<h3 class="font-display text-xl font-bold text-indigoInk dark:text-white">${escapeHTML(d.title)}</h3><p>${escapeHTML(d.extract || '')}</p><a href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold">Open in New Tab <i data-lucide="external-link" class="w-3.5 h-3.5"></i></a>`;
+                        return renderIcons();
                     }
                 }
             } catch (_) {}
-
-            contentEl.innerHTML = `
-                <h3 class="font-display text-lg font-bold text-indigoInk dark:text-white">${escapeHTML(getDomainFromUrl(url))}</h3>
-                <p class="text-indigoMuted dark:text-slate-300">This website prevents direct framing inside another page. You can open it directly in a new browser tab.</p>
-                <a href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold">
-                    Open ${escapeHTML(getDomainFromUrl(url))} in New Tab <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                </a>
-            `;
+            content.innerHTML = `<h3 class="font-display text-lg font-bold text-indigoInk dark:text-white">${escapeHTML(getDomain(url))}</h3><p class="text-indigoMuted dark:text-slate-300">This site restricts direct iframe embedding. Open it in a new browser tab instead.</p><a href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold">Open ${escapeHTML(getDomain(url))} <i data-lucide="external-link" class="w-3.5 h-3.5"></i></a>`;
             renderIcons();
         }
 
         function loadTabIntoViewport(tab) {
             clearTimeout(iframeEmbedWatchdog);
-            const modal = document.getElementById('webBrowserModal');
-            const modalInput = document.getElementById('modalUrlInput');
-            const frame = document.getElementById('webBrowserFrame');
-            const extLink = document.getElementById('browserExternalLink');
-            const hostLabel = document.getElementById('browserCurrentHost');
-            const fallbackEl = document.getElementById('webBrowserReaderFallback');
-
-            if (fallbackEl) fallbackEl.classList.add('hidden');
-            if (modalInput) modalInput.value = tab.url;
-            if (extLink) extLink.href = tab.url;
-            if (hostLabel) hostLabel.textContent = tab.host;
-            if (frame) frame.src = tab.url;
-
-            const homeUrlInput = document.getElementById('homeUrlInput');
-            if (homeUrlInput) homeUrlInput.value = tab.url;
-
-            showModal(modal, 'flex');
-            renderBrowserTabsBar();
-
+            $('webBrowserReaderFallback')?.classList.add('hidden');
+            if ($('modalUrlInput')) $('modalUrlInput').value = tab.url;
+            if ($('browserExternalLink')) $('browserExternalLink').href = tab.url;
+            if ($('browserCurrentHost')) $('browserCurrentHost').textContent = tab.host;
+            if ($('webBrowserFrame')) $('webBrowserFrame').src = tab.url;
+            if ($('homeUrlInput')) $('homeUrlInput').value = tab.url;
+            showModal($('webBrowserModal'), 'flex');
+            renderTabsBars();
             iframeEmbedWatchdog = setTimeout(() => {
                 try {
-                    const doc = frame?.contentDocument;
-                    if (!doc || !doc.body || doc.body.innerHTML.trim() === '') {
-                        renderReaderFallbackForUrl(tab.url);
-                    }
-                } catch (_) {
-                    // Cross-origin frame loaded; if blank/blocked visually, user can still use Retry Frame or Open Tab
-                }
+                    const doc = $('webBrowserFrame')?.contentDocument;
+                    if (!doc || !doc.body || !doc.body.innerHTML.trim()) renderReaderFallbackForUrl(tab.url);
+                } catch (_) {}
             }, 2400);
         }
 
         function retryDirectIframeLoad() {
-            const tab = storedBrowserTabs.find(t => t.id === activeBrowserTabId);
-            const fallbackEl = document.getElementById('webBrowserReaderFallback');
-            const frame = document.getElementById('webBrowserFrame');
-            if (fallbackEl) fallbackEl.classList.add('hidden');
-            if (frame && tab) frame.src = tab.url;
+            const t = storedBrowserTabs.find(x => x.id === activeBrowserTabId);
+            $('webBrowserReaderFallback')?.classList.add('hidden');
+            if ($('webBrowserFrame') && t) $('webBrowserFrame').src = t.url;
         }
 
-        function navigateToUrl(rawUrl, openInNewTab = false) {
-            const normalized = normalizeWebUrl(rawUrl);
-            if (!normalized) {
-                showToast('Enter a valid URL (e.g., wikipedia.org)');
-                return;
-            }
+        function navigateToUrl(raw, openNew = false) {
+            const norm = normalizeUrl(raw);
+            if (!norm) return showToast('Enter a valid URL');
             let parsed;
-            try { parsed = new URL(normalized); } catch (_) {
-                showToast('Enter a valid web address');
-                return;
-            }
-
-            let targetTab = (!openInNewTab && activeBrowserTabId)
-                ? storedBrowserTabs.find(t => t.id === activeBrowserTabId)
-                : null;
-
-            if (!targetTab) {
-                const newId = 'tab_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-                targetTab = {
-                    id: newId,
-                    url: parsed.href,
-                    host: parsed.hostname,
-                    title: parsed.hostname.replace(/^www\./, '')
-                };
-                storedBrowserTabs.push(targetTab);
-                activeBrowserTabId = newId;
+            try { parsed = new URL(norm); } catch (_) { return showToast('Enter a valid web address'); }
+            let tab = (!openNew && activeBrowserTabId) ? storedBrowserTabs.find(x => x.id === activeBrowserTabId) : null;
+            if (!tab) {
+                tab = { id: 'tab_' + Date.now() + '_' + Math.floor(Math.random() * 999), url: parsed.href, host: parsed.hostname, title: parsed.hostname.replace(/^www\./, '') };
+                storedBrowserTabs.push(tab);
+                activeBrowserTabId = tab.id;
             } else {
-                targetTab.url = parsed.href;
-                targetTab.host = parsed.hostname;
-                targetTab.title = parsed.hostname.replace(/^www\./, '');
+                Object.assign(tab, { url: parsed.href, host: parsed.hostname, title: parsed.hostname.replace(/^www\./, '') });
             }
-
             persistBrowserTabs();
-            loadTabIntoViewport(targetTab);
+            loadTabIntoViewport(tab);
         }
 
-        function reloadWebBrowser() {
-            const val = document.getElementById('modalUrlInput')?.value.trim();
-            if (val) navigateToUrl(val, false);
-        }
+        function reloadWebBrowser() { const v = $('modalUrlInput')?.value.trim(); if (v) navigateToUrl(v, false); }
+        function closeWebBrowser() { clearTimeout(iframeEmbedWatchdog); hideModal($('webBrowserModal'), 'flex'); if ($('webBrowserFrame')) $('webBrowserFrame').src = 'about:blank'; }
 
-        function closeWebBrowser() {
-            clearTimeout(iframeEmbedWatchdog);
-            hideModal(document.getElementById('webBrowserModal'), 'flex');
-            const frame = document.getElementById('webBrowserFrame');
-            if (frame) frame.src = 'about:blank';
-        }
-
-        // ==========================================
-        // SEARCH EXECUTION & SMART WIDGETS
-        // ==========================================
+        // SEARCH DISPATCHER & WIDGETS
         function switchTab(tab) {
             currentTab = tab;
-            document.querySelectorAll('.serp-tab').forEach(btn => {
-                btn.classList.remove('border-neonPink', 'text-neonPink', 'font-semibold');
-                btn.classList.add('border-transparent', 'text-indigoMuted', 'dark:text-slate-400');
+            document.querySelectorAll('.serp-tab').forEach(b => {
+                b.classList.remove('border-neonPink', 'text-neonPink', 'font-semibold');
+                b.classList.add('border-transparent', 'text-indigoMuted', 'dark:text-slate-400');
             });
-            const active = document.getElementById(`tab-${tab}`);
-            if (active) {
-                active.classList.remove('border-transparent', 'text-indigoMuted', 'dark:text-slate-400');
-                active.classList.add('border-neonPink', 'text-neonPink', 'font-semibold');
-            }
+            const act = $(`tab-${tab}`);
+            if (act) { act.classList.remove('border-transparent', 'text-indigoMuted', 'dark:text-slate-400'); act.classList.add('border-neonPink', 'text-neonPink', 'font-semibold'); }
             if (currentQuery) executeSearch(currentQuery, tab);
         }
 
-        function toggleSearchTools() {
-            document.getElementById('searchToolsBar')?.classList.toggle('hidden');
-        }
-
-        function applySearchFilters() {
-            activeTimeFilter = document.getElementById('timeFilter')?.value || 'Any time';
-            activeVerbatimFilter = document.getElementById('verbatimFilter')?.value || 'All results';
-            if (currentQuery) executeSearch(currentQuery, currentTab);
-        }
-
-        function resetSearchFilters() {
-            activeTimeFilter = 'Any time';
-            activeVerbatimFilter = 'All results';
-            if (document.getElementById('timeFilter')) document.getElementById('timeFilter').value = 'Any time';
-            if (document.getElementById('verbatimFilter')) document.getElementById('verbatimFilter').value = 'All results';
-            if (currentQuery) executeSearch(currentQuery, currentTab);
-        }
+        function toggleSearchTools() { $('searchToolsBar')?.classList.toggle('hidden'); }
+        function applySearchFilters() { activeTimeFilter = $('timeFilter')?.value || 'Any time'; activeVerbatimFilter = $('verbatimFilter')?.value || 'All results'; if (currentQuery) executeSearch(currentQuery, currentTab); }
+        function resetSearchFilters() { activeTimeFilter = 'Any time'; activeVerbatimFilter = 'All results'; if ($('timeFilter')) $('timeFilter').value = 'Any time'; if ($('verbatimFilter')) $('verbatimFilter').value = 'All results'; if (currentQuery) executeSearch(currentQuery, currentTab); }
 
         async function executeSearch(query, tab = 'all') {
             const q = (query || '').trim();
             if (!q) return;
-
             const lower = q.toLowerCase();
-            if (lower === 'mei.ai') {
-                navigateToUrl('https://IIVShar.github.io/Mei-AI', true);
-                return;
-            }
-
-            if (lower === 'do a barrel roll') {
-                document.body.classList.add('barrel-roll');
-                setTimeout(() => document.body.classList.remove('barrel-roll'), 1400);
-                showToast('Barrel roll!');
-            } else if (lower === 'askew' || lower === 'tilt') {
-                document.body.classList.add('askew');
-            } else {
-                document.body.classList.remove('askew');
-            }
-
-            if (isDirectUrlInput(q)) {
-                navigateToUrl(q, true);
-                return;
-            }
+            if (lower === 'mei.ai') return navigateToUrl('https://IIVShar.github.io/Mei-AI', true);
+            if (lower === 'do a barrel roll') { document.body.classList.add('barrel-roll'); setTimeout(() => document.body.classList.remove('barrel-roll'), 1400); }
+            document.body.classList.toggle('askew', lower === 'askew' || lower === 'tilt');
+            if (isDirectUrl(q)) return navigateToUrl(q, true);
 
             currentQuery = q;
             currentTab = tab || 'all';
             saveRecentSearch(q);
+            hideModal($('appsPopover'), '');
+            $('homeAutocomplete')?.classList.add('hidden');
+            $('serpAutocomplete')?.classList.add('hidden');
+            hideModal($('homeView'), 'flex');
+            showModal($('serpView'), 'flex');
+            if ($('serpSearchInput')) $('serpSearchInput').value = q;
 
-            hideModal(document.getElementById('appsPopover'), '');
-            document.getElementById('homeAutocomplete')?.classList.add('hidden');
-            document.getElementById('serpAutocomplete')?.classList.add('hidden');
-
-            document.getElementById('homeView')?.classList.add('hidden');
-            document.getElementById('homeView')?.classList.remove('flex');
-            const serpView = document.getElementById('serpView');
-            serpView?.classList.remove('hidden');
-            serpView?.classList.add('flex');
-
-            const serpInput = document.getElementById('serpSearchInput');
-            if (serpInput) serpInput.value = q;
-
-            document.querySelectorAll('.serp-tab').forEach(btn => {
-                btn.classList.remove('border-neonPink', 'text-neonPink', 'font-semibold');
-                btn.classList.add('border-transparent', 'text-indigoMuted', 'dark:text-slate-400');
+            document.querySelectorAll('.serp-tab').forEach(b => {
+                b.classList.remove('border-neonPink', 'text-neonPink', 'font-semibold');
+                b.classList.add('border-transparent', 'text-indigoMuted', 'dark:text-slate-400');
             });
-            const activeBtn = document.getElementById(`tab-${currentTab}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('border-transparent', 'text-indigoMuted', 'dark:text-slate-400');
-                activeBtn.classList.add('border-neonPink', 'text-neonPink', 'font-semibold');
-            }
+            const act = $(`tab-${currentTab}`);
+            if (act) { act.classList.remove('border-transparent', 'text-indigoMuted', 'dark:text-slate-400'); act.classList.add('border-neonPink', 'text-neonPink', 'font-semibold'); }
 
-            renderSkeleton(currentTab);
+            const c = $('resultsContainer');
+            if (c) c.innerHTML = currentTab === 'images'
+                ? `<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-3">${Array(8).fill('<div class="aspect-square rounded-2xl skeleton-shimmer"></div>').join('')}</div>`
+                : `<div class="max-w-2xl space-y-4 mt-3">${Array(4).fill('<div class="p-4 rounded-2xl border border-pearlBorder/50 dark:border-midnightBorder/50 space-y-2"><div class="h-3 w-36 rounded-full skeleton-shimmer"></div><div class="h-5 w-3/4 rounded-full skeleton-shimmer"></div><div class="h-3.5 w-full rounded-full skeleton-shimmer"></div></div>').join('')}</div>`;
+
             const start = performance.now();
-
             try {
                 if (currentTab === 'all') await renderAllTab(q, start);
                 else if (currentTab === 'chat') await renderChatTab(q, start);
@@ -1443,111 +987,44 @@
                 else if (currentTab === 'videos') await renderVideosTab(q, start);
                 else if (currentTab === 'maps') await renderMapsTab(q, start);
             } catch (_) {
-                const c = document.getElementById('resultsContainer');
-                if (c) {
-                    c.innerHTML = `<div class="p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder max-w-xl mt-3 text-sm">Could not load search results right now.</div>`;
-                }
+                if (c) c.innerHTML = `<div class="p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder max-w-xl mt-3 text-sm">Could not load search results right now.</div>`;
             }
             renderIcons();
         }
 
-        function renderSkeleton(tab) {
-            const c = document.getElementById('resultsContainer');
-            if (!c) return;
-            if (tab === 'images') {
-                c.innerHTML = `<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-3">${Array(8).fill('<div class="aspect-square rounded-2xl skeleton-shimmer"></div>').join('')}</div>`;
-                return;
-            }
-            c.innerHTML = `<div class="max-w-2xl space-y-4 mt-3">${Array(4).fill('<div class="p-4 rounded-2xl border border-pearlBorder/50 dark:border-midnightBorder/50 space-y-2"><div class="h-3 w-36 rounded-full skeleton-shimmer"></div><div class="h-5 w-3/4 rounded-full skeleton-shimmer"></div><div class="h-3.5 w-full rounded-full skeleton-shimmer"></div></div>').join('')}</div>`;
-        }
-
         function getWeatherMeta(code) {
-            const map = {
-                0: { label: 'Clear Sky', icon: 'sun' },
-                1: { label: 'Mainly Clear', icon: 'sun' },
-                2: { label: 'Partly Cloudy', icon: 'cloud-sun' },
-                3: { label: 'Overcast', icon: 'cloud' },
-                45: { label: 'Foggy', icon: 'cloud-fog' },
-                51: { label: 'Light Drizzle', icon: 'cloud-drizzle' },
-                61: { label: 'Light Rain', icon: 'cloud-rain' },
-                63: { label: 'Rain', icon: 'cloud-rain' },
-                71: { label: 'Light Snow', icon: 'snowflake' },
-                73: { label: 'Snow', icon: 'snowflake' },
-                80: { label: 'Rain Showers', icon: 'cloud-rain' },
-                95: { label: 'Thunderstorm', icon: 'cloud-lightning' }
-            };
-            return map[code] || { label: 'Variable', icon: 'cloud-sun' };
+            return ({ 0: { label: 'Clear Sky', icon: 'sun' }, 1: { label: 'Mainly Clear', icon: 'sun' }, 2: { label: 'Partly Cloudy', icon: 'cloud-sun' }, 3: { label: 'Overcast', icon: 'cloud' }, 45: { label: 'Foggy', icon: 'cloud-fog' }, 51: { label: 'Drizzle', icon: 'cloud-drizzle' }, 61: { label: 'Rain', icon: 'cloud-rain' }, 63: { label: 'Rain', icon: 'cloud-rain' }, 71: { label: 'Snow', icon: 'snowflake' }, 80: { label: 'Showers', icon: 'cloud-rain' }, 95: { label: 'Thunderstorm', icon: 'cloud-lightning' } })[code] || { label: 'Variable', icon: 'cloud-sun' };
         }
 
         async function buildSmartWidgetHTML(q) {
-            const lower = q.toLowerCase();
-
-            // Inline Math
             const mathCandidate = q.replace(/^(calculate|calc|what is|solve)\s+/i, '').trim();
             if (/^[0-9+\-*/().%\s^]+$/.test(mathCandidate) && /[+\-*/%^]/.test(mathCandidate)) {
                 try {
-                    const expr = mathCandidate.replace(/\^/g, '**');
-                    const val = Function(`"use strict"; return (${expr})`)();
+                    const val = Function(`"use strict"; return (${mathCandidate.replace(/\^/g, '**')})`)();
                     if (Number.isFinite(val)) {
-                        return `
-                            <div class="mb-6 p-5 rounded-3xl bg-pearlCard dark:bg-midnight border border-electricBlue/40 shadow-light-glow dark:shadow-cosmic-glow fade-in">
-                                <div class="flex items-center justify-between text-xs text-electricBlue dark:text-neonBlue font-semibold mb-1">
-                                    <span>Instant Calculator</span>
-                                    <button type="button" onclick="openToolModal('calculator')" class="hover:underline">Open Full Calculator</button>
-                                </div>
-                                <div class="text-sm text-indigoMuted dark:text-slate-400">${escapeHTML(mathCandidate)} =</div>
-                                <div class="font-display text-3xl font-extrabold text-indigoInk dark:text-white mt-1">${Number(val.toFixed(8))}</div>
-                            </div>
-                        `;
+                        return `<div class="mb-6 p-5 rounded-3xl bg-pearlCard dark:bg-midnight border border-electricBlue/40 shadow-light-glow dark:shadow-cosmic-glow fade-in"><div class="flex items-center justify-between text-xs text-electricBlue dark:text-neonBlue font-semibold mb-1"><span>Instant Calculator</span><button type="button" onclick="openToolModal('calculator')" class="hover:underline">Open Full Calculator</button></div><div class="text-sm text-indigoMuted dark:text-slate-400">${escapeHTML(mathCandidate)} =</div><div class="font-display text-3xl font-extrabold text-indigoInk dark:text-white mt-1">${Number(val.toFixed(8))}</div></div>`;
                     }
                 } catch (_) {}
             }
-
-            // Live 7-Day Weather
-            if (/\b(weather|forecast|temperature|temp)\b/i.test(lower)) {
+            if (/\b(weather|forecast|temperature|temp)\b/i.test(q)) {
                 const city = q.replace(/\b(weather|forecast|temperature|temp|in|for|today|weekly|7 day)\b/gi, '').trim() || 'Brampton, Ontario';
                 try {
-                    const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`);
-                    const geoData = await geoRes.json();
-                    const place = geoData?.results?.[0] || { name: 'Brampton', admin1: 'Ontario', latitude: 43.7315, longitude: -79.7624 };
-                    const wxRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=7`);
-                    const wx = await wxRes.json();
-
+                    const geo = await (await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`)).json();
+                    const pl = geo?.results?.[0] || { name: 'Brampton', admin1: 'Ontario', latitude: 43.7315, longitude: -79.7624 };
+                    const wx = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pl.latitude}&longitude=${pl.longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=7`)).json();
                     if (wx?.current && wx?.daily) {
                         const cur = getWeatherMeta(wx.current.weather_code);
-                        const days = wx.daily.time || [];
                         return `
                             <div class="mb-6 p-5 sm:p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-neonPink/40 shadow-light-glow dark:shadow-cosmic-glow fade-in">
                                 <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-pearlBorder dark:border-midnightBorder">
-                                    <div>
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-neonPink">Live Weather &amp; 7-Day Forecast</span>
-                                        <h3 class="font-display text-xl font-bold text-indigoInk dark:text-white mt-0.5">${escapeHTML(place.name)}${place.admin1 ? ', ' + escapeHTML(place.admin1) : ''}</h3>
-                                        <p class="text-xs text-indigoMuted dark:text-slate-400 mt-0.5">${cur.label} &bull; Humidity ${wx.current.relative_humidity_2m}% &bull; Wind ${Math.round(wx.current.wind_speed_10m)} km/h</p>
-                                    </div>
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-electricBlue via-vividPurple to-neonPink text-white flex items-center justify-center">
-                                            <i data-lucide="${cur.icon}" class="w-6 h-6"></i>
-                                        </div>
-                                        <div class="font-display text-4xl font-extrabold text-indigoInk dark:text-white">${Math.round(wx.current.temperature_2m)}&deg;C</div>
-                                    </div>
+                                    <div><span class="text-xs font-semibold uppercase tracking-wider text-neonPink">Live Weather &amp; 7-Day Forecast</span><h3 class="font-display text-xl font-bold text-indigoInk dark:text-white mt-0.5">${escapeHTML(pl.name)}${pl.admin1 ? ', ' + escapeHTML(pl.admin1) : ''}</h3><p class="text-xs text-indigoMuted dark:text-slate-400 mt-0.5">${cur.label} &bull; Humidity ${wx.current.relative_humidity_2m}% &bull; Wind ${Math.round(wx.current.wind_speed_10m)} km/h</p></div>
+                                    <div class="flex items-center gap-3"><div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-electricBlue via-vividPurple to-neonPink text-white flex items-center justify-center"><i data-lucide="${cur.icon}" class="w-6 h-6"></i></div><div class="font-display text-4xl font-extrabold text-indigoInk dark:text-white">${Math.round(wx.current.temperature_2m)}&deg;C</div></div>
                                 </div>
                                 <div class="grid grid-cols-7 gap-1.5 sm:gap-2 pt-4 text-center">
-                                    ${days.map((dateStr, idx) => {
-                                        const d = new Date(dateStr + 'T12:00:00');
-                                        const dayName = idx === 0 ? 'Today' : d.toLocaleDateString('en-US', { weekday: 'short' });
-                                        const meta = getWeatherMeta(wx.daily.weather_code[idx]);
-                                        const hi = Math.round(wx.daily.temperature_2m_max[idx]);
-                                        const lo = Math.round(wx.daily.temperature_2m_min[idx]);
-                                        const pop = wx.daily.precipitation_probability_max?.[idx] ?? 0;
-                                        return `
-                                            <div class="p-2 rounded-2xl bg-pearlElevated/70 dark:bg-midnightElevated border border-pearlBorder/60 dark:border-midnightBorder flex flex-col items-center gap-1">
-                                                <span class="text-[11px] font-semibold text-indigoInk dark:text-slate-200">${dayName}</span>
-                                                <i data-lucide="${meta.icon}" class="w-4 h-4 text-electricBlue dark:text-neonBlue"></i>
-                                                <div class="text-xs font-bold text-indigoInk dark:text-white">${hi}&deg;</div>
-                                                <div class="text-[11px] text-indigoMuted dark:text-slate-400">${lo}&deg;</div>
-                                                <span class="text-[10px] text-neonPink font-medium">${pop}%</span>
-                                            </div>
-                                        `;
+                                    ${(wx.daily.time || []).map((ds, i) => {
+                                        const dayName = i === 0 ? 'Today' : new Date(ds + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short' });
+                                        const m = getWeatherMeta(wx.daily.weather_code[i]);
+                                        return `<div class="p-2 rounded-2xl bg-pearlElevated/70 dark:bg-midnightElevated border border-pearlBorder/60 dark:border-midnightBorder flex flex-col items-center gap-1"><span class="text-[11px] font-semibold text-indigoInk dark:text-slate-200">${dayName}</span><i data-lucide="${m.icon}" class="w-4 h-4 text-electricBlue dark:text-neonBlue"></i><div class="text-xs font-bold text-indigoInk dark:text-white">${Math.round(wx.daily.temperature_2m_max[i])}&deg;</div><div class="text-[11px] text-indigoMuted dark:text-slate-400">${Math.round(wx.daily.temperature_2m_min[i])}&deg;</div><span class="text-[10px] text-neonPink font-medium">${wx.daily.precipitation_probability_max?.[i] ?? 0}%</span></div>`;
                                     }).join('')}
                                 </div>
                             </div>
@@ -1555,119 +1032,46 @@
                     }
                 } catch (_) {}
             }
-
-            // Dictionary Card
-            const dictMatch = q.match(/^(?:define|definition of|meaning of)\s+([a-zA-Z-]+)$/i);
-            if (dictMatch) {
-                const word = dictMatch[1].trim();
+            const dm = q.match(/^(?:define|definition of|meaning of)\s+([a-zA-Z-]+)$/i);
+            if (dm) {
                 try {
-                    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
+                    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(dm[1])}`);
                     if (res.ok) {
-                        const entries = await res.json();
-                        const first = entries?.[0];
-                        const meaning = first?.meanings?.[0];
-                        const def = meaning?.definitions?.[0]?.definition;
-                        if (first && def) {
-                            return `
-                                <div class="mb-6 p-5 sm:p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-vividPurple/40 shadow-light-glow dark:shadow-cosmic-glow fade-in">
-                                    <div class="flex items-center justify-between gap-2 mb-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-deepPurple dark:text-vividPurple">Dictionary</span>
-                                        <button type="button" onclick="openToolModal('dictionary')" class="text-xs text-electricBlue dark:text-neonBlue hover:underline">Open Dictionary Tool</button>
-                                    </div>
-                                    <div class="flex items-baseline gap-2.5">
-                                        <h3 class="font-display text-2xl font-extrabold text-indigoInk dark:text-white">${escapeHTML(first.word)}</h3>
-                                        ${first.phonetic ? `<span class="text-sm font-mono text-indigoMuted dark:text-slate-400">${escapeHTML(first.phonetic)}</span>` : ''}
-                                        ${meaning?.partOfSpeech ? `<span class="text-xs italic text-neonPink font-medium">${escapeHTML(meaning.partOfSpeech)}</span>` : ''}
-                                    </div>
-                                    <p class="text-sm text-indigoInk dark:text-slate-200 mt-2.5 leading-relaxed">${escapeHTML(def)}</p>
-                                </div>
-                            `;
-                        }
+                        const first = (await res.json())?.[0], meaning = first?.meanings?.[0], def = meaning?.definitions?.[0]?.definition;
+                        if (first && def) return `<div class="mb-6 p-5 sm:p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-vividPurple/40 shadow-light-glow dark:shadow-cosmic-glow fade-in"><div class="flex items-center justify-between gap-2 mb-1"><span class="text-xs font-semibold uppercase tracking-wider text-deepPurple dark:text-vividPurple">Dictionary</span><button type="button" onclick="openToolModal('dictionary')" class="text-xs text-electricBlue dark:text-neonBlue hover:underline">Open Dictionary Tool</button></div><div class="flex items-baseline gap-2.5"><h3 class="font-display text-2xl font-extrabold text-indigoInk dark:text-white">${escapeHTML(first.word)}</h3>${meaning?.partOfSpeech ? `<span class="text-xs italic text-neonPink font-medium">${escapeHTML(meaning.partOfSpeech)}</span>` : ''}</div><p class="text-sm text-indigoInk dark:text-slate-200 mt-2.5 leading-relaxed">${escapeHTML(def)}</p></div>`;
                     }
                 } catch (_) {}
             }
-
             return '';
         }
 
         async function fetchWebResults(q) {
-            const results = [];
-            const seenUrls = new Set();
+            const results = [], seen = new Set();
+            const add = (it) => { if (it?.url && !seen.has(it.url)) { seen.add(it.url); results.push(it); } };
 
-            const addItem = (item) => {
-                if (!item || !item.url || seenUrls.has(item.url)) return;
-                seenUrls.add(item.url);
-                results.push(item);
-            };
-
-            // 1. DuckDuckGo Instant Answer API
-            try {
-                const res = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(q)}&format=json&no_html=1&skip_disambig=1`);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.AbstractURL && data.AbstractText) {
-                        addItem({
-                            title: data.Heading || q,
-                            url: data.AbstractURL,
-                            snippet: data.AbstractText,
-                            source: getDomainFromUrl(data.AbstractURL)
-                        });
-                    }
-                    const flatten = (arr) => {
-                        if (!Array.isArray(arr)) return;
-                        arr.forEach(entry => {
-                            if (entry.Topics) flatten(entry.Topics);
-                            else if (entry.FirstURL && entry.Text) {
-                                addItem({
-                                    title: entry.Text.split(' - ')[0] || entry.Text,
-                                    url: entry.FirstURL,
-                                    snippet: entry.Text,
-                                    source: getDomainFromUrl(entry.FirstURL)
-                                });
-                            }
-                        });
-                    };
-                    flatten(data.RelatedTopics);
-                }
-            } catch (_) {}
-
-            // 2. Hacker News (Algolia)
-            try {
-                const res = await fetch(`https://hn.algolia.com/api/v1/search?query=${encodeURIComponent(q)}&hitsPerPage=8`);
-                if (res.ok) {
-                    const data = await res.json();
-                    (data.hits || []).forEach(hit => {
-                        const url = hit.url || `https://news.ycombinator.com/item?id=${hit.objectID}`;
-                        addItem({
-                            title: hit.title || hit.story_title || 'Hacker News Discussion',
-                            url,
-                            snippet: `${hit.points || 0} points • ${hit.num_comments || 0} comments • Shared by ${hit.author || 'community'}`,
-                            source: getDomainFromUrl(url)
-                        });
+            await Promise.allSettled([
+                fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(q)}&format=json&no_html=1&skip_disambig=1`).then(r => r.json()).then(d => {
+                    if (d.AbstractURL && d.AbstractText) add({ title: d.Heading || q, url: d.AbstractURL, snippet: d.AbstractText, source: getDomain(d.AbstractURL) });
+                    const walk = (arr) => (arr || []).forEach(x => x.Topics ? walk(x.Topics) : (x.FirstURL && x.Text && add({ title: x.Text.split(' - ')[0], url: x.FirstURL, snippet: x.Text, source: getDomain(x.FirstURL) })));
+                    walk(d.RelatedTopics);
+                }),
+                fetch(`https://hn.algolia.com/api/v1/search?query=${encodeURIComponent(q)}&hitsPerPage=8`).then(r => r.json()).then(d => {
+                    (d.hits || []).forEach(h => {
+                        const u = h.url || `https://news.ycombinator.com/item?id=${h.objectID}`;
+                        add({ title: h.title || h.story_title || 'Hacker News Discussion', url: u, snippet: `${h.points || 0} points • ${h.num_comments || 0} comments`, source: getDomain(u) });
                     });
-                }
-            } catch (_) {}
-
-            // 3. Wikipedia Search Results
-            try {
-                const res = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&srlimit=8&format=json&origin=*`);
-                if (res.ok) {
-                    const data = await res.json();
-                    (data.query?.search || []).forEach(item => {
-                        const pageUrl = `https://en.wikipedia.org/wiki/${encodeURIComponent(item.title.replace(/ /g, '_'))}`;
-                        addItem({
-                            title: `${item.title} — Wikipedia`,
-                            url: pageUrl,
-                            snippet: stripHTML(item.snippet) || 'Encyclopedia reference article.',
-                            source: 'en.wikipedia.org'
-                        });
+                }),
+                fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&srlimit=8&format=json&origin=*`).then(r => r.json()).then(d => {
+                    (d.query?.search || []).forEach(it => {
+                        const u = `https://en.wikipedia.org/wiki/${encodeURIComponent(it.title.replace(/ /g, '_'))}`;
+                        add({ title: `${it.title} — Wikipedia`, url: u, snippet: stripHTML(it.snippet), source: 'en.wikipedia.org' });
                     });
-                }
-            } catch (_) {}
+                })
+            ]);
 
             if (activeVerbatimFilter === 'Verbatim') {
-                const needle = q.toLowerCase();
-                return results.filter(r => r.title.toLowerCase().includes(needle) || r.snippet.toLowerCase().includes(needle));
+                const n = q.toLowerCase();
+                return results.filter(r => r.title.toLowerCase().includes(n) || r.snippet.toLowerCase().includes(n));
             }
             return results;
         }
@@ -1676,373 +1080,346 @@
             try {
                 const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(q)}`);
                 if (!res.ok) return null;
-                const data = await res.json();
-                if (!data || data.type === 'disambiguation' || !data.extract) return null;
-                return {
-                    title: data.title,
-                    subtitle: data.description || 'Overview',
-                    extract: data.extract,
-                    image: data.thumbnail?.source || '',
-                    url: data.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${encodeURIComponent(data.title.replace(/ /g, '_'))}`
+                const d = await res.json();
+                return (!d || d.type === 'disambiguation' || !d.extract) ? null : {
+                    title: d.title, subtitle: d.description || 'Overview', extract: d.extract, image: d.thumbnail?.source || '',
+                    url: d.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${encodeURIComponent(d.title.replace(/ /g, '_'))}`
                 };
-            } catch (_) {
-                return null;
-            }
+            } catch (_) { return null; }
         }
 
-        async function renderAllTab(q, startTime) {
-            const container = document.getElementById('resultsContainer');
-            if (!container) return;
+        async function renderAllTab(q, start) {
+            const c = $('resultsContainer');
+            if (!c) return;
+            const [widgetHTML, items, kg] = await Promise.all([buildSmartWidgetHTML(q), fetchWebResults(q), fetchKnowledgeCard(q)]);
+            if ($('resultsStats')) $('resultsStats').textContent = `${items.length} results for "${q}" (${((performance.now() - start) / 1000).toFixed(2)} seconds)`;
 
-            const [widgetHTML, items, kg] = await Promise.all([
-                buildSmartWidgetHTML(q),
-                fetchWebResults(q),
-                fetchKnowledgeCard(q)
-            ]);
-
-            const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
-            const statsEl = document.getElementById('resultsStats');
-            if (statsEl) {
-                statsEl.textContent = `${items.length} results for "${q}" (${elapsed} seconds)`;
-            }
-
-            const resultsListHTML = items.length > 0 ? items.map((item, idx) => `
+            const listHTML = items.length ? items.map((it, idx) => `
                 <article class="py-3.5 border-b border-pearlBorder/60 dark:border-midnightBorder/60 last:border-b-0 fade-in">
                     <div class="flex items-center gap-2 text-xs text-indigoMuted dark:text-slate-400 mb-1">
-                        <img src="${escapeHTML(getFaviconUrl(item.url))}" alt="" class="w-4 h-4 rounded-sm shrink-0" onerror="this.style.display='none'">
-                        <span class="truncate font-mono">${escapeHTML(item.source)}</span>
+                        <img src="${escapeHTML(getFavicon(it.url))}" alt="" class="w-4 h-4 rounded-sm shrink-0" onerror="this.style.display='none'">
+                        <span class="truncate font-mono">${escapeHTML(it.source)}</span>
                         <span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/10 text-deepPurple dark:text-purple-300 font-semibold">#${idx + 1}</span>
                     </div>
-                    <button type="button" onclick="navigateToUrl('${escapeHTML(item.url).replace(/'/g, "\\'")}', true)" class="text-left font-display text-lg sm:text-xl font-bold text-electricBlue dark:text-neonBlue hover:text-neonPink transition-colors leading-snug block">
-                        ${escapeHTML(item.title)}
-                    </button>
-                    <p class="text-sm text-indigoInk/85 dark:text-slate-300 mt-1 leading-relaxed">${escapeHTML(item.snippet)}</p>
+                    <button type="button" onclick="navigateToUrl('${escapeHTML(it.url).replace(/'/g, "\\'")}', true)" class="text-left font-display text-lg sm:text-xl font-bold text-electricBlue dark:text-neonBlue hover:text-neonPink transition-colors leading-snug block">${escapeHTML(it.title)}</button>
+                    <p class="text-sm text-indigoInk/85 dark:text-slate-300 mt-1 leading-relaxed">${escapeHTML(it.snippet)}</p>
                     <div class="mt-2 flex flex-wrap items-center gap-3 text-xs">
-                        <button type="button" onclick="navigateToUrl('${escapeHTML(item.url).replace(/'/g, "\\'")}', true)" class="text-neonPink font-semibold hover:underline">
-                            Open in Web Frame
-                        </button>
-                        <a href="${escapeHTML(item.url)}" target="_blank" rel="noopener noreferrer" class="text-indigoMuted dark:text-slate-400 hover:text-electricBlue dark:hover:text-neonBlue inline-flex items-center gap-1">
-                            <span>External Tab</span>
-                            <i data-lucide="external-link" class="w-3 h-3"></i>
-                        </a>
+                        <button type="button" onclick="navigateToUrl('${escapeHTML(it.url).replace(/'/g, "\\'")}', true)" class="text-neonPink font-semibold hover:underline">Open in Web Frame</button>
+                        <a href="${escapeHTML(it.url)}" target="_blank" rel="noopener noreferrer" class="text-indigoMuted dark:text-slate-400 hover:text-electricBlue dark:hover:text-neonBlue inline-flex items-center gap-1"><span>External Tab</span><i data-lucide="external-link" class="w-3 h-3"></i></a>
                     </div>
                 </article>
-            `).join('') : `
-                <div class="p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder text-sm space-y-2">
-                    <p class="font-semibold text-indigoInk dark:text-white">No matching results found for "${escapeHTML(q)}".</p>
-                    <p class="text-indigoMuted dark:text-slate-400">Try a broader keyword or ask <strong>Nexus Chat</strong> for help.</p>
-                </div>
-            `;
+            `).join('') : `<div class="p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder text-sm">No matching results found for "${escapeHTML(q)}".</div>`;
 
             const kgHTML = kg ? `
                 <aside class="lg:w-80 xl:w-96 shrink-0 fade-in">
                     <div class="p-5 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder shadow-xs sticky top-28 space-y-3">
                         ${kg.image ? `<img src="${escapeHTML(kg.image)}" alt="${escapeHTML(kg.title)}" class="w-full h-44 object-cover rounded-2xl border border-pearlBorder/60 dark:border-midnightBorder" onerror="this.style.display='none'">` : ''}
-                        <div>
-                            <h3 class="font-display text-xl font-bold text-indigoInk dark:text-white">${escapeHTML(kg.title)}</h3>
-                            <p class="text-xs font-semibold text-neonPink mt-0.5">${escapeHTML(kg.subtitle)}</p>
-                        </div>
+                        <div><h3 class="font-display text-xl font-bold text-indigoInk dark:text-white">${escapeHTML(kg.title)}</h3><p class="text-xs font-semibold text-neonPink mt-0.5">${escapeHTML(kg.subtitle)}</p></div>
                         <p class="text-xs sm:text-sm text-indigoInk/85 dark:text-slate-300 leading-relaxed">${escapeHTML(kg.extract)}</p>
-                        <button type="button" onclick="navigateToUrl('${escapeHTML(kg.url).replace(/'/g, "\\'")}', true)" class="w-full py-2 rounded-full bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder hover:border-neonPink text-xs font-semibold text-indigoInk dark:text-white transition-colors">
-                            Read Full Article in Web Frame
-                        </button>
+                        <button type="button" onclick="navigateToUrl('${escapeHTML(kg.url).replace(/'/g, "\\'")}', true)" class="w-full py-2 rounded-full bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder hover:border-neonPink text-xs font-semibold text-indigoInk dark:text-white">Read Full Article in Web Frame</button>
                     </div>
                 </aside>
             ` : '';
 
-            container.innerHTML = `
-                ${widgetHTML}
-                <div class="flex flex-col lg:flex-row gap-8 items-start">
-                    <div class="flex-1 min-w-0 max-w-2xl w-full">${resultsListHTML}</div>
-                    ${kgHTML}
-                </div>
-            `;
-            renderIcons();
+            c.innerHTML = `${widgetHTML}<div class="flex flex-col lg:flex-row gap-8 items-start"><div class="flex-1 min-w-0 max-w-2xl w-full">${listHTML}</div>${kgHTML}</div>`;
         }
 
-        // ==========================================
-        // NEXUS CHAT TAB & DRAWER
-        // ==========================================
-        function generateNexusChatReply(prompt) {
+        // NEXUS CHAT
+        function generateChatReply(prompt) {
             const p = prompt.toLowerCase();
-            if (p.includes('poem')) {
-                return 'Cobalt skies and violet glow,\nNeon stars in quiet flight,\nGuiding every thought below\nThrough the prism of the night.';
-            }
-            if (p.includes('joke')) {
-                return 'Why did the search engine go to school? To improve its index!';
-            }
-            if (p.includes('black hole')) {
-                return 'Picture a super-heavy star compressed into a tiny space. Near its edge, gravity is so strong that even light cannot escape once it passes the boundary.';
-            }
-            if (p.includes('app idea') || p.includes('ideas')) {
-                return '1. A study timer paired with ambient soundscapes.\n2. A quick meal planner built around pantry ingredients.\n3. A local park finder with weather and trail notes.';
-            }
-            return `Here is a starting point for "${prompt}": define your main goal first, sketch a simple version, and iterate step by step.`;
+            if (p.includes('poem')) return 'Cobalt skies and violet glow,\nNeon stars in quiet flight,\nGuiding every thought below\nThrough the prism of the night.';
+            if (p.includes('joke')) return 'Why did the search engine go to school? To improve its index!';
+            if (p.includes('black hole')) return 'Picture a massive star compressed into a tiny space—near its event horizon, gravity is so strong that even light cannot escape.';
+            if (p.includes('idea')) return '1. A study timer paired with ambient soundscapes.\n2. A meal planner built around pantry ingredients.\n3. A local park finder with weather and trail notes.';
+            return `Here is a starting point for "${prompt}": outline your goal first, build a focused draft, and refine it step by step.`;
         }
 
         function renderChatMessagesInto(target) {
             if (!target) return;
-            if (chatMessages.length === 0) {
-                chatMessages.push({
-                    role: 'assistant',
-                    text: 'Hi! I am Nexus Chat. Ask a question, brainstorm ideas, or test a prompt.'
-                });
-            }
+            if (!chatMessages.length) chatMessages.push({ role: 'assistant', text: 'Hi! I am Nexus Chat. Ask a question, brainstorm ideas, or test a prompt.' });
             target.innerHTML = chatMessages.map(m => `
                 <div class="flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}">
-                    <div class="max-w-[85%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-line ${m.role === 'user' ? 'bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white rounded-br-sm' : 'bg-pearlElevated dark:bg-midnightElevated text-indigoInk dark:text-slate-100 border border-pearlBorder dark:border-midnightBorder rounded-bl-sm'}">
-                        ${escapeHTML(m.text)}
-                    </div>
+                    <div class="max-w-[85%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-line ${m.role === 'user' ? 'bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white rounded-br-sm' : 'bg-pearlElevated dark:bg-midnightElevated text-indigoInk dark:text-slate-100 border border-pearlBorder dark:border-midnightBorder rounded-bl-sm'}">${escapeHTML(m.text)}</div>
                 </div>
-            `).join('') + (chatIsTyping ? `
-                <div class="flex justify-start">
-                    <div class="px-4 py-3 rounded-2xl rounded-bl-sm bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder flex items-center gap-1.5">
-                        <span class="chat-dot w-2 h-2 rounded-full bg-electricBlue"></span>
-                        <span class="chat-dot w-2 h-2 rounded-full bg-vividPurple"></span>
-                        <span class="chat-dot w-2 h-2 rounded-full bg-neonPink"></span>
-                    </div>
-                </div>
-            ` : '');
+            `).join('') + (chatIsTyping ? `<div class="flex justify-start"><div class="px-4 py-3 rounded-2xl rounded-bl-sm bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder flex items-center gap-1.5"><span class="chat-dot w-2 h-2 rounded-full bg-electricBlue"></span><span class="chat-dot w-2 h-2 rounded-full bg-vividPurple"></span><span class="chat-dot w-2 h-2 rounded-full bg-neonPink"></span></div></div>` : '');
             target.scrollTop = target.scrollHeight;
         }
 
-        function sendChatPrompt(text) {
-            const clean = (text || '').trim();
+        function sendChatPrompt(txt) {
+            const clean = (txt || '').trim();
             if (!clean) return;
             chatMessages.push({ role: 'user', text: clean });
             chatIsTyping = true;
-            renderChatMessagesInto(document.getElementById('chatDrawerMessages'));
-            renderChatMessagesInto(document.getElementById('serpChatMessages'));
-
+            renderChatMessagesInto($('chatDrawerMessages'));
+            renderChatMessagesInto($('serpChatMessages'));
             setTimeout(() => {
                 chatIsTyping = false;
-                chatMessages.push({ role: 'assistant', text: generateNexusChatReply(clean) });
-                renderChatMessagesInto(document.getElementById('chatDrawerMessages'));
-                renderChatMessagesInto(document.getElementById('serpChatMessages'));
-            }, 380);
+                chatMessages.push({ role: 'assistant', text: generateChatReply(clean) });
+                renderChatMessagesInto($('chatDrawerMessages'));
+                renderChatMessagesInto($('serpChatMessages'));
+            }, 350);
         }
 
-        function submitChatDrawerInput() {
-            const input = document.getElementById('chatDrawerInput');
-            if (!input) return;
-            const val = input.value.trim();
-            if (!val) return;
-            input.value = '';
-            sendChatPrompt(val);
-        }
+        function submitChatDrawerInput() { const i = $('chatDrawerInput'); if (i?.value.trim()) { const v = i.value.trim(); i.value = ''; sendChatPrompt(v); } }
+        function submitSerpChatInput() { const i = $('serpChatInput'); if (i?.value.trim()) { const v = i.value.trim(); i.value = ''; sendChatPrompt(v); } }
 
-        function submitSerpChatInput() {
-            const input = document.getElementById('serpChatInput');
-            if (!input) return;
-            const val = input.value.trim();
-            if (!val) return;
-            input.value = '';
-            sendChatPrompt(val);
-        }
-
-        function openChatDrawer(initialPrompt = '') {
-            hideModal(document.getElementById('appsPopover'), '');
-            showModal(document.getElementById('chatDrawerBackdrop'), 'block');
-            renderChatMessagesInto(document.getElementById('chatDrawerMessages'));
+        function openChatDrawer(initial = '') {
+            hideModal($('appsPopover'), '');
+            showModal($('chatDrawerBackdrop'), 'block');
+            renderChatMessagesInto($('chatDrawerMessages'));
             renderIcons();
-            if (initialPrompt) {
-                sendChatPrompt(initialPrompt);
-            } else {
-                setTimeout(() => document.getElementById('chatDrawerInput')?.focus(), 80);
-            }
+            initial ? sendChatPrompt(initial) : setTimeout(() => $('chatDrawerInput')?.focus(), 80);
         }
 
-        function closeChatDrawer() {
-            hideModal(document.getElementById('chatDrawerBackdrop'), 'block');
-        }
+        function closeChatDrawer() { hideModal($('chatDrawerBackdrop'), 'block'); }
+        function clearNexusChat() { chatMessages = [{ role: 'assistant', text: 'Chat cleared. What would you like to talk about?' }]; renderChatMessagesInto($('chatDrawerMessages')); renderChatMessagesInto($('serpChatMessages')); }
 
-        function clearNexusChat() {
-            chatMessages = [{ role: 'assistant', text: 'Chat cleared. What would you like to talk about?' }];
-            renderChatMessagesInto(document.getElementById('chatDrawerMessages'));
-            renderChatMessagesInto(document.getElementById('serpChatMessages'));
-        }
-
-        async function renderChatTab(q, startTime) {
-            const container = document.getElementById('resultsContainer');
-            if (!container) return;
-            const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
-            const statsEl = document.getElementById('resultsStats');
-            if (statsEl) statsEl.textContent = `Nexus Chat workspace for "${q}" (${elapsed} seconds)`;
-
+        async function renderChatTab(q, start) {
+            const c = $('resultsContainer');
+            if (!c) return;
+            if ($('resultsStats')) $('resultsStats').textContent = `Nexus Chat workspace for "${q}" (${((performance.now() - start) / 1000).toFixed(2)} seconds)`;
             if (!chatMessages.some(m => m.role === 'user' && m.text === q)) {
-                chatMessages.push({ role: 'user', text: q });
-                chatMessages.push({ role: 'assistant', text: generateNexusChatReply(q) });
+                chatMessages.push({ role: 'user', text: q }, { role: 'assistant', text: generateChatReply(q) });
             }
-
-            container.innerHTML = `
-                <div class="max-w-3xl rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder shadow-xs overflow-hidden fade-in">
-                    <div class="px-5 py-3.5 border-b border-pearlBorder dark:border-midnightBorder flex items-center justify-between">
-                        <span class="font-display font-bold text-sm text-indigoInk dark:text-white">Nexus Chat</span>
-                        <button type="button" onclick="clearNexusChat()" class="text-xs text-neonPink hover:underline font-medium">Clear thread</button>
-                    </div>
-                    <div id="serpChatMessages" class="p-5 space-y-4 max-h-[420px] overflow-y-auto"></div>
-                    <form onsubmit="event.preventDefault(); submitSerpChatInput();" class="p-3.5 border-t border-pearlBorder dark:border-midnightBorder bg-pearlElevated/50 dark:bg-obsidian/60 flex items-center gap-2">
-                        <input id="serpChatInput" type="text" autocomplete="off" placeholder="Continue chatting with Nexus Chat..." class="flex-1 px-4 py-2 rounded-full bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder focus:border-neonPink text-sm text-indigoInk dark:text-white focus:outline-none">
-                        <button type="submit" class="px-4 py-2 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold">Send</button>
-                    </form>
-                </div>
-            `;
-            renderChatMessagesInto(document.getElementById('serpChatMessages'));
+            c.innerHTML = `<div class="max-w-3xl rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder shadow-xs overflow-hidden fade-in"><div class="px-5 py-3.5 border-b border-pearlBorder dark:border-midnightBorder flex items-center justify-between"><span class="font-display font-bold text-sm text-indigoInk dark:text-white">Nexus Chat</span><button type="button" onclick="clearNexusChat()" class="text-xs text-neonPink hover:underline font-medium">Clear thread</button></div><div id="serpChatMessages" class="p-5 space-y-4 max-h-[420px] overflow-y-auto"></div><form onsubmit="event.preventDefault(); submitSerpChatInput();" class="p-3.5 border-t border-pearlBorder dark:border-midnightBorder bg-pearlElevated/50 dark:bg-obsidian/60 flex items-center gap-2"><input id="serpChatInput" type="text" autocomplete="off" placeholder="Continue chatting with Nexus Chat..." class="flex-1 px-4 py-2 rounded-full bg-pearlCard dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder focus:border-neonPink text-sm text-indigoInk dark:text-white focus:outline-none"><button type="submit" class="px-4 py-2 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold">Send</button></form></div>`;
+            renderChatMessagesInto($('serpChatMessages'));
         }
 
-        // ==========================================
-        // IMAGES TAB & LIGHTBOX
-        // ==========================================
-        let currentImageResults = [];
-
-        async function renderImagesTab(q, startTime) {
-            const container = document.getElementById('resultsContainer');
-            if (!container) return;
-
+        // IMAGES, NEWS, VIDEOS & MAPS
+        async function renderImagesTab(q, start) {
+            const c = $('resultsContainer');
             try {
-                const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrnamespace=6&gsrlimit=16&prop=imageinfo&iiprop=url|size|mime&iiurlwidth=640&format=json&origin=*`;
-                const res = await fetch(url);
-                const data = await res.json();
-                const pages = Object.values(data?.query?.pages || {});
-
-                currentImageResults = pages
-                    .filter(p => p.imageinfo && p.imageinfo[0] && /^image\/(jpeg|png|webp|gif)/i.test(p.imageinfo[0].mime || ''))
-                    .map(p => {
-                        const info = p.imageinfo[0];
-                        return {
-                            title: (p.title || 'Image').replace(/^File:/i, '').replace(/\.[^.]+$/, ''),
-                            thumb: info.thumburl || info.url,
-                            full: info.url,
-                            width: info.width || 0,
-                            height: info.height || 0
-                        };
-                    });
-            } catch (_) {
-                currentImageResults = [];
-            }
-
-            const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
-            const statsEl = document.getElementById('resultsStats');
-            if (statsEl) statsEl.textContent = `${currentImageResults.length} images for "${q}" (${elapsed} seconds)`;
-
-            if (currentImageResults.length === 0) {
-                container.innerHTML = `<div class="p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder max-w-xl mt-3 text-sm">No image results found for "${escapeHTML(q)}".</div>`;
-                return;
-            }
-
-            container.innerHTML = `
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-3 fade-in">
-                    ${currentImageResults.map((img, idx) => `
-                        <button type="button" onclick="openLightbox(${idx})" class="group text-left rounded-2xl overflow-hidden bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder hover:border-neonPink transition-all shadow-xs">
-                            <div class="aspect-square bg-pearlElevated dark:bg-midnightElevated overflow-hidden">
-                                <img src="${escapeHTML(img.thumb)}" alt="${escapeHTML(img.title)}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://placehold.co/400x400/12121e/ec4899?text=Image'">
-                            </div>
-                            <div class="p-2.5">
-                                <p class="text-xs font-medium text-indigoInk dark:text-slate-200 truncate">${escapeHTML(img.title)}</p>
-                            </div>
-                        </button>
-                    `).join('')}
-                </div>
-            `;
+                const data = await (await fetch(`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrnamespace=6&gsrlimit=16&prop=imageinfo&iiprop=url|size|mime&iiurlwidth=640&format=json&origin=*`)).json();
+                currentImageResults = Object.values(data?.query?.pages || [])
+                    .filter(p => p.imageinfo?.[0] && /^image\/(jpeg|png|webp|gif)/i.test(p.imageinfo[0].mime || ''))
+                    .map(p => ({ title: (p.title || 'Image').replace(/^File:/i, '').replace(/\.[^.]+$/, ''), thumb: p.imageinfo[0].thumburl || p.imageinfo[0].url, full: p.imageinfo[0].url, width: p.imageinfo[0].width || 0, height: p.imageinfo[0].height || 0 }));
+            } catch (_) { currentImageResults = []; }
+            if ($('resultsStats')) $('resultsStats').textContent = `${currentImageResults.length} images for "${q}" (${((performance.now() - start) / 1000).toFixed(2)} seconds)`;
+            c.innerHTML = currentImageResults.length ? `<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-3 fade-in">${currentImageResults.map((img, i) => `<button type="button" onclick="openLightbox(${i})" class="group text-left rounded-2xl overflow-hidden bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder hover:border-neonPink shadow-xs"><div class="aspect-square bg-pearlElevated dark:bg-midnightElevated overflow-hidden"><img src="${escapeHTML(img.thumb)}" alt="${escapeHTML(img.title)}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://placehold.co/400x400/12121e/ec4899?text=Image'"></div><div class="p-2.5"><p class="text-xs font-medium text-indigoInk dark:text-slate-200 truncate">${escapeHTML(img.title)}</p></div></button>`).join('')}</div>` : `<div class="p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder max-w-xl mt-3 text-sm">No image results found for "${escapeHTML(q)}".</div>`;
         }
 
-        function openLightbox(idx) {
-            const item = currentImageResults[idx];
-            if (!item) return;
-            document.getElementById('lightboxTitle').textContent = item.title;
-            document.getElementById('lightboxImg').src = item.full;
-            document.getElementById('lightboxSourceLink').href = item.full;
-            document.getElementById('lightboxDims').textContent = item.width && item.height ? `${item.width} × ${item.height}` : 'Public Image';
-            showModal(document.getElementById('lightboxModal'), 'flex');
+        function openLightbox(i) {
+            const it = currentImageResults[i];
+            if (!it) return;
+            $('lightboxTitle').textContent = it.title;
+            $('lightboxImg').src = it.full;
+            $('lightboxSourceLink').href = it.full;
+            $('lightboxDims').textContent = it.width && it.height ? `${it.width} × ${it.height}` : 'Public Image';
+            showModal($('lightboxModal'), 'flex');
             renderIcons();
         }
+        function closeLightbox() { hideModal($('lightboxModal'), 'flex'); if ($('lightboxImg')) $('lightboxImg').src = ''; }
 
-        function closeLightbox() {
-            hideModal(document.getElementById('lightboxModal'), 'flex');
-            const img = document.getElementById('lightboxImg');
-            if (img) img.src = '';
-        }
-
-        // ==========================================
-        // NEWS TAB
-        // ==========================================
-        async function renderNewsTab(q, startTime) {
-            const container = document.getElementById('resultsContainer');
-            if (!container) return;
-            const articles = [];
-
+        async function renderNewsTab(q, start) {
+            const c = $('resultsContainer');
+            let articles = [];
             try {
-                const res = await fetch(`https://hn.algolia.com/api/v1/search_by_date?query=${encodeURIComponent(q)}&tags=story&hitsPerPage=12`);
-                if (res.ok) {
-                    const data = await res.json();
-                    (data.hits || []).forEach(hit => {
-                        articles.push({
-                            title: hit.title || 'Story',
-                            url: hit.url || `https://news.ycombinator.com/item?id=${hit.objectID}`,
-                            source: hit.url ? getDomainFromUrl(hit.url) : 'news.ycombinator.com',
-                            date: hit.created_at ? new Date(hit.created_at).toLocaleDateString() : 'Recent',
-                            snippet: `${hit.points || 0} points • ${hit.num_comments || 0} comments`
-                        });
-                    });
-                }
+                const data = await (await fetch(`https://hn.algolia.com/api/v1/search_by_date?query=${encodeURIComponent(q)}&tags=story&hitsPerPage=12`)).json();
+                articles = (data.hits || []).map(h => ({
+                    title: h.title || 'Story', url: h.url || `https://news.ycombinator.com/item?id=${h.objectID}`,
+                    source: h.url ? getDomain(h.url) : 'news.ycombinator.com', date: h.created_at ? new Date(h.created_at).toLocaleDateString() : 'Recent',
+                    snippet: `${h.points || 0} points • ${h.num_comments || 0} comments`
+                }));
             } catch (_) {}
-
-            const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
-            const statsEl = document.getElementById('resultsStats');
-            if (statsEl) statsEl.textContent = `${articles.length} news stories for "${q}" (${elapsed} seconds)`;
-
-            container.innerHTML = articles.length > 0 ? `
-                <div class="max-w-3xl divide-y divide-pearlBorder/60 dark:divide-midnightBorder/60 mt-2 fade-in">
-                    ${articles.map(a => `
-                        <article class="py-4">
-                            <div class="flex items-center gap-2 text-xs text-neonPink font-semibold mb-1">
-                                <span>${escapeHTML(a.source)}</span>
-                                <span class="text-indigoMuted dark:text-slate-400 font-normal">&bull; ${escapeHTML(a.date)}</span>
-                            </div>
-                            <button type="button" onclick="navigateToUrl('${escapeHTML(a.url).replace(/'/g, "\\'")}', true)" class="text-left font-display text-lg font-bold text-indigoInk dark:text-white hover:text-electricBlue dark:hover:text-neonBlue transition-colors block">
-                                ${escapeHTML(a.title)}
-                            </button>
-                            <p class="text-xs text-indigoMuted dark:text-slate-400 mt-1">${escapeHTML(a.snippet)}</p>
-                        </article>
-                    `).join('')}
-                </div>
-            ` : `<div class="p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder max-w-xl mt-3 text-sm">No recent news items found for "${escapeHTML(q)}".</div>`;
+            if ($('resultsStats')) $('resultsStats').textContent = `${articles.length} news stories for "${q}" (${((performance.now() - start) / 1000).toFixed(2)} seconds)`;
+            c.innerHTML = articles.length ? `<div class="max-w-3xl divide-y divide-pearlBorder/60 dark:divide-midnightBorder/60 mt-2 fade-in">${articles.map(a => `<article class="py-4"><div class="flex items-center gap-2 text-xs text-neonPink font-semibold mb-1"><span>${escapeHTML(a.source)}</span><span class="text-indigoMuted dark:text-slate-400 font-normal">&bull; ${escapeHTML(a.date)}</span></div><button type="button" onclick="navigateToUrl('${escapeHTML(a.url).replace(/'/g, "\\'")}', true)" class="text-left font-display text-lg font-bold text-indigoInk dark:text-white hover:text-electricBlue dark:hover:text-neonBlue block">${escapeHTML(a.title)}</button><p class="text-xs text-indigoMuted dark:text-slate-400 mt-1">${escapeHTML(a.snippet)}</p></article>`).join('')}</div>` : `<div class="p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder max-w-xl mt-3 text-sm">No recent news found for "${escapeHTML(q)}".</div>`;
         }
 
-        // ==========================================
-        // VIDEOS TAB & PLAYER MODAL
-        // ==========================================
-        let currentVideoResults = [];
-
-        async function renderVideosTab(q, startTime) {
-            const container = document.getElementById('resultsContainer');
-            if (!container) return;
-
+        async function renderVideosTab(q, start) {
+            const c = $('resultsContainer');
             try {
-                const res = await fetch(`https://archive.org/advancedsearch.php?q=${encodeURIComponent(q + ' AND mediatype:movies')}&fl[]=identifier,title,creator,year&rows=12&page=1&output=json`);
-                const data = await res.json();
-                const docs = data?.response?.docs || [];
-                currentVideoResults = docs.map(d => ({
-                    id: d.identifier,
+                const data = await (await fetch(`https://archive.org/advancedsearch.php?q=${encodeURIComponent(q + ' AND mediatype:movies')}&fl[]=identifier,title,creator,year&rows=12&page=1&output=json`)).json();
+                currentVideoResults = (data?.response?.docs || []).map(d => ({
                     title: Array.isArray(d.title) ? d.title[0] : (d.title || d.identifier),
                     creator: Array.isArray(d.creator) ? d.creator[0] : (d.creator || 'Internet Archive'),
-                    year: d.year || '',
-                    thumb: `https://archive.org/services/img/${encodeURIComponent(d.identifier)}`,
-                    pageUrl: `https://archive.org/details/${encodeURIComponent(d.identifier)}`,
-                    embedUrl: `https://archive.org/embed/${encodeURIComponent(d.identifier)}`
+                    year: d.year || '', thumb: `https://archive.org/services/img/${encodeURIComponent(d.identifier)}`,
+                    pageUrl: `https://archive.org/details/${encodeURIComponent(d.identifier)}`, embedUrl: `https://archive.org/embed/${encodeURIComponent(d.identifier)}`
                 }));
-            } catch (_) {
-                currentVideoResults = [];
+            } catch (_) { currentVideoResults = []; }
+            if ($('resultsStats')) $('resultsStats').textContent = `${currentVideoResults.length} videos for "${q}" (${((performance.now() - start) / 1000).toFixed(2)} seconds)`;
+            c.innerHTML = currentVideoResults.length ? `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-3 fade-in">${currentVideoResults.map((v, i) => `<button type="button" onclick="openVideoModal(${i})" class="group text-left rounded-2xl overflow-hidden bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder hover:border-neonPink shadow-xs"><div class="aspect-video bg-black relative overflow-hidden"><img src="${escapeHTML(v.thumb)}" alt="${escapeHTML(v.title)}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://placehold.co/640x360/12121e/a855f7?text=Video'"><span class="absolute inset-0 flex items-center justify-center bg-black/25"><span class="w-12 h-12 rounded-full bg-gradient-to-tr from-electricBlue via-deepPurple to-neonPink text-white flex items-center justify-center shadow-lg"><i data-lucide="play" class="w-5 h-5 ml-0.5"></i></span></span></div><div class="p-3.5"><h3 class="font-display font-bold text-sm text-indigoInk dark:text-white line-clamp-2">${escapeHTML(v.title)}</h3><p class="text-xs text-indigoMuted dark:text-slate-400 mt-1 truncate">${escapeHTML(v.creator)} ${v.year ? '&bull; ' + escapeHTML(v.year) : ''}</p></div></button>`).join('')}</div>` : `<div class="p-6 rounded-3xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder max-w-xl mt-3 text-sm">No video results found for "${escapeHTML(q)}".</div>`;
+        }
+
+        function openVideoModal(i) {
+            const v = currentVideoResults[i];
+            if (!v) return;
+            $('videoModalTitle').textContent = v.title;
+            $('videoModalMeta').textContent = `${v.creator}${v.year ? ' (' + v.year + ')' : ''}`;
+            $('videoModalSourceLink').href = v.pageUrl;
+            $('videoModalPlayerContainer').innerHTML = `<iframe src="${escapeHTML(v.embedUrl)}" class="w-full h-full border-0" allowfullscreen></iframe>`;
+            showModal($('videoModal'), 'flex');
+            renderIcons();
+        }
+        function closeVideoModal() { hideModal($('videoModal'), 'flex'); if ($('videoModalPlayerContainer')) $('videoModalPlayerContainer').innerHTML = ''; }
+
+        async function renderMapsTab(q, start) {
+            const c = $('resultsContainer');
+            let places = [];
+            try {
+                const data = await (await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=6`)).json();
+                places = (data?.features || []).map(f => {
+                    const p = f.properties || {}, coords = f.geometry?.coordinates || [-79.7624, 43.7315];
+                    return { lat: Number(coords[1]), lon: Number(coords[0]), display_name: [...new Set([p.name, p.city || p.town, p.state, p.country].filter(Boolean))].join(', ') || q, type: p.osm_value || 'Place' };
+                });
+            } catch (_) {}
+            if (!places.length) {
+                try {
+                    const data = await (await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=6&language=en&format=json`)).json();
+                    places = (data?.results || []).map(r => ({ lat: Number(r.latitude), lon: Number(r.longitude), display_name: [r.name, r.admin1, r.country].filter(Boolean).join(', '), type: 'Location' }));
+                } catch (_) {}
             }
 
-            const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
-            const statsEl = document.getElementById('resultsStats');
-            if (statsEl) statsEl.textContent = `${currentVideoResults.length} videos for "${q}" (${elapsed} seconds)`;
+            if ($('resultsStats')) $('resultsStats').textContent = `${places.length} locations for "${q}" (${((performance.now() - start) / 1000).toFixed(2)} seconds)`;
+            const primary = places[0] || { lat: 43.7315, lon: -79.7624, display_name: 'Brampton, Ontario, Canada', type: 'City' };
+            c.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-3 fade-in">
+                    <div class="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+                        ${places.length ? places.map((pl, idx) => `<button type="button" onclick="focusMapLocation(${pl.lat}, ${pl.lon}, ${idx})" class="map-place-card w-full text-left p-4 rounded-2xl bg-pearlCard dark:bg-midnight border ${idx === 0 ? 'border-neonPink shadow-light-glow dark:shadow-cosmic-glow' : 'border-pearlBorder dark:border-midnightBorder'} hover:border-neonPink transition-all"><div class="flex items-start gap-2.5"><i data-lucide="map-pin" class="w-4 h-4 text-neonPink shrink-0 mt-1"></i><div class="min-w-0 flex-1"><p class="text-sm font-semibold text-indigoInk dark:text-white line-clamp-2">${escapeHTML(pl.display_name)}</p><div class="flex items-center justify-between gap-2 mt-1.5"><span class="text-[11px] font-mono text-indigoMuted dark:text-slate-400">${pl.lat.toFixed(4)}, ${pl.lon.toFixed(4)}</span><span class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-500/10 text-deepPurple dark:text-purple-300 font-semibold">${escapeHTML(pl.type)}</span></div></div></div></button>`).join('') : `<div class="p-5 rounded-2xl bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder text-sm">No exact matches for "${escapeHTML(q)}". Showing Brampton, Ontario.</div>`}
+                    </div>
+                    <div class="lg:col-span-2 rounded-3xl overflow-hidden border border-pearlBorder dark:border-midnightBorder shadow-xs h-[420px] sm:h-[500px] relative bg-pearlElevated dark:bg-midnight">
+                        <div id="nexusLeafletMap" class="w-full h-full"></div>
+                        <a id="osmExternalLink" href="https://www.openstreetmap.org/?mlat=${primary.lat}&mlon=${primary.lon}#map=14/${primary.lat}/${primary.lon}" target="_blank" rel="noopener noreferrer" class="absolute bottom-3 left-3 z-20 px-3.5 py-1.5 rounded-full bg-pearlCard/95 dark:bg-midnight/95 border border-pearlBorder dark:border-purple-500/40 text-xs font-semibold text-indigoInk dark:text-white hover:border-neonPink shadow-md">Open in OpenStreetMap &rarr;</a>
+                    </div>
+                </div>
+            `;
+            requestAnimationFrame(() => {
+                const el = $('nexusLeafletMap');
+                if (!el) return;
+                if (window.L) {
+                    try {
+                        activeMapInstance?.remove();
+                        activeMapMarkers = [];
+                        activeMapInstance = L.map('nexusLeafletMap').setView([primary.lat, primary.lon], 13);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(activeMapInstance);
+                        const icon = L.divIcon({ className: 'nexus-map-pin', iconSize: [18, 18], iconAnchor: [9, 9] });
+                        (places.length ? places : [primary]).forEach((pl, idx) => {
+                            const m = L.marker([pl.lat, pl.lon], { icon }).addTo(activeMapInstance).bindPopup(`<strong>${escapeHTML(pl.display_name)}</strong>`);
+                            if (idx === 0) m.openPopup();
+                            activeMapMarkers.push(m);
+                        });
+                        setTimeout(() => activeMapInstance?.invalidateSize(), 150);
+                        return;
+                    } catch (_) {}
+                }
+                el.innerHTML = `<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${primary.lon - 0.05}%2C${primary.lat - 0.03}%2C${primary.lon + 0.05}%2C${primary.lat + 0.03}&layer=mapnik&marker=${primary.lat}%2C${primary.lon}" class="w-full h-full border-0"></iframe>`;
+            });
+        }
 
-            container.innerHTML = currentVideoResults.length > 0 ? `
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-3 fade-in">
-                    ${currentVideoResults.map((v, idx) => `
-                        <button type="button" onclick="openVideoModal(${idx})" class="group text-left rounded-2xl overflow-hidden bg-pearlCard dark:bg-midnight border border-pearlBorder dark:border-midnightBorder hover:border-neonPink transition-all shadow-xs">
-                            <div class="aspect-video bg-black relative overflow-hidden">
-                                <img src="${escapeHTML(v.thumb)}" alt="${escapeHTML(v.title)}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://placehold.co/640x360/12121e/a855f7?text=Video'">
-                                <span class="absolute inset-0 flex items-center justify-center bg-black/25 group-hover:bg-bla
+        function focusMapLocation(lat, lon, idx) {
+            document.querySelectorAll('.map-place-card').forEach((c, i) => {
+                c.classList.toggle('border-neonPink', i === idx);
+                c.classList.toggle('border-pearlBorder', i !== idx);
+            });
+            if ($('osmExternalLink')) $('osmExternalLink').href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=14/${lat}/${lon}`;
+            if (activeMapInstance && window.L) {
+                activeMapInstance.invalidateSize();
+                activeMapInstance.flyTo([Number(lat), Number(lon)], 14, { duration: 0.6 });
+                activeMapMarkers[idx]?.openPopup();
+            }
+        }
+
+        // TOOLS & INFO MODALS
+        function openToolModal(tool) {
+            hideModal($('appsPopover'), '');
+            calcExpression = '0';
+            if (tool === 'calculator') {
+                $('toolModalTitle').textContent = 'Nexus Calculator';
+                $('toolModalIcon').innerHTML = `<i data-lucide="calculator" class="w-4 h-4"></i>`;
+                $('toolModalBody').innerHTML = `<div class="p-4 rounded-2xl bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder mb-4 text-right font-mono"><div id="calcDisplay" class="text-2xl sm:text-3xl font-bold text-indigoInk dark:text-white truncate">0</div></div><div class="grid grid-cols-4 gap-2 text-sm font-semibold">${['C','(',')','/','7','8','9','*','4','5','6','-','1','2','3','+','0','.','⌫','='].map(k => `<button type="button" onclick="pressCalcKey('${k}')" class="py-3 rounded-2xl ${k === '=' ? 'bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white' : ['/', '*', '-', '+'].includes(k) ? 'bg-purple-500/15 text-deepPurple dark:text-vividPurple border border-purple-500/25' : 'bg-pearlElevated dark:bg-midnightElevated text-indigoInk dark:text-slate-100 border border-pearlBorder dark:border-midnightBorder'} active:scale-95">${k}</button>`).join('')}</div>`;
+            } else if (tool === 'translator') {
+                $('toolModalTitle').textContent = 'Live Translator';
+                $('toolModalIcon').innerHTML = `<i data-lucide="languages" class="w-4 h-4"></i>`;
+                $('toolModalBody').innerHTML = `<div class="space-y-3"><div class="flex items-center gap-2"><select id="transSourceLang" class="flex-1 px-3 py-2 rounded-xl bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-xs"><option value="en">English</option><option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option><option value="ja">Japanese</option></select><i data-lucide="arrow-right" class="w-4 h-4 text-neonPink shrink-0"></i><select id="transTargetLang" class="flex-1 px-3 py-2 rounded-xl bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-xs"><option value="es">Spanish</option><option value="fr">French</option><option value="en">English</option><option value="de">German</option><option value="ja">Japanese</option></select></div><textarea id="transSourceText" rows="3" placeholder="Type text to translate..." class="w-full p-3 rounded-2xl bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-sm focus:outline-none focus:border-neonPink"></textarea><button type="button" onclick="runTranslation()" class="w-full py-2.5 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold">Translate</button><div id="transResultBox" class="p-3.5 rounded-2xl bg-pearlElevated/70 dark:bg-midnightElevated/80 border border-pearlBorder dark:border-midnightBorder min-h-[60px] text-sm">Translation appears here.</div></div>`;
+            } else {
+                $('toolModalTitle').textContent = 'Nexus Dictionary';
+                $('toolModalIcon').innerHTML = `<i data-lucide="book-open" class="w-4 h-4"></i>`;
+                $('toolModalBody').innerHTML = `<div class="space-y-3"><form onsubmit="event.preventDefault(); runDictionaryLookup();" class="flex items-center gap-2"><input id="dictWordInput" type="text" placeholder="Look up an English word..." class="flex-1 px-4 py-2 rounded-full bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-sm focus:outline-none focus:border-neonPink"><button type="submit" class="px-4 py-2 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold">Define</button></form><div id="dictResultBox" class="p-4 rounded-2xl bg-pearlElevated/70 dark:bg-midnightElevated/80 border border-pearlBorder dark:border-midnightBorder min-h-[84px] text-sm">Enter a word to see its definition.</div></div>`;
+            }
+            showModal($('toolModal'), 'flex');
+            renderIcons();
+        }
+
+        function pressCalcKey(k) {
+            const d = $('calcDisplay');
+            if (!d) return;
+            if (k === 'C') calcExpression = '0';
+            else if (k === '⌫') calcExpression = calcExpression.length > 1 ? calcExpression.slice(0, -1) : '0';
+            else if (k === '=') {
+                try {
+                    const v = Function(`"use strict"; return (${calcExpression.replace(/[^0-9+\-*/().]/g, '')})`)();
+                    calcExpression = Number.isFinite(v) ? String(Number(v.toFixed(8))) : 'Error';
+                } catch (_) { calcExpression = 'Error'; }
+            } else {
+                calcExpression = (calcExpression === '0' || calcExpression === 'Error') ? (/[0-9.(]/.test(k) ? k : '0') : calcExpression + k;
+            }
+            d.textContent = calcExpression;
+        }
+
+        async function runTranslation() {
+            const txt = $('transSourceText')?.value.trim(), box = $('transResultBox');
+            if (!txt || !box) return;
+            box.textContent = 'Translating...';
+            try {
+                const d = await (await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(txt)}&langpair=${encodeURIComponent(($('transSourceLang')?.value || 'en') + '|' + ($('transTargetLang')?.value || 'es'))}`)).json();
+                box.textContent = d?.responseData?.translatedText || 'No translation available.';
+            } catch (_) { box.textContent = 'Translation service unavailable.'; }
+        }
+
+        async function runDictionaryLookup() {
+            const w = $('dictWordInput')?.value.trim(), box = $('dictResultBox');
+            if (!w || !box) return;
+            box.textContent = `Looking up "${w}"...`;
+            try {
+                const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(w)}`);
+                if (!res.ok) throw 0;
+                const first = (await res.json())?.[0], m = first?.meanings?.[0];
+                box.innerHTML = `<div class="font-display text-lg font-bold">${escapeHTML(first?.word || w)}</div>${m?.partOfSpeech ? `<div class="text-xs italic text-neonPink mb-1">${escapeHTML(m.partOfSpeech)}</div>` : ''}<p class="text-sm leading-relaxed">${escapeHTML(m?.definitions?.[0]?.definition || 'Definition unavailable.')}</p>`;
+            } catch (_) { box.textContent = `No definition found for "${w}".`; }
+        }
+
+        function openInfoModal(sec) {
+            hideModal($('appsPopover'), '');
+            const pages = {
+                about: { title: 'About Nexus Search', icon: 'sparkles', html: `<p class="text-sm leading-relaxed">Nexus Search is a private, zero-account search workspace with web results, Nexus Chat, images, news, videos, interactive maps, built-in tools, and a multi-tab Web Frame.</p>` },
+                privacy: { title: 'Privacy & Local Storage', icon: 'shield-check', html: `<div class="space-y-3 text-sm leading-relaxed"><p>No account is required. Recent searches, theme choice, and stored Web Frame tabs stay locally in your browser.</p><button type="button" onclick="clearLocalSessionData()" class="px-4 py-2 rounded-full bg-pink-500/15 text-neonPink border border-pink-500/30 text-xs font-semibold hover:bg-pink-500/25">Clear Saved Local Data</button></div>` },
+                help: { title: 'Help & Shortcuts', icon: 'help-circle', html: `<ul class="space-y-2 text-sm list-disc pl-5"><li>Type <span class="font-mono text-neonPink">Mei.ai</span> or any domain to open it in the Web Frame.</li><li>Search <span class="font-mono">weather Brampton</span>, <span class="font-mono">12 * 15</span>, or <span class="font-mono">define prism</span> for instant widgets.</li><li>Press <kbd class="px-1.5 py-0.5 rounded bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-xs">Esc</kbd> to close modals.</li></ul>` },
+                feedback: { title: 'Send Feedback', icon: 'message-square', html: `<form onsubmit="event.preventDefault(); closeToolModal(); showToast('Feedback recorded. Thank you!');" class="space-y-3"><textarea rows="3" placeholder="Share suggestions or issues..." class="w-full p-3 rounded-2xl bg-pearlElevated dark:bg-midnightElevated border border-pearlBorder dark:border-midnightBorder text-sm focus:outline-none focus:border-neonPink"></textarea><button type="submit" class="w-full py-2.5 rounded-full bg-gradient-to-r from-electricBlue via-deepPurple to-neonPink text-white text-xs font-semibold">Send Feedback</button></form>` },
+                terms: { title: 'Terms', icon: 'file-text', html: `<p class="text-sm leading-relaxed">Nexus Search displays content from public APIs and external websites; third-party links remain subject to their respective site terms.</p>` }
+            };
+            const p = pages[sec] || pages.about;
+            $('toolModalTitle').textContent = p.title;
+            $('toolModalIcon').innerHTML = `<i data-lucide="${p.icon}" class="w-4 h-4"></i>`;
+            $('toolModalBody').innerHTML = p.html;
+            showModal($('toolModal'), 'flex');
+            renderIcons();
+        }
+
+        function clearLocalSessionData() {
+            recentSearches = []; storedBrowserTabs = []; activeBrowserTabId = null;
+            try { window.localStorage.removeItem('nexus_recent_searches'); window.localStorage.removeItem('nexus_browser_tabs'); } catch (_) {}
+            renderTabsBars(); closeToolModal(); showToast('Cleared local search history and stored tabs');
+        }
+        function closeToolModal() { hideModal($('toolModal'), 'flex'); }
+
+        document.addEventListener('click', (e) => {
+            const p = $('appsPopover');
+            if (p && !p.classList.contains('hidden') && !p.contains(e.target) && !e.target.closest('button[onclick*="toggleAppsMenu"]')) hideModal(p, '');
+            if (!e.target.closest('#homeSearchInput') && !e.target.closest('#homeAutocomplete')) $('homeAutocomplete')?.classList.add('hidden');
+            if (!e.target.closest('#serpSearchInput') && !e.target.closest('#serpAutocomplete')) $('serpAutocomplete')?.classList.add('hidden');
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') { closeVoiceModal(); closeToolModal(); closeLightbox(); closeVideoModal(); closeChatDrawer(); closeWebBrowser(); hideModal($('appsPopover'), ''); }
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            applySavedTheme();
+            renderStaticUI();
+            setupAutocomplete('homeSearchInput', 'homeAutocomplete', 'homeClearBtn');
+            setupAutocomplete('serpSearchInput', 'serpAutocomplete', 'serpClearBtn');
+            renderTabsBars();
+            renderIcons();
+        });
+    </script>
+</body>
+</html>
